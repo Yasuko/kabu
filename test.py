@@ -1,0 +1,36 @@
+import model.call.AuthUser as AU
+import model.call.AuthRefresh as AR
+import model.call.Info as Info
+
+
+"""
+refreshtoken = AU.AuthUser().call({
+    "mailaddress": "ton_ma@hotmail.com",
+    "password": "qcF6wk3wd84TYtX"
+})
+"""
+refreshtoken = "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.SU6AXl9QhpEUsYvh2hAB-pzYrvlhDUrMF0gT7uwTXpQAX7nitQLrpnsGf0eQtAZTdQYomAHzpeJTDBxaGNqKUWgO2fStkiGukMua4Z53u0P0UUIxlle_hq8EGtCEgjemcG9L1zOe4rFf4-LMNQiY9j1OZgbUxMrTTEdztC78e6BGYBrIXPC6578w1tp5CkqCyHgq187EIK6gv7get6-A6weVlhO22PpWpJog1MnX4WPObqbOqdkXwN6Ms_gRVNmOOwmkSbHDUkUlpa8htwU7VHgv6SLvEFR4KTjAwCUvi4bEpccO68kzv5OWARbjuvxeQpOz8ac72Xz-H2WBwRa6Dw.Ef6eOZKt_Grmcy6r.yVtvJCLpV6tSEjBd3medlu-3gSt5MLCJPiG2FmPkTNWPp7E0FFtk-4c8LXhBCvtUn9pezJML8zkblcJOpOtt0iyczz2kNud098JBaPenV3ZEAD3KQbUg5uqcbO7JaOW0Qr0yszloL5vp2pT5WLUiDGVkRl8tIYV003KEITokEfbOPnA2FH9YC0Rwpa968bKjeLabkNUcz5OkSLBh3cOQlLFCZ2WTgiHh7xakCWBJslRnHUghqO4M8kt6puPI2v0vooPTKzCZSgM07JOryGupzIgI_4UkC1JALEg_AghHTLxdAVQRDc2Ei-sQLmBRR33Jhbrqd4NLO0qL33ZWXfr7c-O_eBF1F3aoZC4zh5t7RQkMNRyGboe91bMYcT0pSQEK-6z5e-7nVYAzfPM0tQiLOJ6t_rno_cpgtfa_IYKzU65R5DdD5RWF9QiLEEWGr0zynYuV6M1rxQtXmS1DGJpVofJH9BY02Aj6bJ5Q9xgRn7Utf0Prb92yBCrBL8vE7I7KD_mxog8FLKrlXCltyHlmmU2of3KJBIHK1ADeSlF7kExHB7Kvhfe-8_7Uya4ddlfw56XubRC8yMZDcHhNnIQtQL_w4oVMM_Lk8zcFzjYOP7bBr_Fe4A9BHf3ZFr9zEsuCBgpyzxvPj_62OYC7-FjmdOk9GOe2Q9hZOTmJozaZA_Ee4J8npYZap5NR9dPhzxicUSnJfnczDSAk2C0EDz4i543AAW7OqMv_iu4R5p4Ai4R4bNQJ4DzSdY-ZG9_fe3ZpYJvEHwSCODAMv5xf8N11DwiK8a_2s7Pk6LzE28xU42mByDkTPAbpsdGjWPjM7uBaLoviooq7UhLAxkMYcyE3TKkZH8wPFvRY6EdgBAmMjfwUF23NK53bO2LavGPQKwQZQ9r2_4haKBuuGrqM-EDJ19KSBEKR0r9ior57mZ9_4Xjo_i59UVKGShljJR8BCVT-9JtvTMx1ORNgowFv3RNpkUoDvoRsxYOyhALPV4I2Cr71txPdWi2hfwxVJ9_uRRo1O2Vu39a15AP9Mal8JBcENgxQNs4v8bKktP3WwjKapGH6rJrhAnos-JyG6fccNPdCCsL1KuWM7ynOJ9ge0uGtIz_ILPO5CiL5Eg6lTDmLRSZ85NIhW6fdwyE4PwEgodaxWhLtcfywCweXhKng_dBk29Pd3dpHxm92nETywZSZ41NCjLtIl8kK_WSVCo9Y2p4Y-0WZN1YaKz795ndL12u8UsBJYGpoWipcJksNpesMt_KtlT3Slma40Jj7cGeIjD4ZoVjIhqg_F0oQbdDshRgs9DUmQlLuh-TH2Bccto9cQ1jTVv-Ao6R5AD8a0spahDVGyoy_uxJQ-4X8aQ.b5YKDrylY_Z-bSXs2u30_A"
+print("Token: ", refreshtoken)
+
+id_token = AR.AuthRefresh().call({
+    "refreshtoken": refreshtoken
+})
+
+print("ID Token: ", id_token)
+
+info = Info.Info().call(
+{
+    "code": "2789",
+    "date": "2023-07-01"
+},
+    id_token
+)
+
+print("Info: ", info)
+
+
+
+"""
+
+https://query2.finance.yahoo.com/v8/finance/chart/2264.T?range=1d&interval=1m&events=split%7Cdiv
+"""

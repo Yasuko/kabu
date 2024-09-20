@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  nodejs:
+    build: ./docker-files/nodejs
+    tty: true
+    volumes:
+      - node_modules-store:/root/work/node_modules
+      - ../client:/root/work
+    ports:
+      - "8888:8888"
+      - "8080:8080"
+  python:
+    build: ./docker-files/python
+    tty: true
+    volumes:
+      - ../:/root/work
+    ports:
+      - "8800:8800"
+  kabu-db:
+    image: postgres:16.4
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: yasuko
+      POSTGRES_PASSWORD: yasukosan
+      POSTGRES_DB: kabu
+
+volumes:
+  node_modules-store:
+  db-store:
