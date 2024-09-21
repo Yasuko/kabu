@@ -3,7 +3,7 @@
 
 """
 
-class BreakdownSchema:
+class History3Month:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS history_3month (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

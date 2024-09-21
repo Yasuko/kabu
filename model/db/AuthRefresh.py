@@ -13,6 +13,7 @@ class OptionsType:
     idToken: str = ""
 
 class AuthRefresh:
+
     def __init__(self):
         if pgsql.check_connection() == False:
             pgsql.connect()
@@ -32,10 +33,10 @@ class AuthRefresh:
     # データを更新する関数
     def update(self, id, data: OptionsType):
         update_query = """
-        UPDATE auth_refresh
+        UPDATE
+            auth_refresh
         SET
-            refreshtoken = %s,
-             idToken = %s
+            idToken = %s
         WHERE id = %s;
         """
         try:
@@ -80,7 +81,6 @@ class AuthRefresh:
 Sample Doc
 
 https://jpx.gitbook.io/j-quants-ja/api-reference/idtoken
-
 
 
 """

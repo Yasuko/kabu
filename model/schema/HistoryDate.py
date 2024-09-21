@@ -3,7 +3,7 @@
 
 """
 
-class BreakdownSchema:
+class HistoryDate:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS history_date (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
