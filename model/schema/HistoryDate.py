@@ -7,7 +7,7 @@ class HistoryDate:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS history_date (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-        industry_id UUID NOT NULL REFERENCES industry(id),
+        company_code VARCHAR(7) NOT NULL REFERENCES industry(company_code),
         Date DATE NOT NULL,
         Open NUMERIC NOT NULL,
         High NUMERIC NOT NULL,
@@ -26,7 +26,7 @@ class HistoryDate:
         self.DB = DB
     
     def create_table(self):
-        print('Creating table breakdown')
+        print('Creating table history_date')
         try:
             self.DB.execute(self.create_table_query)
         except Exception as e:
