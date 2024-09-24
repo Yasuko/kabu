@@ -18,6 +18,7 @@ class HistoryWeek:
         StockSplits NUMERIC NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+    CREATE INDEX ON history_week (company_code);
     """
 
     DB = None

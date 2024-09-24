@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS company_officers (
     unexercised_value BIGINT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON company_officers (company_code);
 '''
 
 class CompanyOfficers:
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS company_officers (
     unexercised_value BIGINT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON company_officers (company_code);
     """
 
     DB = None

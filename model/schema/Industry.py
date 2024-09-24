@@ -29,7 +29,7 @@ class Industry:
     create_table_query = """
 CREATE TABLE IF NOT EXISTS industry (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7),
+    company_code VARCHAR(7) UNIQUE,
     address1 VARCHAR(255),
     address2 VARCHAR(255),
     city VARCHAR(100),
@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS industry (
     full_time_employees VARCHAR(50),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
     """
 
     DB = None

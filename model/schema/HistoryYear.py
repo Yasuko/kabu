@@ -18,6 +18,7 @@ class HistoryYear:
         StockSplits NUMERIC NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+    CREATE INDEX ON history_year (company_code);
     """
 
     DB = None

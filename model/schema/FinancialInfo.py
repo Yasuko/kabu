@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS financial_info (
     operating_margins NUMERIC,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON financial_info (company_code);
 '''
 
 class FinancialInfo:
@@ -53,7 +53,7 @@ class FinancialInfo:
     create_table_query = """
 CREATE TABLE IF NOT EXISTS financial_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7),
+    company_code VARCHAR(7) NOT NULL REFERENCES industry(company_code),
     enterprise_value NUMERIC,
     profit_margins NUMERIC,
     float_shares BIGINT,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS financial_info (
     operating_margins NUMERIC,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON financial_info (company_code);
     """
 
     DB = None

@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS risk_info (
     max_age INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON industry (company_code);
 '''
 
 class RiskInfo:
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS risk_info (
     max_age INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON risk_info (company_code);
     """
 
     DB = None
@@ -42,7 +42,7 @@ CREATE INDEX idx_company_code ON industry (company_code);
         self.DB = DB
     
     def create_table(self):
-        print('Creating table info')
+        print('Creating table risk info')
         try:
             self.DB.execute(self.create_table_query)
         except Exception as e:

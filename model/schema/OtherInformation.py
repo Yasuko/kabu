@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS other_info (
     number_of_analyst_opinions INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON other_info (company_code);
 '''
 
 class OtherInformation:
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS other_info (
     number_of_analyst_opinions INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON other_info (company_code);
     """
 
     DB = None

@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS market_info (
     two_hundred_day_average NUMERIC,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON market_info (company_code);
 '''
 
 class MarketInfo:
@@ -37,7 +37,7 @@ class MarketInfo:
     create_table_query = """
 CREATE TABLE IF NOT EXISTS market_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7),
+    company_code VARCHAR(7) NOT NULL REFERENCES industry(company_code),
     industry_id UUID NOT NULL,
     price_hint INTEGER,
     previous_close NUMERIC,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS market_info (
     two_hundred_day_average NUMERIC,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON market_info (company_code);
     """
 
     DB = None

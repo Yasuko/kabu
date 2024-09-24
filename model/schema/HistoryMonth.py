@@ -18,6 +18,7 @@ class HistoryMonth:
         StockSplits NUMERIC NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+    CREATE INDEX ON history_month (company_code);
     """
 
     DB = None

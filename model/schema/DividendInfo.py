@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS dividend_info (
     last_dividend_date BIGINT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON dividend_info (company_code);
 '''
 
 class DividendInfo:
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS dividend_info (
     last_dividend_date BIGINT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_company_code ON industry (company_code);
+CREATE INDEX ON dividend_info (company_code);
     """
 
     DB = None
