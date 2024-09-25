@@ -37,6 +37,8 @@ class PgSQL:
     def password(self, value): self._password = value
     
     def connect(self):
+        if self.conn != None:
+            return
         db_url = f"postgresql://{self._user}:{self._password}@{self._host}:{self._port}/{self._database}"
         print(db_url)
         self.conn = psycopg2.connect(db_url)
@@ -50,27 +52,43 @@ class PgSQL:
     クエリを実行する 
     '''
     def execute(self, query, params=None):
-        with self.conn.cursor() as cursor:
-            cursor.execute(query, params)
-            self.conn.commit()
+        try:
+            with self.conn.cursor() as cursor:
+                cursor.execute(query, params)
+                self.conn.commit()
+            return True
+        except Exception as e:
+            print(e)
+            exit()
+            return False
 
     '''
-    データを一見取得する
+    データを1件取得する
     '''
     def fetch_one(self, query, params=None):
-        with self.conn.cursor() as cursor:
-            cursor.execute(query, params)
-            result = cursor.fetchone()
-        return result
+        try:
+            with self.conn.cursor() as cursor:
+                cursor.execute(query, params)
+                result = cursor.fetchone()
+            return result
+        except Exception as e:
+            print(e)
+            exit()
+            return None
     
     '''
     データを全て取得する
     '''
     def fetch_all(self, query, params=None):
-        with self.conn.cursor() as cursor:
-            cursor.execute(query, params)
-            result = cursor.fetchall()
-        return result
+        try:
+            with self.conn.cursor() as cursor:
+                cursor.execute(query, params)
+                result = cursor.fetchall()
+            return result
+        except Exception as e:
+            print(e)
+            exit()
+            return None
 
     def close(self):
         self.conn.close()

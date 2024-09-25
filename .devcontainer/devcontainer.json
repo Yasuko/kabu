@@ -23,6 +23,8 @@
 	"extensions": [
 		"GitHub.copilot",
 		"naumovs.color-highlight",
+		"ms-python.python",
+		"ms-azuretools.vscode-docker"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

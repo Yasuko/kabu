@@ -15,5 +15,7 @@ RUN apt install -y vim less
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --upgrade setuptools
 
+RUN pip install python-dotenv psycopg2 uuid
+
 RUN mkdir /root/work
 
