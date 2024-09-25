@@ -2,7 +2,7 @@
 リスク情報 (RiskInfo) テーブルのスキーマを定義する
 '''
 
-from model.schema.RiskInfo import RiskInfoDBType
+from model.schema.RiskInfo import RiskInfoDBType, RiskInfoType
 from lib.pgsql import Pgsql
 
 
@@ -13,7 +13,7 @@ class RiskInfo:
         self.DB = Pgsql.Pgsql().connect()
     
     # レコードの登録
-    def insert_record(self, data: RiskInfoDBType):
+    def insert_record(self, data: RiskInfoType):
         query = """
         INSERT INTO
             risk_info

@@ -1,4 +1,12 @@
 import yfinance as yf
+
+from model.db.Industry import Industry
+from model.db.CompanyOfficers import CompanyOfficers
+from model.db.RiskInfo import RiskInfo
+from model.db.MarketInfo import MarketInfo
+from model.db.FinancialInfo import FinancialInfo
+from model.db.DividendInfo import DividendInfo
+from model.db.OtherInformation import OtherInformation
 from lib.pgsql import Pgsql
 
 # DB接続

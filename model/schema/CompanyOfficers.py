@@ -18,6 +18,20 @@ class CompanyOfficersDBType(CompanyOfficersType):
     id: str
     createdAt: str
 
+def ConvertToCompanyOfficersType(data: dict) -> CompanyOfficersType:
+    return CompanyOfficersType(
+        company_code = data['company_code'],
+        max_age = data['max_age'],
+        name = data['name'],
+        age = data['age'],
+        title = data['title'],
+        year_born = data['year_born'],
+        fiscal_year = data['fiscal_year'],
+        total_pay = data['total_pay'],
+        exercised_value = data['exercised_value'],
+        unexercised_value = data['unexercised_value'],
+    )
+
 class CompanyOfficers:
     # テーブル作成クエリ
     create_table_query = """

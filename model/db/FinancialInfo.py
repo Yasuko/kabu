@@ -85,4 +85,4 @@ class FinancialInfo:
         return records
 
     def get_latest_record_by_company_code(self, company_code):
-        return get_latest_records_by_company_code(company_code, limit=1)[0]
+        return self.get_latest_records_by_company_code(company_code, limit=1)[0]

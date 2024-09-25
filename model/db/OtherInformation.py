@@ -62,9 +62,12 @@ class OtherInformation:
 
     def get_latest_records_by_company_code(self, company_code: str, limit=10):
         query = """
-        SELECT * FROM other_info
-        WHERE company_code = %s
-        ORDER BY createdAt DESC
+        SELECT * FROM
+            other_info
+        WHERE
+            company_code = %s
+        ORDER BY
+            createdAt DESC
         LIMIT %s
         """
         records = self.DB.fetchAll(query, (company_code, limit))
