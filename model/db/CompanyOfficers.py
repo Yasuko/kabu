@@ -3,16 +3,19 @@
 '''
 
 from model.schema.CompanyOfficers import CompanyOfficersType, CompanyOfficersDBType
-
+from lib.pgsql import PgSQL
 class CompanyOfficers:
 
     DB = None
 
-    def __init__(self, DB):
-        self.DB = DB
+    def __init__(self, DB = None):
+        if DB is not None:
+            self.DB = DB
+        else:
+            self.DB = PgSQL().connect()
     
     # レコードの登録
-    def insert_record(self, data: CompanyOfficersType):
+    def insert_record(self, data: list[CompanyOfficersType]):
         query = """
         INSERT INTO
             company_officers
@@ -27,7 +30,10 @@ class CompanyOfficers:
             %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW()
         )
         """
-        self.DB.execute(query, (data,))
+        for d in data:
+            self.DB.execute(query, (*d,))
+
+
 
     # レコードの更新
     def update_record(self, id, **kwargs: CompanyOfficersDBType):
@@ -50,7 +56,7 @@ class CompanyOfficers:
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
         query = "SELECT * FROM company_officers WHERE id = %s"
-        record = self.DB.execute(query, (id,))
+        record = self.DB.fetch_one(query, (id,))
         return record
 
     # company_codeからレコードを検索、createdAtでソートし最新の20件を取得し返す
@@ -64,7 +70,7 @@ class CompanyOfficers:
             createdAt DESC
         LIMIT 20
         """
-        records = self.DB.execute(query, (company_code,))
+        records = self.DB.fetch_all(query, (company_code,))
         return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の5件を取得し返す
@@ -78,5 +84,5 @@ class CompanyOfficers:
             createdAt DESC
         LIMIT 5
         """
-        records = self.DB.execute(query, (company_code,))
+        records = self.DB.fetch_all(query, (company_code,))
         return records

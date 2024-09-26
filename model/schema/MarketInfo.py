@@ -5,7 +5,6 @@
 
 class MarketInfoType:
     company_code: str
-    industry_id: str
     price_hint: int
     previous_close: float
     open: float
@@ -33,13 +32,39 @@ class MarketInfoDBType(MarketInfoType):
     id: str
     createdAt: str
 
+def ConvertToMarketInfoType(data: dict) -> MarketInfoType:
+    return {
+        'company_code': data['companyCode'],
+        'price_hint': data['priceHint'],
+        'previous_close': data['previousClose'],
+        'open': data['open'],
+        'day_low': data['dayLow'],
+        'day_high': data['dayHigh'],
+        'regular_market_previous_close': data['regularMarketPreviousClose'],
+        'regular_market_open': data['regularMarketOpen'],
+        'regular_market_day_low': data['regularMarketDayLow'],
+        'regular_market_day_high': data['regularMarketDayHigh'],
+        'volume': data['volume'],
+        'regular_market_volume': data['regularMarketVolume'],
+        'average_volume': data['averageVolume'],
+        'average_volume_10days': data['averageVolume10days'],
+        'average_daily_volume_10day': data['averageDailyVolume10Day'],
+        'bid': data['bid'],
+        'ask': data['ask'],
+        'market_cap': data['marketCap'],
+        'fifty_two_week_low': data['fiftyTwoWeekLow'],
+        'fifty_two_week_high': data['fiftyTwoWeekHigh'],
+        'price_to_sales_trailing_12_months': data['priceToSalesTrailing12Months'],
+        'fifty_day_average': data['fiftyDayAverage'],
+        'two_hundred_day_average': data['twoHundredDayAverage']
+    }
+
 class MarketInfo:
     # テーブル作成クエリ
     create_table_query = """
 CREATE TABLE IF NOT EXISTS market_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7) NOT NULL REFERENCES industry(company_code),
-    industry_id UUID NOT NULL,
+    company_code VARCHAR(20) NOT NULL REFERENCES industry(company_code),
     price_hint INTEGER,
     previous_close NUMERIC,
     open NUMERIC,

@@ -39,6 +39,34 @@ class OtherInformationDBType(OtherInformationType):
     id: str
     createdAt: str
 
+def ConvertToOtherInformationType(data: dict) -> OtherInformationType:
+    return {
+        'company_code': data['companyCode'],
+        'currency': data['currency'],
+        'financial_currency': data['financialCurrency'],
+        'trailing_peg_ratio': data['trailingPegRatio'],
+        'exchange': data['exchange'],
+        'quote_type': data['quoteType'],
+        'symbol': data['symbol'],
+        'underlying_symbol': data['underlyingSymbol'],
+        'short_name': data['shortName'],
+        'long_name': data['longName'],
+        'first_trade_date_epoch_utc': data['firstTradeDateEpochUtc'],
+        'time_zone_full_name': data['timeZoneFullName'],
+        'time_zone_short_name': data['timeZoneShortName'],
+        'uuid': data['uuid'],
+        'message_board_id': data['messageBoardId'],
+        'gmt_offset_milliseconds': data['gmtOffSetMilliseconds'],
+        'current_price': data['currentPrice'],
+        'target_high_price': data['targetHighPrice'],
+        'target_low_price': data['targetLowPrice'],
+        'target_mean_price': data['targetMeanPrice'],
+        'target_median_price': data['targetMedianPrice'],
+        'recommendation_mean': data['recommendationMean'],
+        'recommendation_key': data['recommendationKey'],
+        'number_of_analyst_opinions': data['numberOfAnalystOpinions']
+    }
+
 '''
 OtherInformationのスキーマ定義
 '''
@@ -47,7 +75,7 @@ class OtherInformation:
     create_table_query = """
 CREATE TABLE IF NOT EXISTS other_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7),
+    company_code VARCHAR(20),
     currency VARCHAR(10),
     financial_currency VARCHAR(10),
     trailing_peg_ratio NUMERIC,

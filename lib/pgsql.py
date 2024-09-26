@@ -42,6 +42,7 @@ class PgSQL:
         db_url = f"postgresql://{self._user}:{self._password}@{self._host}:{self._port}/{self._database}"
         print(db_url)
         self.conn = psycopg2.connect(db_url)
+        return self
     
     def check_connection(self):
         if self.conn == None:

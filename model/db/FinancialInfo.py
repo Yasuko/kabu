@@ -4,7 +4,7 @@
 '''
 
 from model.schema.FinancialInfo import FinancialInfoType, FinancialInfoDBType
-from lib.pgsql import Pgsql
+from lib.pgsql import PgSQL
 
 class FinancialInfo:
 
@@ -14,7 +14,7 @@ class FinancialInfo:
         if DB is not None:
             self.DB = DB
         else:
-            self.DB = Pgsql.Pgsql().connect()
+            self.DB = PgSQL().connect()
     
     def insert_record(self, data: FinancialInfoType):
         query = """
@@ -28,8 +28,7 @@ class FinancialInfo:
             net_income_to_common, trailing_eps,
             forward_eps, peg_ratio, last_split_factor,
             last_split_date, enterprise_to_revenue,
-            enterprise_to_ebitda, fifty_two_week_change,
-            sandp_52_week_change, total_cash,
+            enterprise_to_ebitda, sandp_52_week_change, total_cash,
             total_cash_per_share, ebitda, total_debt, quick_ratio,
             current_ratio, total_revenue, debt_to_equity,
             revenue_per_share, return_on_assets,
@@ -40,7 +39,7 @@ class FinancialInfo:
             %s, %s, %s, %s, %s,
             %s, %s, %s, %s,
             %s, %s, %s, %s,
-            %s, %s, %s, %s, %s,
+            %s, %s, %s, %s,
             %s, %s, %s, %s,
             %s, %s, %s, %s, %s, %s,
             %s, %s, %s, %s, %s,
@@ -48,7 +47,7 @@ class FinancialInfo:
             %s, %s, NOW()
         )
         """
-        self.DB.execute(query, (data, ))
+        self.DB.execute(query, (*data, ))
 
     def update_record(self, id, **kwargs: FinancialInfoDBType):
         set_clause = ', '.join([f"{key} = %({key})s" for key in kwargs.keys()])
@@ -68,7 +67,7 @@ class FinancialInfo:
 
     def get_record_by_id(self, id):
         query = "SELECT * FROM financial_info WHERE id = %s"
-        record = self.DB.fetchOne(query, (id,))
+        record = self.DB.fetch_one(query, (id,))
         return record
 
     def get_latest_records_by_company_code(self, company_code, limit=10):
@@ -81,7 +80,7 @@ class FinancialInfo:
             createdAt DESC
         LIMIT %s
         """
-        records = self.DB.fetchAll(query, (company_code, limit))
+        records = self.DB.fetch_all(query, (company_code, limit))
         return records
 
     def get_latest_record_by_company_code(self, company_code):

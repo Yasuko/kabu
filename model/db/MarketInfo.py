@@ -4,7 +4,7 @@
 '''
 
 from model.schema.MarketInfo import MarketInfoType, MarketInfoDBType
-from lib.pgsql import Pgsql
+from lib.pgsql import PgSQL
 
 class MarketInfo:
 
@@ -14,7 +14,7 @@ class MarketInfo:
         if DB is not None:
             self.DB = DB
         else:
-            self.DB = Pgsql.Pgsql().connect()
+            self.DB = PgSQL().connect()
     
     # レコードの登録
     def insert_record(self, data: MarketInfoType):
@@ -42,7 +42,7 @@ class MarketInfo:
         )
         RETURNING id;
         """
-        new_id = self.DB.fetchOne(query, (data,))
+        new_id = self.DB.fetch_one(query, (*data,))
         return new_id
 
     # レコードの更新
@@ -66,7 +66,7 @@ class MarketInfo:
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
         query = "SELECT * FROM market_info WHERE id = %s;"
-        record = self.DB.fetchOne(query, (id,))
+        record = self.DB.fetch_one(query, (id,))
         return record
 
     # company_codeからレコードを検索、createdAtでソートし最新の10件を取得し返す
@@ -80,7 +80,7 @@ class MarketInfo:
             createdAt DESC 
         LIMIT 5;
         """
-        records = self.DB.fetchAll(query, (company_code,))
+        records = self.DB.fetch_all(query, (company_code,))
         return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の1件を取得し返す
@@ -94,6 +94,6 @@ class MarketInfo:
             createdAt DESC 
         LIMIT 1;
         """
-        record = self.DB.fetchOne(query, (company_code,))
+        record = self.DB.fetch_one(query, (company_code,))
         return record
 

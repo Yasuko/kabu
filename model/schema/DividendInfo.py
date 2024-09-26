@@ -19,13 +19,26 @@ class DividendInfoDBType(DividendInfoType):
     id: str
     createdAt: str
 
+def ConvertToDividendInfoType(data: dict) -> DividendInfoType:
+    return {
+        'company_code': data['companyCode'],
+        'dividend_rate': data['dividendRate'],
+        'dividend_yield': data['dividendYield'],
+        'ex_dividend_date': data['exDividendDate'],
+        'payout_ratio': data['payoutRatio'],
+        'five_year_avg_dividend_yield': data['fiveYearAvgDividendYield'],
+        'trailing_annual_dividend_rate': data['trailingAnnualDividendRate'],
+        'trailing_annual_dividend_yield': data['trailingAnnualDividendYield'],
+        'last_dividend_value': data['lastDividendValue'],
+        'last_dividend_date': data['lastDividendDate']
+    }
 
 class DividendInfo:
     # テーブル作成クエリ
     create_table_query = """
 CREATE TABLE IF NOT EXISTS dividend_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7),
+    company_code VARCHAR(20),
     dividend_rate NUMERIC,
     dividend_yield NUMERIC,
     ex_dividend_date BIGINT,

@@ -17,13 +17,25 @@ class RiskInfoDBType(RiskInfoType):
     id: str
     createdAt: int
 
+def ConvertToRiskInfoType(data: dict) -> RiskInfoType:
+    return {
+        'company_code': data['companyCode'],
+        'audit_risk': data['auditRisk'],
+        'board_risk': data['boardRisk'],
+        'compensation_risk': data['compensationRisk'],
+        'shareholder_rights_risk': data['shareHolderRightsRisk'],
+        'overall_risk': data['overallRisk'],
+        'governance_epoch_date': data['governanceEpochDate'],
+        'compensation_as_of_epoch_date': data['compensationAsOfEpochDate'],
+        'max_age': data['maxAge']
+    }
 
 class RiskInfo:
     # テーブル作成クエリ
     create_table_query = """
 CREATE TABLE IF NOT EXISTS risk_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7),
+    company_code VARCHAR(20),
     audit_risk INTEGER,
     board_risk INTEGER,
     compensation_risk INTEGER,

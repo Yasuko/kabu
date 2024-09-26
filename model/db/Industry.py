@@ -2,9 +2,8 @@
 企業情報 (industry)
 
 '''
-
 from model.schema.Industry import IndustryType, IndustryDBType
-from lib.pgsql import Pgsql
+from lib.pgsql import PgSQL
 
 class Industry:
 
@@ -14,10 +13,11 @@ class Industry:
         if DB is not None:
             self.DB = DB
         else:
-            self.DB = Pgsql.Pgsql().connect()
+            self.DB = PgSQL().connect()
     
     # レコードの登録
     def insert_record(self, data: IndustryType):
+        print(data)
         query = """
         INSERT INTO
             industry
@@ -37,7 +37,8 @@ class Industry:
         )
         RETURNING id;
         """
-        new_id = self.DB.fetchOne(query, (data,))
+        print('insert industry')
+        new_id = self.DB.fetch_one(query, (*data,))
         return new_id
 
     # レコードの更新
@@ -61,7 +62,7 @@ class Industry:
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
         query = "SELECT * FROM industry WHERE id = %s;"
-        record = self.DB.fetchOne(query, (id,))
+        record = self.DB.fetch_one(query, (id,))
         return record
 
     # company_codeからレコードを検索、createdAtでソートし最新の5件を取得し返す
@@ -75,7 +76,7 @@ class Industry:
             createdAt DESC
         LIMIT 5;
         """
-        records = self.DB.fetchAll(query, (company_code,))
+        records = self.DB.fetch_all(query, (company_code,))
         return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の1件を取得し返す
@@ -89,7 +90,7 @@ class Industry:
             createdAt DESC
         LIMIT 1;
         """
-        record = self.DB.fetchOne(query, (company_code,))
+        record = self.DB.fetch_one(query, (company_code,))
         return record
 
     # idからレコードを1件検索し、他のテーブルをcompany_codeでjoinし返す
@@ -114,7 +115,7 @@ class Industry:
         WHERE
             i.id = %s;
         """
-        record = self.DB.fetchOne(query, (id,))
+        record = self.DB.fetch_one(query, (id,))
         return record
 
     # company_codeからレコードを検索し、他のテーブルをcompany_codeでjoinし、createdAtでソートし最新の5件を取得し返す
@@ -142,5 +143,5 @@ class Industry:
             i.createdAt DESC
         LIMIT 5;
         """
-        records = self.DB.fetchAll(query, (company_code,))
+        records = self.DB.fetch_all(query, (company_code,))
         return records

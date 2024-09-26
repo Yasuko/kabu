@@ -25,7 +25,6 @@ class FinancialInfoType:
     last_split_date: int
     enterprise_to_revenue: float
     enterprise_to_ebitda: float
-    fifty_two_week_change: float
     sandp_52_week_change: float
     total_cash: float
     total_cash_per_share: float
@@ -49,12 +48,56 @@ class FinancialInfoDBType(FinancialInfoType):
     id: str
     createdAt: str
 
+def ConvertToFinancialInfoType(data: dict) -> FinancialInfoType:
+    return {
+        'company_code': data['companyCode'],
+        'enterprise_value': data['enterpriseValue'],
+        'profit_margins': data['profitMargins'],
+        'float_shares': data['floatShares'],
+        'shares_outstanding': data['sharesOutstanding'],
+        'held_percent_insiders': data['heldPercentInsiders'],
+        'held_percent_institutions': data['heldPercentInstitutions'],
+        'implied_shares_outstanding': data['impliedSharesOutstanding'],
+        'book_value': data['bookValue'],
+        'price_to_book': data['priceToBook'],
+        'last_fiscal_year_end': data['lastFiscalYearEnd'],
+        'next_fiscal_year_end': data['nextFiscalYearEnd'],
+        'most_recent_quarter': data['mostRecentQuarter'],
+        'net_income_to_common': data['netIncomeToCommon'],
+        'trailing_eps': data['trailingEps'],
+        'forward_eps': data['forwardEps'],
+        'peg_ratio': data['pegRatio'],
+        'last_split_factor': data['lastSplitFactor'],
+        'last_split_date': data['lastSplitDate'],
+        'enterprise_to_revenue': data['enterpriseToRevenue'],
+        'enterprise_to_ebitda': data['enterpriseToEbitda'],
+        'sandp_52_week_change': data['SandP52WeekChange'],
+        'total_cash': data['totalCash'],
+        'total_cash_per_share': data['totalCashPerShare'],
+        'ebitda': data['ebitda'],
+        'total_debt': data['totalDebt'],
+        'quick_ratio': data['quickRatio'],
+        'current_ratio': data['currentRatio'],
+        'total_revenue': data['totalRevenue'],
+        'debt_to_equity': data['debtToEquity'],
+        'revenue_per_share': data['revenuePerShare'],
+        'return_on_assets': data['returnOnAssets'],
+        'return_on_equity': data['returnOnEquity'],
+        'free_cashflow': data['freeCashflow'],
+        'operating_cashflow': data['operatingCashflow'],
+        'revenue_growth': data['revenueGrowth'],
+        'gross_margins': data['grossMargins'],
+        'ebitda_margins': data['ebitdaMargins'],
+        'operating_margins': data['operatingMargins']
+
+    }
+
 class FinancialInfo:
     # テーブル作成クエリ
     create_table_query = """
 CREATE TABLE IF NOT EXISTS financial_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7) NOT NULL REFERENCES industry(company_code),
+    company_code VARCHAR(20) NOT NULL REFERENCES industry(company_code),
     enterprise_value NUMERIC,
     profit_margins NUMERIC,
     float_shares BIGINT,
@@ -75,7 +118,6 @@ CREATE TABLE IF NOT EXISTS financial_info (
     last_split_date BIGINT,
     enterprise_to_revenue NUMERIC,
     enterprise_to_ebitda NUMERIC,
-    fifty_two_week_change NUMERIC,
     sandp_52_week_change NUMERIC,
     total_cash NUMERIC,
     total_cash_per_share NUMERIC,

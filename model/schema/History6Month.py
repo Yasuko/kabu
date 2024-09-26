@@ -7,7 +7,7 @@ class History6Month:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS history_6month (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-        company_code VARCHAR(7) NOT NULL REFERENCES industry(company_code),
+        company_code VARCHAR(20) NOT NULL REFERENCES industry(company_code),
         Date DATE NOT NULL,
         Open NUMERIC NOT NULL,
         High NUMERIC NOT NULL,

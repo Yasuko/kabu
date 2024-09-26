@@ -2,16 +2,17 @@
 その他の情報 (other_information) テーブルのスキーマを定義
 '''
 
-from model.schema.OtherInformation import OtherInformationType
-from model.schema.OtherInformation import OtherInformationDBType
+from model.schema.OtherInformation import OtherInformationType, OtherInformationDBType
+from lib.pgsql import PgSQL
 
 class OtherInformation:
-    # テーブル作成クエリ
-
     DB = None
 
-    def __init__(self, DB):
-        self.DB = DB
+    def __init__(self, DB = None):
+        if DB is not None:
+            self.DB = DB
+        else:
+            self.DB = PgSQL().connect()
     
     def insert_record(self, data: OtherInformationDBType):
         query = """
@@ -37,7 +38,7 @@ class OtherInformation:
             %s, %s, %s, %s, NOW()
         )
         """
-        self.DB.execute(query, (data,))
+        self.DB.execute(query, (*data,))
 
     def update_record(self, id: str, **kwargs: OtherInformationDBType):
         set_clause = ", ".join([f"{key} = %s" for key in kwargs.keys()])
@@ -57,7 +58,7 @@ class OtherInformation:
 
     def get_record_by_id(self, id: str):
         query = "SELECT * FROM other_info WHERE id = %s"
-        record = self.DB.fetchOne(query, (id,))
+        record = self.DB.fetch_one(query, (id,))
         return record
 
     def get_latest_records_by_company_code(self, company_code: str, limit=10):
@@ -70,7 +71,7 @@ class OtherInformation:
             createdAt DESC
         LIMIT %s
         """
-        records = self.DB.fetchAll(query, (company_code, limit))
+        records = self.DB.fetch_all(query, (company_code, limit))
         return records
 
     def get_latest_record_by_company_code(self, company_code: str):

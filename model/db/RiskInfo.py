@@ -3,14 +3,17 @@
 '''
 
 from model.schema.RiskInfo import RiskInfoDBType, RiskInfoType
-from lib.pgsql import Pgsql
+from lib.pgsql import PgSQL
 
 
 class RiskInfo:
     DB = None
 
-    def __init__(self, DB):
-        self.DB = Pgsql.Pgsql().connect()
+    def __init__(self, DB = None):
+        if DB is not None:
+            self.DB = DB
+        else:
+            self.DB = PgSQL().connect()
     
     # レコードの登録
     def insert_record(self, data: RiskInfoType):
@@ -31,7 +34,7 @@ class RiskInfo:
             %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW()
         )
         """
-        self.DB.execute(query, (data,))
+        self.DB.execute(query, (*data,))
 
     # レコードの更新
     def update_record(self, id: str, **kwargs: RiskInfoDBType):
@@ -53,7 +56,7 @@ class RiskInfo:
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
         query = "SELECT * FROM risk_info WHERE id = %s"
-        record = self.DB.execute(query, (id,))
+        record = self.DB.fetch_one(query, (id,))
         return record
 
     # company_codeからレコードを検索、createdAtでソートし最新の10件を取得し返す
@@ -67,7 +70,7 @@ class RiskInfo:
             createdAt DESC
         LIMIT 10
         """
-        records = self.DB.execute(query, (company_code,))
+        records = self.DB.fetch_all(query, (company_code,))
         return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の1件を取得し返す
@@ -81,5 +84,5 @@ class RiskInfo:
             createdAt DESC
         LIMIT 1
         """
-        record = self.DB.execute(query, (company_code,))
+        record = self.DB.fetch_one(query, (company_code,))
         return record

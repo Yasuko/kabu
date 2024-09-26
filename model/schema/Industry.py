@@ -21,16 +21,37 @@ class IndustryType:
     long_business_summary: str
     full_time_employees: str
 
+
 class IndustryDBType(IndustryType):
     id: str
     createdAt: str
+
+def ConvertToIndustryType(data: dict) -> IndustryType:
+    return {
+        'company_code': data['companyCode'],
+        'address1': data['address1'],
+        'address2': data['address2'],
+        'city': data['city'],
+        'zip': data['zip'],
+        'country': data['country'],
+        'phone': data['phone'],
+        'website': data['website'],
+        'industry': data['industry'],
+        'industry_key': data['industryKey'],
+        'industry_disp': data['industryDisp'],
+        'sector': data['sector'],
+        'sector_key': data['sectorKey'],
+        'sector_disp': data['sectorDisp'],
+        'long_business_summary': data['longBusinessSummary'],
+        'full_time_employees': data['fullTimeEmployees']
+    }
 
 class Industry:
     # テーブル作成クエリ
     create_table_query = """
 CREATE TABLE IF NOT EXISTS industry (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(7) UNIQUE,
+    company_code VARCHAR(20) UNIQUE,
     address1 VARCHAR(255),
     address2 VARCHAR(255),
     city VARCHAR(100),
