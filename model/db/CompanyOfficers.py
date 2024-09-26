@@ -31,6 +31,7 @@ class CompanyOfficers:
         )
         """
         for d in data:
+            print(d)
             self.DB.execute(query, (*d,))
 
 

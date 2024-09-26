@@ -17,7 +17,6 @@ class Industry:
     
     # レコードの登録
     def insert_record(self, data: IndustryType):
-        print(data)
         query = """
         INSERT INTO
             industry

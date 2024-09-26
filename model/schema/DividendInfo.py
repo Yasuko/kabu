@@ -22,15 +22,15 @@ class DividendInfoDBType(DividendInfoType):
 def ConvertToDividendInfoType(data: dict) -> DividendInfoType:
     return {
         'company_code': data['companyCode'],
-        'dividend_rate': data['dividendRate'],
-        'dividend_yield': data['dividendYield'],
-        'ex_dividend_date': data['exDividendDate'],
-        'payout_ratio': data['payoutRatio'],
-        'five_year_avg_dividend_yield': data['fiveYearAvgDividendYield'],
-        'trailing_annual_dividend_rate': data['trailingAnnualDividendRate'],
-        'trailing_annual_dividend_yield': data['trailingAnnualDividendYield'],
-        'last_dividend_value': data['lastDividendValue'],
-        'last_dividend_date': data['lastDividendDate']
+        'dividend_rate': float(data['dividendRate']),
+        'dividend_yield': float(data['dividendYield']),
+        'ex_dividend_date': int(data['exDividendDate']),
+        'payout_ratio': float(data['payoutRatio']),
+        'five_year_avg_dividend_yield': float(data['fiveYearAvgDividendYield']),
+        'trailing_annual_dividend_rate': float(data['trailingAnnualDividendRate']),
+        'trailing_annual_dividend_yield': float(data['trailingAnnualDividendYield']),
+        'last_dividend_value': float(data['lastDividendValue']),
+        'last_dividend_date': int(data['lastDividendDate'])
     }
 
 class DividendInfo:

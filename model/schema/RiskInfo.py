@@ -20,14 +20,14 @@ class RiskInfoDBType(RiskInfoType):
 def ConvertToRiskInfoType(data: dict) -> RiskInfoType:
     return {
         'company_code': data['companyCode'],
-        'audit_risk': data['auditRisk'],
-        'board_risk': data['boardRisk'],
-        'compensation_risk': data['compensationRisk'],
-        'shareholder_rights_risk': data['shareHolderRightsRisk'],
-        'overall_risk': data['overallRisk'],
-        'governance_epoch_date': data['governanceEpochDate'],
-        'compensation_as_of_epoch_date': data['compensationAsOfEpochDate'],
-        'max_age': data['maxAge']
+        'audit_risk': int(data['auditRisk']),
+        'board_risk': int(data['boardRisk']),
+        'compensation_risk': int(data['compensationRisk']),
+        'shareholder_rights_risk': int(data['shareHolderRightsRisk']),
+        'overall_risk': int(data['overallRisk']),
+        'governance_epoch_date': int(data['governanceEpochDate']),
+        'compensation_as_of_epoch_date': int(data['compensationAsOfEpochDate']),
+        'max_age': int(data['maxAge'])
     }
 
 class RiskInfo:

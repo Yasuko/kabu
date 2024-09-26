@@ -18,21 +18,24 @@ class CompanyOfficersDBType(CompanyOfficersType):
     id: str
     createdAt: str
 
-def ConvertToCompanyOfficersType(company_code: str, data: list[dict]) -> list[CompanyOfficersType]:
+def ConvertToCompanyOfficersType(
+    company_code: str,
+    data: list[dict]
+) -> list[CompanyOfficersType]:
     officers = []
     for d in data:
         print(d)
         officers.append({
             'company_code': company_code,
-            'max_age': d['maxAge'],
+            'max_age': int(d['maxAge']),
             'name': d['name'],
-            'age': d['age'] if 'age' in d else 0,
+            'age': int(d['age']) if 'age' in d else 0,
             'title': d['title'],
-            'year_born': d['yearBorn'] if 'yearBorn' in d else 0,
-            'fiscal_year': d['fiscalYear'],
-            'total_pay': d['totalPay'] if 'totalPay' in d else 0,
-            'exercised_value': d['exercisedValue'],
-            'unexercised_value': d['unexercisedValue']
+            'year_born': int(d['yearBorn']) if 'yearBorn' in d else 0,
+            'fiscal_year': int(d['fiscalYear']),
+            'total_pay': int(d['totalPay']) if 'totalPay' in d else 0,
+            'exercised_value': int(d['exercisedValue']),
+            'unexercised_value': int(d['unexercisedValue'])
         })
     return officers
 

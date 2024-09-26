@@ -27,6 +27,7 @@ class IndustryDBType(IndustryType):
     createdAt: str
 
 def ConvertToIndustryType(data: dict) -> IndustryType:
+    print(data)
     return {
         'company_code': data['companyCode'],
         'address1': data['address1'],

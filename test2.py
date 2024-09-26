@@ -21,7 +21,7 @@ from model.schema.OtherInformation import OtherInformationType, OtherInformation
 while True:
     try:
         msft = yf.Ticker("9984.T")
-        print(msft)
+        print(msft.session)
         data = msft.info
         data['companyCode'] = '9984'
         #print(data)
@@ -52,7 +52,7 @@ print(_otherInformation)
 print('Inserting Industry')
 Industry().insert_record(ConvertToIndustryType(data))
 print('Inserting CompanyOfficers')
-CompanyOfficers().insert_record(ConvertToCompanyOfficersType(data))
+CompanyOfficers().insert_record(ConvertToCompanyOfficersType(data['companyCode'], data['companyOfficers']))
 print('Inserting RiskInfo')
 RiskInfo().insert_record(ConvertToRiskInfoType(data))
 print('Inserting MarketInfo')
