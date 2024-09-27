@@ -4,6 +4,7 @@
 '''
 from model.schema.Industry import IndustryType, IndustryDBType
 from lib.pgsql import PgSQL
+from lib.utils import query_convert
 
 class Industry:
 
@@ -17,27 +18,22 @@ class Industry:
     
     # レコードの登録
     def insert_record(self, data: IndustryType):
-        query = """
+        q, v, i = query_convert(data, IndustryType)
+        query = f"""
         INSERT INTO
             industry
         (
-            company_code, address1, address2,
-            city, zip, country, phone, website,
-            industry, industry_key, industry_disp,
-            sector, sector_key, sector_disp,
-            long_business_summary, full_time_employees,
+            {q},
             createdAt
         )
         VALUES
         (
-            %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, NOW()
+            {v},
+            NOW()
         )
-        RETURNING id;
         """
-        print('insert industry')
-        new_id = self.DB.fetch_one(query, (*data,))
+        new_id = self.DB.execute(query, (i))
+        print('Insert Industory new_id:', new_id)
         return new_id
 
     # レコードの更新
@@ -70,7 +66,7 @@ class Industry:
         SELECT * FROM
             industry
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT 5;
@@ -84,7 +80,7 @@ class Industry:
         SELECT * FROM
             industry
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT 1;
@@ -100,17 +96,17 @@ class Industry:
         FROM
             industry i
         LEFT JOIN
-            company_officers co ON i.company_code = co.company_code
+            company_officers co ON i.companyCode = co.companyCode
         LEFT JOIN
-            dividend_info di ON i.company_code = di.company_code
+            dividend_info di ON i.companyCode = di.companyCode
         LEFT JOIN
-            financial_info fi ON i.company_code = fi.company_code
+            financial_info fi ON i.companyCode = fi.companyCode
         LEFT JOIN
-            market_info mi ON i.company_code = mi.company_code
+            market_info mi ON i.companyCode = mi.companyCode
         LEFT JOIN
-            other_information oi ON i.company_code = oi.company_code
+            other_information oi ON i.companyCode = oi.companyCode
         LEFT JOIN
-            risk_info ri ON i.company_code = ri.company_code
+            risk_info ri ON i.companyCode = ri.companyCode
         WHERE
             i.id = %s;
         """
@@ -125,19 +121,19 @@ class Industry:
         FROM
             industry i
         LEFT JOIN
-            company_officers co ON i.company_code = co.company_code
+            company_officers co ON i.companyCode = co.companyCode
         LEFT JOIN
-            dividend_info di ON i.company_code = di.company_code
+            dividend_info di ON i.companyCode = di.companyCode
         LEFT JOIN
-            financial_info fi ON i.company_code = fi.company_code
+            financial_info fi ON i.companyCode = fi.companyCode
         LEFT JOIN
-            market_info mi ON i.company_code = mi.company_code
+            market_info mi ON i.companyCode = mi.companyCode
         LEFT JOIN
-            other_information oi ON i.company_code = oi.company_code
+            other_information oi ON i.companyCode = oi.companyCode
         LEFT JOIN
-            risk_info ri ON i.company_code = ri.company_code
+            risk_info ri ON i.companyCode = ri.companyCode
         WHERE
-            i.company_code = %s
+            i.companyCode = %s
         ORDER BY
             i.createdAt DESC
         LIMIT 5;

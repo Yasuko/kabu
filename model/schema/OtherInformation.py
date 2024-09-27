@@ -1,7 +1,10 @@
-'''
-その他の情報 (other_information) テーブルのスキーマを定義
+from lib.utils import validate
 
 '''
+その他の情報 (other_information) テーブルのスキーマを定義
+'''
+
+from lib.utils import validate
 
 '''
 OtherInformationの型定義
@@ -40,32 +43,14 @@ class OtherInformationDBType(OtherInformationType):
     createdAt: str
 
 def ConvertToOtherInformationType(data: dict) -> OtherInformationType:
-    return {
-        'company_code': data['companyCode'],
-        'currency': data['currency'],
-        'financial_currency': data['financialCurrency'],
-        'trailing_peg_ratio': float(data['trailingPegRatio']),
-        'exchange': data['exchange'],
-        'quote_type': data['quoteType'],
-        'symbol': data['symbol'],
-        'underlying_symbol': data['underlyingSymbol'],
-        'short_name': data['shortName'],
-        'long_name': data['longName'],
-        'first_trade_date_epoch_utc': int(data['firstTradeDateEpochUtc']),
-        'time_zone_full_name': data['timeZoneFullName'],
-        'time_zone_short_name': data['timeZoneShortName'],
-        'uuid': data['uuid'],
-        'message_board_id': data['messageBoardId'],
-        'gmt_offset_milliseconds': int(data['gmtOffSetMilliseconds']),
-        'current_price': float(data['currentPrice']),
-        'target_high_price': float(data['targetHighPrice']),
-        'target_low_price': float(data['targetLowPrice']),
-        'target_mean_price': float(data['targetMeanPrice']),
-        'target_median_price': float(data['targetMedianPrice']),
-        'recommendation_mean': float(data['recommendationMean']),
-        'recommendation_key': data['recommendationKey'],
-        'number_of_analyst_opinions': int(data['numberOfAnalystOpinions'])
-    }
+    result = {}
+    for key in OtherInformationType.__annotations__.keys():
+        if key in data:
+            result[key] = validate(data[key], OtherInformationType.__annotations__[key])
+        else:
+            result[key] = validate('', OtherInformationType.__annotations__[key])
+    #print('Validate Test: ', result)
+    return result
 
 '''
 OtherInformationのスキーマ定義
@@ -75,7 +60,7 @@ class OtherInformation:
     create_table_query = """
 CREATE TABLE IF NOT EXISTS other_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(20),
+    companyCode VARCHAR(20),
     currency VARCHAR(10),
     financial_currency VARCHAR(10),
     trailing_peg_ratio NUMERIC,
@@ -101,7 +86,7 @@ CREATE TABLE IF NOT EXISTS other_info (
     number_of_analyst_opinions INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX ON other_info (company_code);
+CREATE INDEX ON other_info (companyCode);
     """
 
     DB = None

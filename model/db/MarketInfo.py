@@ -5,6 +5,7 @@
 
 from model.schema.MarketInfo import MarketInfoType, MarketInfoDBType
 from lib.pgsql import PgSQL
+from lib.utils import query_convert
 
 class MarketInfo:
 
@@ -18,32 +19,22 @@ class MarketInfo:
     
     # レコードの登録
     def insert_record(self, data: MarketInfoType):
-        query = """
+        q, v, i = query_convert(data, MarketInfoType)
+        query = f"""
         INSERT INTO
             market_info
         (
-            company_code, industry_id, price_hint,
-            previous_close, open, day_low, day_high, 
-            regular_market_previous_close,
-            regular_market_open, regular_market_day_low, 
-            regular_market_day_high, volume,
-            regular_market_volume, average_volume, 
-            average_volume_10days, average_daily_volume_10day,
-            bid, ask, market_cap, fifty_two_week_low,
-            fifty_two_week_high, price_to_sales_trailing_12_months, 
-            fifty_day_average, two_hundred_day_average, createdAt
+            {q},
+            createdAt
         )
         VALUES
         (
-            %s, %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s, %s, %s,
+            {v},
             NOW()
         )
-        RETURNING id;
         """
-        new_id = self.DB.fetch_one(query, (*data,))
-        return new_id
+        result = self.DB.execute(query, (i))
+        return result
 
     # レコードの更新
     def update_record(self, id, **kwargs: MarketInfoDBType):
@@ -75,7 +66,7 @@ class MarketInfo:
         SELECT * FROM
             market_info 
         WHERE
-            company_code = %s 
+            companyCode = %s 
         ORDER BY
             createdAt DESC 
         LIMIT 5;
@@ -89,7 +80,7 @@ class MarketInfo:
         SELECT * FROM
             market_info 
         WHERE
-            company_code = %s 
+            companyCode = %s 
         ORDER BY
             createdAt DESC 
         LIMIT 1;

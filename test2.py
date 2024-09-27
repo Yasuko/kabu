@@ -23,9 +23,16 @@ while True:
         msft = yf.Ticker("9984.T")
         print(msft.session)
         data = msft.info
-        data['companyCode'] = '9984'
-        #print(data)
-        break
+        #print('Return API Result :', data)
+        
+        if 'industryKey' in data:
+            data['companyCode'] = '9984'
+            #print(data)
+            break
+        print('API Result is None')
+        sys.sleep(5)
+        continue
+
     except Exception as e:
         print(e)
         sys.sleep(5)

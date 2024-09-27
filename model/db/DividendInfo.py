@@ -5,6 +5,7 @@
 
 from model.schema.DividendInfo import DividendInfoDBType, DividendInfoType
 from lib.pgsql import PgSQL
+from lib.utils import query_convert
 
 class DividendInfo:
 
@@ -18,26 +19,22 @@ class DividendInfo:
     
     # レコードの登録
     def insert_record(self, data: DividendInfoType):
-        query = """
+        q, v, i = query_convert(data, DividendInfoType)
+        query = f"""
         INSERT INTO
             dividend_info
         (
-            company_code, dividend_rate, dividend_yield,
-            ex_dividend_date, payout_ratio, 
-            five_year_avg_dividend_yield,
-            trailing_annual_dividend_rate,
-            trailing_annual_dividend_yield, 
-            last_dividend_value, last_dividend_date, createdAt
+            {q},
+            createdAt
         )
         VALUES
         (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW()
+            {v},
+            NOW()
         );
-        RETURNING id;
         """
-        self.DB.execute(query, (*data,))
-        new_id = self.DB.fetch_one()
-        return new_id
+        result = self.DB.execute(query, (i))
+        return result
 
     # レコードの更新
     def update_record(self, id, **kwargs: DividendInfoDBType):
@@ -70,7 +67,7 @@ class DividendInfo:
         SELECT * FROM
             dividend_info 
         WHERE
-            company_code = %s 
+            companyCode = %s 
         ORDER BY
             createdAt DESC 
         LIMIT 10;
@@ -84,7 +81,7 @@ class DividendInfo:
         SELECT * FROM
             dividend_info 
         WHERE
-            company_code = %s 
+            companyCode = %s 
         ORDER BY
             createdAt DESC 
         LIMIT 1;

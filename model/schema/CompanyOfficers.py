@@ -2,17 +2,19 @@
 役員情報 (company_officers) テーブルのスキーマを定義するモジュール
 '''
 
+from lib.utils import validate
+
 class CompanyOfficersType:
-    company_code: str
-    max_age: int
+    companyCode: str
+    maxAge: int
     name: str
     age: int
     title: str
-    year_born: int
-    fiscal_year: int
-    total_pay: int
-    exercised_value: int
-    unexercised_value: int
+    yearBorn: int
+    fiscalYear: int
+    totalPay: int
+    exercisedValue: int
+    unexercisedValue: int
 
 class CompanyOfficersDBType(CompanyOfficersType):
     id: str
@@ -24,19 +26,16 @@ def ConvertToCompanyOfficersType(
 ) -> list[CompanyOfficersType]:
     officers = []
     for d in data:
-        print(d)
-        officers.append({
-            'company_code': company_code,
-            'max_age': int(d['maxAge']),
-            'name': d['name'],
-            'age': int(d['age']) if 'age' in d else 0,
-            'title': d['title'],
-            'year_born': int(d['yearBorn']) if 'yearBorn' in d else 0,
-            'fiscal_year': int(d['fiscalYear']),
-            'total_pay': int(d['totalPay']) if 'totalPay' in d else 0,
-            'exercised_value': int(d['exercisedValue']),
-            'unexercised_value': int(d['unexercisedValue'])
-        })
+        result = {
+            'companyCode': company_code
+        }
+        for key in CompanyOfficersType.__annotations__.keys():
+            if key in d:
+                result[key] = validate(d[key], CompanyOfficersType.__annotations__[key])
+            else:
+                result[key] = validate('', CompanyOfficersType.__annotations__[key])
+        #print('Validate Test: ', result)
+        officers.append(result)
     return officers
 
 class CompanyOfficers:
@@ -44,19 +43,19 @@ class CompanyOfficers:
     create_table_query = """
 CREATE TABLE IF NOT EXISTS company_officers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(20),
-    max_age INTEGER,
+    companyCode VARCHAR(20) NOT NULL,
+    maxAge INTEGER,
     name VARCHAR(255),
     age INTEGER,
     title VARCHAR(255),
-    year_born INTEGER,
-    fiscal_year INTEGER,
-    total_pay BIGINT,
-    exercised_value BIGINT,
-    unexercised_value BIGINT,
+    yearBorn INTEGER,
+    fiscalYear INTEGER,
+    totalPay BIGINT,
+    exercisedValue BIGINT,
+    unexercisedValue BIGINT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX ON company_officers (company_code);
+CREATE INDEX ON company_officers (companyCode);
     """
 
     DB = None

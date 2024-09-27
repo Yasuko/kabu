@@ -7,7 +7,7 @@ class History6Month:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS history_6month (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-        company_code VARCHAR(20) NOT NULL REFERENCES industry(company_code),
+        companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
         Open NUMERIC NOT NULL,
         High NUMERIC NOT NULL,
@@ -18,7 +18,7 @@ class History6Month:
         StockSplits NUMERIC NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    CREATE INDEX ON history_6month (company_code);
+    CREATE INDEX ON history_6month (companyCode);
     """
 
     DB = None

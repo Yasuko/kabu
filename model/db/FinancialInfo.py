@@ -5,6 +5,7 @@
 
 from model.schema.FinancialInfo import FinancialInfoType, FinancialInfoDBType
 from lib.pgsql import PgSQL
+from lib.utils import query_convert
 
 class FinancialInfo:
 
@@ -17,37 +18,17 @@ class FinancialInfo:
             self.DB = PgSQL().connect()
     
     def insert_record(self, data: FinancialInfoType):
-        query = """
+        q, v, i = query_convert(data, FinancialInfoType)
+        query = f"""
         INSERT INTO financial_info (
-            company_code, enterprise_value, profit_margins,
-            float_shares, shares_outstanding,
-            held_percent_insiders, held_percent_institutions,
-            implied_shares_outstanding, book_value,
-            price_to_book, last_fiscal_year_end,
-            next_fiscal_year_end, most_recent_quarter,
-            net_income_to_common, trailing_eps,
-            forward_eps, peg_ratio, last_split_factor,
-            last_split_date, enterprise_to_revenue,
-            enterprise_to_ebitda, sandp_52_week_change, total_cash,
-            total_cash_per_share, ebitda, total_debt, quick_ratio,
-            current_ratio, total_revenue, debt_to_equity,
-            revenue_per_share, return_on_assets,
-            return_on_equity, free_cashflow, operating_cashflow,
-            revenue_growth, gross_margins,
-            ebitda_margins, operating_margins, createdAt
+            {q},
+            createdAt
         ) VALUES (
-            %s, %s, %s, %s, %s,
-            %s, %s, %s, %s,
-            %s, %s, %s, %s,
-            %s, %s, %s, %s,
-            %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s,
-            %s, %s, NOW()
+            {v},
+            NOW()
         )
         """
-        self.DB.execute(query, (*data, ))
+        self.DB.execute(query, (i))
 
     def update_record(self, id, **kwargs: FinancialInfoDBType):
         set_clause = ', '.join([f"{key} = %({key})s" for key in kwargs.keys()])
@@ -75,7 +56,7 @@ class FinancialInfo:
         SELECT * FROM
             financial_info
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT %s

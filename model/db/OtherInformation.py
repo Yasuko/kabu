@@ -4,6 +4,7 @@
 
 from model.schema.OtherInformation import OtherInformationType, OtherInformationDBType
 from lib.pgsql import PgSQL
+from lib.utils import query_convert
 
 class OtherInformation:
     DB = None
@@ -15,34 +16,26 @@ class OtherInformation:
             self.DB = PgSQL().connect()
     
     def insert_record(self, data: OtherInformationDBType):
-        query = """
+        q, v, i = query_convert(data, OtherInformationType)
+        query = f"""
         INSERT INTO
             other_info
         (
-            company_code, currency, financial_currency,
-            trailing_peg_ratio, exchange, quote_type,
-            symbol, underlying_symbol, short_name, long_name,
-            first_trade_date_epoch_utc, time_zone_full_name,
-            time_zone_short_name, uuid, message_board_id,
-            gmt_offset_milliseconds, current_price,
-            target_high_price, target_low_price, target_mean_price,
-            target_median_price, recommendation_mean,
-            recommendation_key, number_of_analyst_opinions,
+            {q},
             createdAt
         )
         VALUES
         (
-            %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, %s, %s, %s,
-            %s, %s, %s, %s, NOW()
+            {v},
+            NOW()
         )
         """
-        self.DB.execute(query, (*data,))
+        result = self.DB.execute(query, (i))
+        return result
 
     def update_record(self, id: str, **kwargs: OtherInformationDBType):
         set_clause = ", ".join([f"{key} = %s" for key in kwargs.keys()])
-        query = """
+        query = f"""
         UPDATE
             other_info
         SET
@@ -66,7 +59,7 @@ class OtherInformation:
         SELECT * FROM
             other_info
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT %s

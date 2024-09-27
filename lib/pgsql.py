@@ -50,7 +50,7 @@ class PgSQL:
         return True
         
     '''
-    クエリを実行する 
+    登録系クエリを実行する 
     '''
     def execute(self, query, params=None):
         try:

@@ -7,7 +7,7 @@ class HistoryWeek:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS history_week (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-        company_code VARCHAR(20) NOT NULL REFERENCES industry(company_code),
+        companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
         Open NUMERIC NOT NULL,
         High NUMERIC NOT NULL,
@@ -18,7 +18,7 @@ class HistoryWeek:
         StockSplits NUMERIC NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    CREATE INDEX ON history_week (company_code);
+    CREATE INDEX ON history_week (companyCode);
     """
 
     DB = None

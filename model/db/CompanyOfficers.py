@@ -4,6 +4,8 @@
 
 from model.schema.CompanyOfficers import CompanyOfficersType, CompanyOfficersDBType
 from lib.pgsql import PgSQL
+from lib.utils import query_convert
+
 class CompanyOfficers:
 
     DB = None
@@ -16,23 +18,23 @@ class CompanyOfficers:
     
     # レコードの登録
     def insert_record(self, data: list[CompanyOfficersType]):
-        query = """
-        INSERT INTO
-            company_officers
-        (
-            company_code, max_age, name,
-            age, title, year_born, fiscal_year,
-            total_pay, exercised_value,
-            unexercised_value, createdAt
-        )
-        VALUES
-        (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW()
-        )
-        """
         for d in data:
             print(d)
-            self.DB.execute(query, (*d,))
+            q, v, i = query_convert(d, CompanyOfficersType)
+            query = f"""
+            INSERT INTO
+                company_officers
+            (
+                {q},
+                createdAt
+            )
+            VALUES
+            (
+                {v},
+                NOW()
+            )
+            """
+            self.DB.execute(query, (i))
 
 
 
@@ -66,7 +68,7 @@ class CompanyOfficers:
         SELECT * FROM
             company_officers
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT 20
@@ -80,7 +82,7 @@ class CompanyOfficers:
         SELECT * FROM
             company_officers
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT 5

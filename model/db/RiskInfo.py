@@ -4,7 +4,7 @@
 
 from model.schema.RiskInfo import RiskInfoDBType, RiskInfoType
 from lib.pgsql import PgSQL
-
+from lib.utils import query_convert
 
 class RiskInfo:
     DB = None
@@ -17,24 +17,22 @@ class RiskInfo:
     
     # レコードの登録
     def insert_record(self, data: RiskInfoType):
-        query = """
+        q, v, i = query_convert(data, RiskInfoType)
+        query = f"""
         INSERT INTO
             risk_info
         (
-            company_code, audit_risk,
-            board_risk, compensation_risk,
-            shareholder_rights_risk, overall_risk,
-            governance_epoch_date,
-            compensation_as_of_epoch_date,
-            max_age,
+            {q},
             createdAt
         )
         VALUES
         (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW()
+            {v},
+            NOW()
         )
         """
-        self.DB.execute(query, (*data,))
+        result = self.DB.execute(query, (i))
+        return result
 
     # レコードの更新
     def update_record(self, id: str, **kwargs: RiskInfoDBType):
@@ -65,7 +63,7 @@ class RiskInfo:
         SELECT * FROM
             risk_info
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT 10
@@ -79,7 +77,7 @@ class RiskInfo:
         SELECT * FROM
             risk_info
         WHERE
-            company_code = %s
+            companyCode = %s
         ORDER BY
             createdAt DESC
         LIMIT 1

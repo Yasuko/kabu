@@ -1,52 +1,50 @@
 '''
 リスク情報 (RiskInfo) テーブルのスキーマを定義する
 '''
+from lib.utils import validate
 
 class RiskInfoType:
-    company_code: str
-    audit_risk: int
-    board_risk: int
-    compensation_risk: int
-    shareholder_rights_risk: int
-    overall_risk: int
-    governance_epoch_date: int
-    compensation_as_of_epoch_date: int
-    max_age: int
+    companyCode: str
+    auditRisk: int
+    boardRisk: int
+    compensationRisk: int
+    shareHolderRightsRisk: int
+    overallRisk: int
+    governanceEpochDate: int
+    compensationAsOfEpochDate: int
+    maxAge: int
 
 class RiskInfoDBType(RiskInfoType):
     id: str
     createdAt: int
 
 def ConvertToRiskInfoType(data: dict) -> RiskInfoType:
-    return {
-        'company_code': data['companyCode'],
-        'audit_risk': int(data['auditRisk']),
-        'board_risk': int(data['boardRisk']),
-        'compensation_risk': int(data['compensationRisk']),
-        'shareholder_rights_risk': int(data['shareHolderRightsRisk']),
-        'overall_risk': int(data['overallRisk']),
-        'governance_epoch_date': int(data['governanceEpochDate']),
-        'compensation_as_of_epoch_date': int(data['compensationAsOfEpochDate']),
-        'max_age': int(data['maxAge'])
-    }
+    result = {}
+    for key in RiskInfoType.__annotations__.keys():
+        if key in data:
+            result[key] = validate(data[key], RiskInfoType.__annotations__[key])
+        else:
+            result[key] = validate('', RiskInfoType.__annotations__[key])
+    #print('Validate Test: ', result)
+    return result
 
 class RiskInfo:
     # テーブル作成クエリ
     create_table_query = """
 CREATE TABLE IF NOT EXISTS risk_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    company_code VARCHAR(20),
-    audit_risk INTEGER,
-    board_risk INTEGER,
-    compensation_risk INTEGER,
-    shareholder_rights_risk INTEGER,
-    overall_risk INTEGER,
-    governance_epoch_date BIGINT,
-    compensation_as_of_epoch_date BIGINT,
-    max_age INTEGER,
+    companyCode VARCHAR(20),
+    auditRisk INTEGER,
+    boardRisk INTEGER,
+    compensationRisk INTEGER,
+    shareHolderRightsRisk INTEGER,
+    overallRisk INTEGER,
+    governanceEpochDate BIGINT,
+    compensationAsOfEpochDate BIGINT,
+    maxAge INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX ON risk_info (company_code);
+CREATE INDEX ON risk_info (companyCode);
     """
 
     DB = None
