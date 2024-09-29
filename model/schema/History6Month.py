@@ -1,7 +1,32 @@
 """
 6ヶ月 株価データ breakdown
-
 """
+from lib.utils import validate
+
+class History6MonthType:
+    companyCode: str
+    Date: str
+    Open: float
+    High: float
+    Low: float
+    Close: float
+    Volume: float
+    Dividends: float
+    StockSplits: float
+
+class History6MonthDBType(History6MonthType):
+    id: str
+    createdAt: str
+
+def ConvertToHistory6MonthType(data: dict) -> History6MonthType:
+    result = {}
+    for key in History6MonthType.__annotations__.keys():
+        if key in data:
+            result[key] = validate(data[key], History6MonthType.__annotations__[key])
+        else:
+            result[key] = validate('', History6MonthType.__annotations__[key])
+    #print('Validate Test: ', result)
+    return result
 
 class History6Month:
     create_table_query = """

@@ -2,6 +2,33 @@
 3ヶ月 株価データ breakdown
 """
 
+from lib.utils import validate
+
+class History3MonthType:
+    companyCode: str
+    Date: str
+    Open: float
+    High: float
+    Low: float
+    Close: float
+    Volume: float
+    Dividends: float
+    StockSplits: float
+
+class History3MonthDBType(History3MonthType):
+    id: str
+    createdAt: str
+
+def ConvertToHistory3MonthType(data: dict) -> History3MonthType:
+    result = {}
+    for key in History3MonthType.__annotations__.keys():
+        if key in data:
+            result[key] = validate(data[key], History3MonthType.__annotations__[key])
+        else:
+            result[key] = validate('', History3MonthType.__annotations__[key])
+    #print('Validate Test: ', result)
+    return result
+
 class History3Month:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS history_3month (

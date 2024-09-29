@@ -71,7 +71,7 @@ class PgSQL:
             with self.conn.cursor() as cursor:
                 cursor.execute(query, params)
                 result = cursor.fetchone()
-            return result
+            return result[0]
         except Exception as e:
             print(e)
             exit()

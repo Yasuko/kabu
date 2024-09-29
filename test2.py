@@ -17,16 +17,17 @@ from model.schema.FinancialInfo import FinancialInfoType, FinancialInfoDBType, C
 from model.schema.DividendInfo import DividendInfoType, DividendInfoDBType, ConvertToDividendInfoType
 from model.schema.OtherInformation import OtherInformationType, OtherInformationDBType, ConvertToOtherInformationType
 
+company_code = '9984'
 
 while True:
     try:
-        msft = yf.Ticker("9984.T")
+        msft = yf.Ticker(company_code + '.T')
         print(msft.session)
         data = msft.info
         #print('Return API Result :', data)
         
         if 'industryKey' in data:
-            data['companyCode'] = '9984'
+            data['companyCode'] = company_code
             #print(data)
             break
         print('API Result is None')

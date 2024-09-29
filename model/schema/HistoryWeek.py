@@ -1,7 +1,33 @@
 """
  株価データ breakdown
-
 """
+
+from lib.utils import validate
+
+class HistoryMonthType:
+    companyCode: str
+    Date: str
+    Open: float
+    High: float
+    Low: float
+    Close: float
+    Volume: float
+    Dividends: float
+    StockSplits: float
+
+class HistoryMonthDBType(HistoryMonthType):
+    id: str
+    createdAt: str
+
+def ConvertToHistoryMonthType(data: dict) -> HistoryMonthType:
+    result = {}
+    for key in HistoryMonthType.__annotations__.keys():
+        if key in data:
+            result[key] = validate(data[key], HistoryMonthType.__annotations__[key])
+        else:
+            result[key] = validate('', HistoryMonthType.__annotations__[key])
+    #print('Validate Test: ', result)
+    return result
 
 class HistoryWeek:
     create_table_query = """

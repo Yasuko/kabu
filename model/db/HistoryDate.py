@@ -1,64 +1,73 @@
-import lib.pgsql as pgsql
-
 """
  株価１日単位株価データ
-
-
-id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-industry_id UUID NOT NULL REFERENCES industry(id),
-Date DATE,
-Open NUMERIC,
-High NUMERIC,
-Low NUMERIC,
-Close NUMERIC,
-Dividends NUMERIC,
-StockSplits NUMERIC,
-createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 """
 
+from model.schema.HistoryDate import HistoryDateType, HistoryDateDBType
+from lib.pgsql import PgSQL
+from lib.utils import query_convert
+
 class HistoryDate:
-    def __init__(self):
-        if pgsql.check_connection() == False:
-            pgsql.connect()
+    DB = None
+
+    def __init__(self, DB = None):
+        if DB is None:
+            self.DB = PgSQL().connect()
+        else:
+            self.DB = DB
 
     # データの追加
-    def add_data(self, industry_id, date, open, high, low, close, volume, dividends, stock_splits):
-        self.cursor.execute("""
-            INSERT INTO history_date (industry_id, Date, Open, High, Low, Close, Volume, Dividends, StockSplits)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (industry_id, date, open, high, low, close, volume, dividends, stock_splits))
+    def add_data(self, data: HistoryDateType):
+        q, v, i = query_convert(data, HistoryDateType)
+        query = f"""
+            INSERT INTO
+                history_date
+            (
+                {q}
+            )
+            VALUES
+            (
+                {v}
+            )
+        """
+        result = self.DB.execute(query, (i))
+        return result
 
     # データの更新
-    def update_data(self, id, industry_id, date, open, high, low, close, volume, dividends, stock_splits):
-        self.cursor.execute("""
+    def update_data(self, id, **kwargs: HistoryDateType):
+        set_clause = ", ".join([f"{key} = %s" for key in kwargs.keys()])
+        query = f"""
             UPDATE history_date
-            SET industry_id = %s, Date = %s, Open = %s, High = %s, Low = %s, Close = %s, Volume = %s, Dividends = %s, StockSplits = %s
+            SET
+                {set_clause}
             WHERE id = %s
-        """, (industry_id, date, open, high, low, close, volume, dividends, stock_splits, id))
+        """
+        self.DB.execute(query, (*kwargs.values(), id))
 
     # データの削除
     def delete_data(self, id):
-        self.cursor.execute("DELETE FROM history_date WHERE id = %s", (id,))
+        query = "DELETE FROM history_date WHERE id = %s"
+        self.DB.execute(query, (id,))
 
     # Dateに重複がない場合のみ、データの追加
-    def add_data_if_not_exists(self, industry_id, date, open, high, low, close, volume, dividends, stock_splits):
-        if self.cursor.execute("SELECT COUNT(*) FROM history_date WHERE Date = %s", (date,)) == 0:
-            self.add_data(industry_id, date, open, high, low, close, volume, dividends, stock_splits)
+    def add_data_if_not_exists(self, date, data: HistoryDateType):
+        query = "SELECT COUNT(*) FROM history_date WHERE Date = %s"
+        if self.DB.fetch_one(query, (date,)) == 0:
+            self.add_data(data)
             return True
         return None
 
     # idからデータを抜き出し
     def get_data_by_id(self, id):
-        return self.cursor.fetchone("SELECT * FROM history_date WHERE id = %s", (id,))
+        query = "SELECT * FROM history_date WHERE id = %s"
+        return self.DB.fetch_one(query, (id,))
 
-    # Dateで絞り込み、industry_idからデータを抜き出し
-    def get_data_by_date_and_industry_id(self, date, industry_id):
-        return self.cursor.fetchall("SELECT * FROM history_date WHERE Date = %s AND industry_id = %s", (date, industry_id))
+    # Dateで絞り込み、companyCodeからデータを抜き出し
+    def get_data_by_date_and_company_code(self, date, companyCode):
+        query = "SELECT * FROM history_date WHERE Date = %s AND companyCode = %s"
+        return self.DB.fetch_all(query, (date, companyCode))
 
     # Dateで絞り込んだデータを抜き出し
     def get_data_by_date(self, date):
-        return self.cursor.fetchall("SELECT * FROM history_date WHERE Date = %s", (date,))
-
-
-
+        query = "SELECT * FROM history_date WHERE Date = %s"
+        return self.DB.fetch_all(query, (date,))
 

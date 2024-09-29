@@ -29,6 +29,7 @@ class MarketInfoType:
     fiftyDayAverage: float
     twoHundredDayAverage: float
 
+
 class MarketInfoDBType(MarketInfoType):
     id: str
     createdAt: str
@@ -87,3 +88,152 @@ CREATE INDEX ON market_info (companyCode);
         except Exception as e:
             print(e)
             exit()
+
+
+
+'''
+MarketInfoType = [
+    {
+        'key': 'companyCode',
+        'type': 'str',
+        'required': True,
+        'db_type': 'UUID PRIMARY KEY DEFAULT uuid_generate_v4()'
+    },
+    {
+        'key': 'priceHint',
+        'type': 'int',
+        'required': False,
+        'db_type': 'INTEGER'
+    },
+    {
+        'key': 'previousClose',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'open',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'dayLow',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'dayHigh',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'regularMarketPreviousClose',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'regularMarketOpen',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'regularMarketDayLow',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'regularMarketDayHigh',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'volume',
+        'type': 'int',
+        'required': False,
+        'db_type': 'BIGINT'
+    },
+    {
+        'key': 'regularMarketVolume',
+        'type': 'int',
+        'required': False,
+        'db_type': 'BIGINT'
+    },
+    {
+        'key': 'averageVolume',
+        'type': 'int',
+        'required': False,
+        'db_type': 'BIGINT'
+    },
+    {
+        'key': 'averageVolume10days',
+        'type': 'int',
+        'required': False,
+        'db_type': 'BIGINT'
+    },
+    {
+        'key': 'averageDailyVolume10Day',
+        'type': 'int',
+        'required': False,
+        'db_type': 'BIGINT'
+    },
+    {
+        'key': 'bid',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'ask',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'marketCap',
+        'type': 'float',
+    },
+    {
+        'key': 'fiftyTwoWeekLow',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'fiftyTwoWeekHigh',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'priceToSalesTrailing12Months',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'fiftyDayAverage',
+        'type': 'float', 'required': False,'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'twoHundredDayAverage',
+        'type': 'float',
+        'required': False,
+        'db_type': 'NUMERIC'
+    },
+    {
+        'key': 'createdAt',
+        'type': 'str',
+        'required': False,
+        'db_type': 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+    }
+]
+
+
+'''

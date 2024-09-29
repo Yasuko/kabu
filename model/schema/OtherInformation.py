@@ -10,30 +10,30 @@ from lib.utils import validate
 OtherInformationの型定義
 '''
 class OtherInformationType:
-    company_code: str
+    companyCode: str
     currency: str
-    financial_currency: str
-    trailing_peg_ratio: float
+    financialCurrency: str
+    trailingPegRatio: float
     exchange: str
-    quote_type: str
+    quoteType: str
     symbol: str
-    underlying_symbol: str
-    short_name: str
-    long_name: str
-    first_trade_date_epoch_utc: int
-    time_zone_full_name: str
-    time_zone_short_name: str
+    underlyingSymbol: str
+    shortName: str
+    longName: str
+    firstTradeDateEpochUtc: int
+    timeZoneFullName: str
+    timeZoneShortName: str
     uuid: str
-    message_board_id: str
-    gmt_offset_milliseconds: int
-    current_price: float
-    target_high_price: float
-    target_low_price: float
-    target_mean_price: float
-    target_median_price: float
-    recommendation_mean: float
-    recommendation_key: str
-    number_of_analyst_opinions: int
+    messageBoardId: str
+    gmtOffsetMilliseconds: int
+    currentPrice: float
+    targetHighPrice: float
+    targetLowPrice: float
+    targetMeanPrice: float
+    targetMedianPrice: float
+    recommendationMean: float
+    recommendationKey: str
+    numberOfAnalystOpinions: int
 
 '''
 OtherInformationのDB型定義
@@ -62,28 +62,28 @@ CREATE TABLE IF NOT EXISTS other_info (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     companyCode VARCHAR(20),
     currency VARCHAR(10),
-    financial_currency VARCHAR(10),
-    trailing_peg_ratio NUMERIC,
+    financialCurrency VARCHAR(10),
+    trailingPegRatio NUMERIC,
     exchange VARCHAR(10),
-    quote_type VARCHAR(10),
+    quoteType VARCHAR(10),
     symbol VARCHAR(10),
-    underlying_symbol VARCHAR(10),
-    short_name VARCHAR(50),
-    long_name VARCHAR(100),
-    first_trade_date_epoch_utc BIGINT,
-    time_zone_full_name VARCHAR(50),
-    time_zone_short_name VARCHAR(10),
+    underlyingSymbol VARCHAR(10),
+    shortName VARCHAR(50),
+    longName VARCHAR(100),
+    firstTradeDateEpochUtc BIGINT,
+    timeZoneFullName VARCHAR(50),
+    timeZoneShortName VARCHAR(10),
     uuid UUID,
-    message_board_id VARCHAR(50),
-    gmt_offset_milliseconds BIGINT,
-    current_price NUMERIC,
-    target_high_price NUMERIC,
-    target_low_price NUMERIC,
-    target_mean_price NUMERIC,
-    target_median_price NUMERIC,
-    recommendation_mean NUMERIC,
-    recommendation_key VARCHAR(10),
-    number_of_analyst_opinions INTEGER,
+    messageBoardId VARCHAR(50),
+    gmtOffsetMilliseconds BIGINT,
+    currentPrice NUMERIC,
+    targetHighPrice NUMERIC,
+    targetLowPrice NUMERIC,
+    targetMeanPrice NUMERIC,
+    targetMedianPrice NUMERIC,
+    recommendationMean NUMERIC,
+    recommendationKey VARCHAR(10),
+    numberOfAnalystOpinions INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX ON other_info (companyCode);

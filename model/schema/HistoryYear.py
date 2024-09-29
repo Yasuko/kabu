@@ -1,7 +1,33 @@
 """
  株価データ breakdown
-
 """
+
+from lib.utils import validate
+
+class HistoryYearType:
+    companyCode: str
+    Date: str
+    Open: float
+    High: float
+    Low: float
+    Close: float
+    Volume: float
+    Dividends: float
+    StockSplits: float
+
+class HistoryYearDBType(HistoryYearType):
+    id: str
+    createdAt: str
+
+def ConvertToHistoryYearType(data: dict) -> HistoryYearType:
+    result = {}
+    for key in HistoryYearType.__annotations__.keys():
+        if key in data:
+            result[key] = validate(data[key], HistoryYearType.__annotations__[key])
+        else:
+            result[key] = validate('', HistoryYearType.__annotations__[key])
+    #print('Validate Test: ', result)
+    return result
 
 class HistoryYear:
     create_table_query = """
