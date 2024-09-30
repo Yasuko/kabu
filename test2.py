@@ -28,7 +28,7 @@ while True:
         
         if 'industryKey' in data:
             data['companyCode'] = company_code
-            #print(data)
+            #print(data
             break
         print('API Result is None')
         sys.sleep(5)

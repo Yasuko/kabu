@@ -53,6 +53,10 @@ def build_date_map(
         for month in range(1, 13):
             start_date = datetime.date(year, month, 1)
             end_date = datetime.date(year, month, calendar.monthrange(year, month)[1])
+
+            # 日付が現在の日付よりも未来の場合は処理を終了
+            if end_date > datetime.date.today():
+                break
             date_ranges.append({
                 "start": start_date.strftime("%Y-%m-%d"),
                 "end": end_date.strftime("%Y-%m-%d")
