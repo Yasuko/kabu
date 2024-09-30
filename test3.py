@@ -7,7 +7,7 @@ from model.db.HistoryDate import HistoryDate
 while True:
     try:
         msft = yf.Ticker("9984.T")
-        data = msft.history(start="2022-12-10", end="2022-12-20", period="1d")
+        data = msft.history(start="2010-12-01", end="2010-12-31", period="1d")
         #print('Return API Result :', data)
         break
     except Exception as e:
@@ -24,6 +24,6 @@ for timestamp, d in data.to_dict(orient='index').items():
     del d['Stock Splits']
     print(d)
 
-    HistoryDate().add_data_if_not_exists(d['Date'], d)
+    #HistoryDate().add_data_if_not_exists(d['Date'], d)
 #r = msft.history(start="2022-12-10", end="2022-12-20", period="1d")
 

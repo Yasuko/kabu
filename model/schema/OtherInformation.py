@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS other_info (
     targetMeanPrice NUMERIC,
     targetMedianPrice NUMERIC,
     recommendationMean NUMERIC,
-    recommendationKey VARCHAR(10),
+    recommendationKey VARCHAR(20),
     numberOfAnalystOpinions INTEGER,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

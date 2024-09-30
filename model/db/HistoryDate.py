@@ -48,6 +48,13 @@ class HistoryDate:
         query = "DELETE FROM history_date WHERE id = %s"
         self.DB.execute(query, (id,))
 
+    # DateとcompanyCodeの重複がない場合のみ、データの追加
+    def add_data_if_not_exists_by_date_and_company_code(self, date, companyCode, data: HistoryDateType):
+        query = "SELECT COUNT(*) FROM history_date WHERE Date = %s AND companyCode = %s"
+        if self.DB.fetch_one(query, (date, companyCode)) == 0:
+            self.add_data(data)
+            return True
+
     # Dateに重複がない場合のみ、データの追加
     def add_data_if_not_exists(self, date, data: HistoryDateType):
         query = "SELECT COUNT(*) FROM history_date WHERE Date = %s"

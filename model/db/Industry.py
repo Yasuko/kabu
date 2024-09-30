@@ -33,8 +33,24 @@ class Industry:
         )
         """
         new_id = self.DB.execute(query, (i))
-        print('Insert Industory new_id:', new_id)
+        #print('Insert Industory new_id:', new_id)
         return new_id
+
+    # 72時間以内に登録されたレコードがない場合、新規登録
+    def insert_record_if_not_exists(self, data: IndustryType):
+        query = """
+        SELECT
+            id
+        FROM
+            industry
+        WHERE
+            companyCode = %s
+        AND
+            createdAt >= NOW() - INTERVAL '72 hours';
+        """
+        record = self.DB.fetch_one(query, (data['companyCode'],))
+        if record is None:
+            self.insert_record(data)
 
     # レコードの更新
     def update_record(self, id, **kwargs: IndustryDBType):
@@ -59,6 +75,12 @@ class Industry:
         query = "SELECT * FROM industry WHERE id = %s;"
         record = self.DB.fetch_one(query, (id,))
         return record
+
+    # company_codeの重複を排除し、全てのレコードを取得し返す
+    def get_all_records(self):
+        query = "SELECT DISTINCT ON (companyCode) * FROM industry;"
+        records = self.DB.fetch_all(query)
+        return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の5件を取得し返す
     def get_latest_5_records_by_company_code(self, company_code):

@@ -19,7 +19,6 @@ class CompanyOfficers:
     # レコードの登録
     def insert_record(self, data: list[CompanyOfficersType]):
         for d in data:
-            print(d)
             q, v, i = query_convert(d, CompanyOfficersType)
             query = f"""
             INSERT INTO
