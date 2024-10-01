@@ -91,8 +91,18 @@ class HistoryDate:
         return self._DB.fetch_all(query, (date,))
 
     def get_all_data_by_company_code(self, companyCode, getQuery = False):
-        query = "SELECT * FROM history_date WHERE companyCode = " + companyCode
+        query = "SELECT * FROM history_date WHERE companyCode = '" + str(companyCode) + "'"
 
         if getQuery:
             return query
         return self._DB.fetch_all(query)
+    
+    # 指定日前から指定日までのデータを取得
+    def get_data_by_date_range(
+        self,
+        companyCode,
+        start_date,
+        end_date
+    ) -> list:
+        query = "SELECT * FROM history_date WHERE companyCode = %s AND Date >= %s AND Date <= %s"
+        return self._DB.fetch_all(query, (companyCode, start_date, end_date))

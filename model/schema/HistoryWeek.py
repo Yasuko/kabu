@@ -4,7 +4,7 @@
 
 from lib.utils import validate
 
-class HistoryMonthType:
+class HistoryWeekType:
     companyCode: str
     Date: str
     Open: float
@@ -15,17 +15,17 @@ class HistoryMonthType:
     Dividends: float
     StockSplits: float
 
-class HistoryMonthDBType(HistoryMonthType):
+class HistoryWeekDBType(HistoryWeekType):
     id: str
     createdAt: str
 
-def ConvertToHistoryMonthType(data: dict) -> HistoryMonthType:
+def ConvertToHistoryMonthType(data: dict) -> HistoryWeekType:
     result = {}
-    for key in HistoryMonthType.__annotations__.keys():
+    for key in HistoryWeekType.__annotations__.keys():
         if key in data:
-            result[key] = validate(data[key], HistoryMonthType.__annotations__[key])
+            result[key] = validate(data[key], HistoryWeekType.__annotations__[key])
         else:
-            result[key] = validate('', HistoryMonthType.__annotations__[key])
+            result[key] = validate('', HistoryWeekType.__annotations__[key])
     #print('Validate Test: ', result)
     return result
 
