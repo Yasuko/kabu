@@ -4,6 +4,11 @@ import yfinance as yf
 from model.db.HistoryDate import HistoryDate
 #from model.schema.HistoryDate import HistoryDateType, HistoryDateDBType, ConvertToHistoryDateType
 
+'''
+株価情報を取得するサンプル
+'''
+
+
 while True:
     try:
         msft = yf.Ticker("9984.T")

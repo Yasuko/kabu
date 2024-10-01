@@ -2,6 +2,10 @@ import model.call.AuthUser as AU
 import model.call.AuthRefresh as AR
 import model.call.Info as Info
 
+'''
+Yahoo Finance APIの試験
+'''
+
 
 """
 refreshtoken = AU.AuthUser().call({

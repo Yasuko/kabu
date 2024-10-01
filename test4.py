@@ -18,6 +18,9 @@ from model.schema.FinancialInfo import FinancialInfoType, FinancialInfoDBType, C
 from model.schema.DividendInfo import DividendInfoType, DividendInfoDBType, ConvertToDividendInfoType
 from model.schema.OtherInformation import OtherInformationType, OtherInformationDBType, ConvertToOtherInformationType
 
+'''
+企業コード一覧のcsvから、企業情報を取得し、DBに登録する試験
+'''
 
 def read_csv_as_dict(file_path):
     result = []

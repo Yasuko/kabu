@@ -7,6 +7,11 @@ from model.db.HistoryDate import HistoryDate
 
 from lib.utils import build_date_map
 
+'''
+DBに保存された企業情報から、株価情報を取得し、DBに登録する試験
+'''
+
+
 # ファイルパスを指定
 company_codes = Industry().get_all_records()
 date_map = build_date_map()
