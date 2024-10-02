@@ -23,17 +23,13 @@ for row in company_codes:
     print(results)
 '''
 
-historys = HistoryDate().get_all_data_by_company_code(1301)
+historys = HistoryDate().get_all_data_by_company_code(1815)
 
 
 for i in range(len(historys) - 9):
     r = convert_vector(historys[i:i+10], historys[i+10][2])
+    print(r)
+    _r = VectorDate().get_dot_by_vec(r['Vec'], 10)
+    print(_r)
 
-    _r = VectorDate().insert_exists_by_date_and_company_code(
-                        historys[i+10][2],
-                        historys[i+10][1],
-                        r
-                    )
-    if _r:
-        print(r)
-    
+    time.sleep(30)

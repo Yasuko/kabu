@@ -34,6 +34,16 @@ class VectorWeek:
         result = self.DB.execute(query, (i))
         return result
 
+    # DateとcompanyCodeの重複がない場合のみ、データの追加
+    def insert_exists_by_date_and_company_code(
+        self, date, companyCode, data: VectorWeekType
+    ) -> bool:
+        query = "SELECT COUNT(*) FROM vector_week WHERE Date = %s AND companyCode = %s"
+        if self.DB.fetch_one(query, (date, companyCode)) == 0:
+            self.insert_record(data)
+            return True
+        return False
+
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
         query = "SELECT * FROM vector_week WHERE id = %s"
