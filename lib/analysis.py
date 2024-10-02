@@ -1,142 +1,6 @@
 import pandas as pd
 
 from model.db.HistoryDate import HistoryDate
-from model.db.HistoryWeek import HistoryWeek
-from model.db.HistoryMonth import HistoryMonth
-from model.db.History3Month import History3Month
-from model.db.History6Month import History6Month
-from model.db.HistoryYear import HistoryYear
-
-
-def convert_date_to_week(
-    company_code: str,
-):
-
-    df = pd.read_sql_query(
-        HistoryDate().get_all_data_by_company_code(company_code),
-        HistoryDate().DB
-    )
-
-    # 日付をdatetime型に変換
-    df['Date'] = pd.to_datetime(df['Date'])
-
-    # 週ごとにデータをグループ化し、必要な集計を行う
-    weekly_df = df.resample('W-MON', on='Date').agg({
-        'companyCode': 'first',
-        'Open': 'first',
-        'High': 'max',
-        'Low': 'min',
-        'Close': 'last',
-        'Volume': 'sum',
-        'Dividends': 'sum',
-        'StockSplits': 'sum'
-    }).reset_index()
-
-    print(weekly_df)
-
-
-
-def convert_date_to_month(
-    company_code: str,
-):
-    df = pd.read_sql_query(
-        HistoryDate().get_all_data_by_company_code(company_code),
-        HistoryDate().DB
-    )
-
-    # 日付をdatetime型に変換
-    df['Date'] = pd.to_datetime(df['Date'])
-
-    # 月ごとにデータをグループ化し、必要な集計を行う
-    monthly_df = df.resample('M', on='Date').agg({
-        'companyCode': 'first',
-        'Open': 'first',
-        'High': 'max',
-        'Low': 'min',
-        'Close': 'last',
-        'Volume': 'sum',
-        'Dividends': 'sum',
-        'StockSplits': 'sum'
-    }).reset_index()
-
-    print(monthly_df)
-
-def convert_date_to_3month(
-    company_code: str,
-):
-    df = pd.read_sql_query(
-        HistoryDate().get_all_data_by_company_code(company_code),
-        HistoryDate().DB
-    )
-
-    # 日付をdatetime型に変換
-    df['Date'] = pd.to_datetime(df['Date'])
-
-    # 3ヶ月ごとにデータをグループ化し、必要な集計を行う
-    monthly_df = df.resample('3M', on='Date').agg({
-        'companyCode': 'first',
-        'Open': 'first',
-        'High': 'max',
-        'Low': 'min',
-        'Close': 'last',
-        'Volume': 'sum',
-        'Dividends': 'sum',
-        'StockSplits': 'sum'
-    }).reset_index()
-
-    print(monthly_df)
-
-def convert_date_to_6month(
-    company_code: str,
-):
-    df = pd.read_sql_query(
-        HistoryDate().get_all_data_by_company_code(company_code),
-        HistoryDate().DB
-    )
-
-    # 日付をdatetime型に変換
-    df['Date'] = pd.to_datetime(df['Date'])
-
-    # 6ヶ月ごとにデータをグループ化し、必要な集計を行う
-    monthly_df = df.resample('6M', on='Date').agg({
-        'companyCode': 'first',
-        'Open': 'first',
-        'High': 'max',
-        'Low': 'min',
-        'Close': 'last',
-        'Volume': 'sum',
-        'Dividends': 'sum',
-        'StockSplits': 'sum'
-    }).reset_index()
-
-    print(monthly_df)
-
-
-def convert_date_to_year(
-    company_code: str,
-):
-    df = pd.read_sql_query(
-        HistoryDate().get_all_data_by_company_code(company_code),
-        HistoryDate().DB
-    )
-
-    # 日付をdatetime型に変換
-    df['Date'] = pd.to_datetime(df['Date'])
-
-    # 年ごとにデータをグループ化し、必要な集計を行う
-    monthly_df = df.resample('Y', on='Date').agg({
-        'companyCode': 'first',
-        'Open': 'first',
-        'High': 'max',
-        'Low': 'min',
-        'Close': 'last',
-        'Volume': 'sum',
-        'Dividends': 'sum',
-        'StockSplits': 'sum'
-    }).reset_index()
-
-    print(monthly_df)
-
 
 def convert_pressure(
     record: list,
@@ -313,22 +177,24 @@ def rate_by_three_month(
 
     return rate
 
-def rate_by_six_month(
-    company_code: str,
-):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
-    
-    df = HistoryDate().get_data_by_date_range(
-        company_code,
-        today - pd.DateOffset(months=6),
-        today
-    )
 
-    # データが存在しない場合
-    if len(df) == 0:
-        return None
+def convert_vector(
+    records: list[list],
+    date: str
+) -> dict:
 
-    rate = ((df[1][6] - df[0][3]) / df[0][3]) * 100
+    # Open値の最大値と最小値を取得
+    open_values = [record[3] for record in records]
+    max_open = max(open_values)
+    min_open = min(open_values)
 
-    return rate
+    # 正規化
+    normalized_open_values = [(open - min_open) / (max_open - min_open) for open in open_values]
+
+    # 結果を辞書形式で返す
+    return {
+        "companyCode": records[0][1],
+        "Date": date,
+        "Vec": normalized_open_values,
+    }
+

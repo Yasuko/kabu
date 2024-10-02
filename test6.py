@@ -6,6 +6,10 @@ from lib.analysis import convert_date_to_week, convert_date_to_month
 from lib.analysis import convert_date_to_3month, convert_date_to_year
 from lib.analysis import convert_pressure
 
+'''
+ローソク足を計算し、売買圧を計算する試験
+'''
+
 # ファイルパスを指定
 #company_codes = Industry().get_all_records()
 
