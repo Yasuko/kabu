@@ -27,13 +27,16 @@ historys = HistoryDate().get_all_data_by_company_code(1301)
 
 
 for i in range(len(historys) - 9):
+    # ベクトルデータに変換
     r = convert_vector(historys[i:i+10], historys[i+10][2])
 
+    # 指定の日付から、10日前までのベクトルデータを保存
     _r = VectorDate().insert_exists_by_date_and_company_code(
                         historys[i+10][2],
                         historys[i+10][1],
                         r
                     )
+    # 保存が成功した場合、ベクトルデータを表示
     if _r:
         print(r)
     

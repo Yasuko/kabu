@@ -1,5 +1,6 @@
 import datetime
 import calendar
+import math
 from typing import Tuple
 
 def validate(
@@ -63,3 +64,16 @@ def build_date_map(
             })
     
     return date_ranges
+
+'''
+値動きから角度を計算し、返す
+'''
+def angle(data: list) -> list:
+    angles = []
+    for i in range(1, len(data)):
+        x_diff = 1
+        y_diff = data[i] - data[i-1]
+        angle = math.atan2(y_diff, x_diff)
+        angles.append(angle)
+
+    return angles

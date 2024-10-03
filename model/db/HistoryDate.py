@@ -85,18 +85,28 @@ class HistoryDate:
         query = "SELECT * FROM history_date WHERE Date = %s AND companyCode = %s"
         return self._DB.fetch_all(query, (date, companyCode))
 
-    # Dateで絞り込んだデータを抜き出し
-    def get_data_by_date(self, date):
-        query = "SELECT * FROM history_date WHERE Date = %s"
-        return self._DB.fetch_all(query, (date,))
-
     def get_all_data_by_company_code(self, companyCode, getQuery = False):
         query = "SELECT * FROM history_date WHERE companyCode = '" + str(companyCode) + "'"
 
         if getQuery:
             return query
         return self._DB.fetch_all(query)
-    
+
+    # Dateから最新のデータ30件を取得
+    def get_latest_data(self, date, limit = 30):
+        query = f"""
+        SELECT
+            *
+        FROM
+            history_date
+        WHERE
+            Date = %s
+        ORDER BY
+            createdAt DESC
+        LIMIT %s
+        """
+        return self._DB.fetch_all(query, (date, limit))
+
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(
         self,
@@ -104,5 +114,16 @@ class HistoryDate:
         start_date,
         end_date
     ) -> list:
-        query = "SELECT * FROM history_date WHERE companyCode = %s AND Date >= %s AND Date <= %s"
+        query = f"""
+        SELECT
+            *
+        FROM
+            history_date
+        WHERE
+            companyCode = %s
+        AND
+            Date >= %s
+        AND
+            Date <= %s
+        """
         return self._DB.fetch_all(query, (companyCode, start_date, end_date))

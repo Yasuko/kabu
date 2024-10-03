@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 
 from model.db.HistoryDate import HistoryDate
 
@@ -31,157 +32,61 @@ def convert_pressure(
     }
     
 
-def rate_by_one_day(
+def rate(
     company_code: str,
+    start_date: pd.Timestamp,
 ):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
     
     df = HistoryDate().get_data_by_date_range(
         company_code,
-        today - pd.DateOffset(days=1),
-        today
+        datetime.timedelta(days=15),
+        start_date
     )
 
     # データが存在しない場合
     if len(df) == 0:
         return None
 
-    rate = ((df[1][6] - df[0][3]) / df[0][3]) * 100
-    pressure1 = convert_pressure(df[0])
-    pressure2 = convert_pressure(df[1])
+    results = []
+    i = len(df) - 1
 
-    return {
-        'Rate': rate,
-        #pressureの平均値を返す
-        'Pressure': (pressure1['Percentage'] + pressure2['Percentage']) / 2
-    }
+    # 1日前のOpen値と当日のOpen値の差を計算
+    results.append({
+        'rarte': diff_rate(df[i][3], df[i-1][3]),
+        'pressure': convert_pressure(df[i])
+    })
+    # 2日前のOpen値と当日のOpen値の差を計算
+    results.append({
+        'rarte': diff_rate(df[i][3], df[i-2][3]),
+        'pressure': convert_pressure(df[i-2])
+    })
+    # 3日前のOpen値と当日のOpen値の差を計算
+    results.append({
+        'rarte': diff_rate(df[i][3], df[i-3][3]),
+        'pressure': convert_pressure(df[i-3])
+    })
+    # 1週間前のOpen値と当日のOpen値の差を計算
+    results.append({
+        'rarte': diff_rate(df[i][3], df[i-5][3]),
+        'pressure': convert_pressure(df[i-5])
+    })
+    # 2週間前のOpen値と当日のOpen値の差を計算
+    results.append({
+        'rarte': diff_rate(df[i][3], df[i-10][3]),
+        'pressure': convert_pressure(df[i-10])
+    })
 
-def rate_by_two_day(
-    company_code: str,
-):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
-    
-    df = HistoryDate().get_data_by_date_range(
-        company_code,
-        today - pd.DateOffset(days=2),
-        today
-    )
+    return results
 
-    # データが存在しない場合
-    if len(df) == 0:
-        return None
-
-    rate = ((df[2][6] - df[0][3]) / df[0][3]) * 100
-
-    return rate
-
-def rate_by_three_day(
-    company_code: str,
-):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
-    
-    df = HistoryDate().get_data_by_date_range(
-        company_code,
-        today - pd.DateOffset(days=3),
-        today
-    )
-
-    # データが存在しない場合
-    if len(df) == 0:
-        return None
-
-    rate = ((df[3][6] - df[0][3]) / df[0][3]) * 100
-
-    return rate
-
-def rate_by_one_week(
-    company_code: str,
-):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
-    
-    df = HistoryDate().get_data_by_date_range(
-        company_code,
-        today - pd.DateOffset(weeks=1),
-        today
-    )
-
-    # データが存在しない場合
-    if len(df) == 0:
-        return None
-
-    rate = ((df[1][6] - df[0][3]) / df[0][3]) * 100
-
-    return rate
-
-def rate_by_two_week(
-    company_code: str,
-):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
-    
-    df = HistoryDate().get_data_by_date_range(
-        company_code,
-        today - pd.DateOffset(weeks=2),
-        today
-    )
-
-    # データが存在しない場合
-    if len(df) == 0:
-        return None
-
-    rate = ((df[2][6] - df[0][3]) / df[0][3]) * 100
-
-    return rate
-
-def rate_by_one_month(
-    company_code: str,
-):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
-    
-    df = HistoryDate().get_data_by_date_range(
-        company_code,
-        today - pd.DateOffset(months=1),
-        today
-    )
-
-    # データが存在しない場合
-    if len(df) == 0:
-        return None
-
-    rate = ((df[1][6] - df[0][3]) / df[0][3]) * 100
-
-    return rate
-
-def rate_by_three_month(
-    company_code: str,
-):
-    # 今日の日付を取得
-    today = pd.Timestamp.today().normalize()
-    
-    df = HistoryDate().get_data_by_date_range(
-        company_code,
-        today - pd.DateOffset(months=3),
-        today
-    )
-
-    # データが存在しない場合
-    if len(df) == 0:
-        return None
-
-    rate = ((df[1][6] - df[0][3]) / df[0][3]) * 100
-
-    return rate
-
+def diff_rate(
+    data1: float,
+    data2: float
+) -> float:
+    return ((data1 - data2) / data2) * 100
 
 def convert_vector(
     records: list[list],
-    date: str
-) -> dict:
+) -> float:
 
     # Open値の最大値と最小値を取得
     open_values = [record[3] for record in records]
@@ -192,9 +97,5 @@ def convert_vector(
     normalized_open_values = [(open - min_open) / (max_open - min_open) for open in open_values]
 
     # 結果を辞書形式で返す
-    return {
-        "companyCode": records[0][1],
-        "Date": date,
-        "Vec": normalized_open_values,
-    }
+    return normalized_open_values
 
