@@ -36,9 +36,21 @@ class VectorDate:
 
     # DateとcompanyCodeの重複がない場合のみ、データの追加
     def insert_exists_by_date_and_company_code(
-        self, date, companyCode, data: VectorDateType
+        self,
+        date,
+        companyCode,
+        data: VectorDateType,
     ) -> bool:
-        query = "SELECT COUNT(*) FROM vector_date WHERE Date = %s AND companyCode = %s"
+        query = f"""
+        SELECT
+            COUNT(*)
+        FROM
+            vector_date
+        WHERE
+            Date = %s
+        AND
+            companyCode = %s
+        """
         if self.DB.fetch_one(query, (date, companyCode)) == 0:
             self.insert_record(data)
             return True

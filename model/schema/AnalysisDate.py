@@ -6,11 +6,18 @@ from lib.utils import validate
 class AnalysisDateType:
     companyCode: str
     Date: str
-    OneDay: float
-    TwoDay: float
-    ThreeDay: float
-    OneWeek: float
-    TwoWeek: float
+    Day: float
+    DayOne: float
+    DayTwo: float
+    DayThree: float
+    WeekOne: float
+    WeekTwo: float
+    PressDay: float
+    PressOne: float
+    PressTwo: float
+    PressThree: float
+    PressWeekOne: float
+    PressWeekTwo: float
     Rad: list
 
 class AnalysisDateDBType(AnalysisDateType):
@@ -33,11 +40,18 @@ class AnalysisDate:
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
-        OneDay NUMERIC NOT NULL,
-        TwoDay NUMERIC NOT NULL,
-        ThreeDay NUMERIC NOT NULL,
-        OneWeek NUMERIC NOT NULL,
-        TwoWeek NUMERIC NOT NULL,
+        Day NUMERIC NOT NULL,
+        DayOne NUMERIC NOT NULL,
+        DayTwo NUMERIC NOT NULL,
+        DayThree NUMERIC NOT NULL,
+        WeekOne NUMERIC NOT NULL,
+        WeekTwo NUMERIC NOT NULL,
+        PressDay NUMERIC NOT NULL,
+        PressOne NUMERIC NOT NULL,
+        PressTwo NUMERIC NOT NULL,
+        PressThree NUMERIC NOT NULL,
+        PressWeekOne NUMERIC NOT NULL,
+        PressWeekTwo NUMERIC NOT NULL,
         Rad NUMERIC[] NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

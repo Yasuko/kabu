@@ -7,7 +7,7 @@ from model.db.HistoryDate import HistoryDate
 from model.db.VectorDate import VectorDate
 
 from lib.utils import build_date_map
-from lib.analysis import convert_vector
+from lib.analysis import normalize
 
 '''
 DBに保存された企業情報から、株価情報を取得し、DBに登録する試験
@@ -77,7 +77,7 @@ for row in company_codes:
     historys = HistoryDate().get_latest_data(row[1])
     for i in range(len(historys) - 9):
         # ベクトルデータに変換
-        r = convert_vector(historys[i:i+10], historys[i+10][2])
+        r = normalize(historys[i:i+10], historys[i+10][2])
 
         # 指定の日付から、10日前までのベクトルデータを保存
         _r = VectorDate().insert_exists_by_date_and_company_code(
