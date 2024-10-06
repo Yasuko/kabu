@@ -5,17 +5,22 @@ import math
 from model.db.HistoryDate import HistoryDate
 from model.db.VectorDate import VectorDate
 
+from lib.utils import angle
+
 '''
 ローソク足から、上げ下げの圧力を計算する
 '''
 def convert_pressure(
     record: list,
 ) -> float:
-    print(record)
     open_price = record[3]
     close_price = record[6]
     high_price = record[4]
     low_price = record[5]
+
+    # nanがいずれかに含まれている場合は0を返す
+    if math.isnan(open_price) or math.isnan(close_price) or math.isnan(high_price) or math.isnan(low_price):
+        return 0
 
     if close_price > open_price:  # 陽線の場合
         upper_wick = high_price - close_price
@@ -36,13 +41,13 @@ def convert_pressure(
 
 def rate(
     company_code: str,
-    start_date: pd.Timestamp,
+    date: pd.Timestamp,
 ):
     
     df = HistoryDate().get_data_by_date_range(
         company_code,
-        datetime.timedelta(days=15),
-        start_date
+        date - datetime.timedelta(days=30),
+        date
     )
 
     # データが存在しない場合
@@ -54,34 +59,34 @@ def rate(
 
     # 今日のOpenとCloseの差を計算
     results.append({
-        'rarte': diff_rate(df[i][3], df[i][6]),
+        'rate': diff_rate(df[i][3], df[i][6]),
         'pressure': convert_pressure(df[i])
     })
 
     # 1日前のOpen値と当日のOpen値の差を計算
     results.append({
-        'rarte': diff_rate(df[i][3], df[i-1][3]),
+        'rate': diff_rate(df[i][3], df[i-1][3]),
         'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-1])) / 2
     })
     # 2日前のOpen値と当日のOpen値の差を計算
     results.append({
-        'rarte': diff_rate(df[i][3], df[i-2][3]),
-        'pressure': (convert_pressure(df[i-2]) + convert_pressure(df[i-2])) / 2
+        'rate': diff_rate(df[i][3], df[i-2][3]),
+        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-2])) / 2
     })
     # 3日前のOpen値と当日のOpen値の差を計算
     results.append({
-        'rarte': diff_rate(df[i][3], df[i-3][3]),
-        'pressure': (convert_pressure(df[i-3]) + convert_pressure(df[i-3])) / 2
+        'rate': diff_rate(df[i][3], df[i-3][3]),
+        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-3])) / 2
     })
     # 1週間前のOpen値と当日のOpen値の差を計算
     results.append({
-        'rarte': diff_rate(df[i][3], df[i-5][3]),
-        'pressure': (convert_pressure(df[i-5]) + convert_pressure(df[i-5])) / 2
+        'rate': diff_rate(df[i][3], df[i-5][3]),
+        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-5])) / 2
     })
     # 2週間前のOpen値と当日のOpen値の差を計算
     results.append({
-        'rarte': diff_rate(df[i][3], df[i-10][3]),
-        'pressure': (convert_pressure(df[i-10]) + convert_pressure(df[i-10])) / 2
+        'rate': diff_rate(df[i][3], df[i-10][3]),
+        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-10])) / 2
     })
 
     return results
@@ -100,7 +105,7 @@ def diff_rate(
 最大および最小の「Open」値が同じ場合、ゼロ除算を避けるためにすべての正規化された値に0を返します。
 引数:
     records (list[list]): 各レコードが財務データを含むリストであるレコードのリスト。
-                          「Open」値はインデックス3にある必要があります。
+                        「Open」値はインデックス3にある必要があります。
 戻り値:
     dict: 正規化された「Open」値を含む辞書。
 """
@@ -112,6 +117,9 @@ def normalize(
 
     # Open値の最大値と最小値を取得
     open_values = [float(record[3]) for record in records]
+    # 配列が空の場合は0を返す
+    if len(open_values) == 0:
+        return [0]
     max_open = max(open_values)
     min_open = min(open_values)
 
@@ -142,21 +150,21 @@ def vector_angle(
     
     df = HistoryDate().get_data_by_date_range(
         company_code,
-        datetime.timedelta(days=15),
+        date - datetime.timedelta(days=30),
         date
     )
+    # データが存在しない場合, Noneを返す
+    if len(df) <= 9:
+        return None
     # ノーマライズ
     v = normalize(df[0:10])
-    #print(v)
     # 内積計算で近似べクトルデータを取得
     r = VectorDate().get_dot_by_vec(v, 10)
-    #print(r)
 
     results = []
     for _r in r:
         # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
         h = HistoryDate().get_data_by_date_range(_r[1], _r[0], _r[0] + datetime.timedelta(days=15))
-        print(h)
         # 価格の変動を角度に変換
         results.append(angle([item[3] for item in h]))
 

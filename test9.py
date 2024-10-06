@@ -1,8 +1,9 @@
 import datetime
+import time
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
-from model.db.VectorDate import VectorDate
+
 
 from lib.analysis import rate, vector_angle
 
@@ -10,24 +11,59 @@ from lib.analysis import rate, vector_angle
 １日前、２日前、３日前、１週間前、２週間前からの株価から
 変動率を計算しデータベースに保存する試験
 '''
-'''
-company_codes = Industry().get_all_records()
 
-#print(company_codes)
+company_codes = Industry().get_all_records()
+day = datetime.datetime.now()
+print(company_codes)
 #print(date_map)
 
 for row in company_codes:
-    historys = HistoryDate().get_all_data_by_company_code(row[1])
-    results = []
-    for history in historys:
-        results.append(convert_pressure(history))
-    print(results)
-'''
+    print('Getting data for : ' + row[1])
+    r = rate(row[1], day)
+    if r == None:
+        print('Unable to get data for : ' + row[1])
+        continue
+    v = vector_angle(row[1], day)
+    if v == None:
+        print('Unable to get data for : ' + row[1])
+        continue
+    r = AnalysisDate().add_exists_by_date_and_company_code(
+        day.strftime("%Y-%m-%d"),
+        row[1],
+         {
+            'companyCode': row[1],
+            'Date': day,
+            'Day': r[0]['rate'],
+            'DayOne': r[1]['rate'],
+            'DayTwo': r[2]['rate'],
+            'DayThree': r[3]['rate'],
+            'WeekOne': r[4]['rate'],
+            'WeekTwo': r[5]['rate'],
+            'PressDay': r[0]['pressure'],
+            'PressOne': r[1]['pressure'],
+            'PressTwo': r[2]['pressure'],
+            'PressThree': r[3]['pressure'],
+            'PressWeekOne': r[4]['pressure'],
+            'PressWeekTwo': r[5]['pressure'],
+            'Rad1': v[0],
+            'Rad2': v[1],
+            'Rad3': v[2],
+            'Rad4': v[3],
+            'Rad5': v[4],
+            'Rad6': v[5],
+            'Rad7': v[6],
+            'Rad8': v[7],
+            'Rad9': v[8],
+            'Rad10': v[9]
+        })
+    #print('Analysis :', r)
+    #time.sleep(20)
 
-day = datetime.datetime(2021, 1, 30)
-r = rate('1301', day)
-v = vector_angle('1301', day)
 
+
+
+
+#print(r, v)
 """
 historys = HistoryDate().get_data_by_date_range('1301', day - datetime.timedelta(days=15), day)
 i = len(historys) - 1

@@ -4,7 +4,7 @@
 
 from model.schema.AnalysisDate import AnalysisDateType, AnalysisDateDBType
 from lib.pgsql import PgSQL
-from lib.utils import query_convert
+from lib.utils import query_convert, chek_float
 
 class AnalysisDate:
     _DB = None
@@ -36,6 +36,11 @@ class AnalysisDate:
         result = self._DB.execute(query, (i))
         return result
     
+    # idを指定してデータを削除
+    def delete(self, id):
+        query = "DELETE FROM analysis_date WHERE id = %s"
+        self._DB.execute(query, (id,))
+
     # companyCodeとDateでデータの削除
     def delete_by_date_and_company_code(self, date, companyCode):
         query = """
@@ -51,9 +56,10 @@ class AnalysisDate:
     def add_exists_by_date_and_company_code(
         self, date, companyCode, data: AnalysisDateType
     ) -> bool:
+        print(date)
         query = f"""
         SELECT
-            COUNT(*)
+            *
         FROM
             analysis_date
         WHERE
@@ -61,9 +67,14 @@ class AnalysisDate:
         AND
             companyCode = %s
         """
-        if self._DB.fetch_one(query, (date, companyCode)) == 0:
+        r = self._DB.fetch_all(query, (date, companyCode))
+
+        if len(r) <= 0:
             self.add_data(data)
             return True
+        if  len(r[0]) > 5 and chek_float(r[0][3]) == False or chek_float(r[0][4]) == False or chek_float(r[0][5]) == False or chek_float(r[0][6]) == False:
+            self.delete(r[0][0])
+            self.add_data(data)
         return None
 
     # DateとcompanyCodeからデータを取得

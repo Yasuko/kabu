@@ -4,7 +4,7 @@
 
 from model.schema.HistoryDate import HistoryDateType, HistoryDateDBType
 from lib.pgsql import PgSQL
-from lib.utils import query_convert
+from lib.utils import query_convert, chek_float
 
 class HistoryDate:
     _DB = None
@@ -56,8 +56,24 @@ class HistoryDate:
     def add_data_if_not_exists_by_date_and_company_code(
         self, date, companyCode, data: HistoryDateType
     ) -> bool:
-        query = "SELECT COUNT(*) FROM history_date WHERE Date = %s AND companyCode = %s"
-        if self._DB.fetch_one(query, (date, companyCode)) == 0:
+        query = f"""
+        SELECT
+            *
+        FROM
+            history_date
+        WHERE
+            Date = %s
+        AND
+            companyCode = %s
+        """
+        r = self._DB.fetch_all(query, (date, companyCode))
+        print(len(r))
+        if len(r) <= 0:
+            self.add_data(data)
+            return True
+        
+        if  len(r[0]) > 5 and chek_float(r[0][3]) == False or chek_float(r[0][4]) == False or chek_float(r[0][5]) == False or chek_float(r[0][6]) == False:
+            self.delete_data(r[0][0])
             self.add_data(data)
             return True
         return None

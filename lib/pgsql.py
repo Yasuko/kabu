@@ -15,6 +15,10 @@ class PgSQL:
 
     def __init__(self):
         print('PgSQL initialized')
+    
+    def __del__(self):
+        if self.conn != None:
+            self.conn.close()
 
     @property
     def host(self): return self._host
@@ -42,6 +46,7 @@ class PgSQL:
         db_url = f"postgresql://{self._user}:{self._password}@{self._host}:{self._port}/{self._database}"
         print(db_url)
         self.conn = psycopg2.connect(db_url)
+        self.cursor = self.conn.cursor()
         return self
     
     def check_connection(self):
@@ -54,9 +59,9 @@ class PgSQL:
     '''
     def execute(self, query, params=None):
         try:
-            with self.conn.cursor() as cursor:
-                cursor.execute(query, params)
-                self.conn.commit()
+
+            self.cursor.execute(query, params)
+            self.conn.commit()
             return True
         except Exception as e:
             print(e)
@@ -68,9 +73,8 @@ class PgSQL:
     '''
     def fetch_one(self, query, params=None):
         try:
-            with self.conn.cursor() as cursor:
-                cursor.execute(query, params)
-                result = cursor.fetchone()
+            self.cursor.execute(query, params)
+            result = self.cursor.fetchone()
             return result[0]
         except Exception as e:
             print(e)
@@ -82,9 +86,8 @@ class PgSQL:
     '''
     def fetch_all(self, query, params=None):
         try:
-            with self.conn.cursor() as cursor:
-                cursor.execute(query, params)
-                result = cursor.fetchall()
+            self.cursor.execute(query, params)
+            result = self.cursor.fetchall()
             return result
         except Exception as e:
             print(e)

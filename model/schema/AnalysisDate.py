@@ -18,7 +18,16 @@ class AnalysisDateType:
     PressThree: float
     PressWeekOne: float
     PressWeekTwo: float
-    Rad: list
+    Rad1: list
+    Rad2: list
+    Rad3: list
+    Rad4: list
+    Rad5: list
+    Rad6: list
+    Rad7: list
+    Rad8: list
+    Rad9: list
+    Rad10: list
 
 class AnalysisDateDBType(AnalysisDateType):
     id: str
@@ -52,7 +61,16 @@ class AnalysisDate:
         PressThree NUMERIC NOT NULL,
         PressWeekOne NUMERIC NOT NULL,
         PressWeekTwo NUMERIC NOT NULL,
-        Rad NUMERIC[] NOT NULL,
+        Rad1 NUMERIC[][] NOT NULL,
+        Rad2 NUMERIC[][] NOT NULL,
+        Rad3 NUMERIC[][] NOT NULL,
+        Rad4 NUMERIC[][] NOT NULL,
+        Rad5 NUMERIC[][] NOT NULL,
+        Rad6 NUMERIC[][] NOT NULL,
+        Rad7 NUMERIC[][] NOT NULL,
+        Rad8 NUMERIC[][] NOT NULL,
+        Rad9 NUMERIC[][] NOT NULL,
+        Rad10 NUMERIC[][] NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX ON analysis_date (companyCode);

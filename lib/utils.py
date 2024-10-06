@@ -1,8 +1,22 @@
 import datetime
 import calendar
 import math
+import math
 from typing import Tuple
 
+'''
+タイプヒントの型情報と、引数のデータが一致しているかを検証し
+一致している場合はデータを返し
+一致していない場合は型に合わせた最小のデータを返す
+
+Args:
+    data (int | float | str | list | dict | set | bool | None): 検証するデータ
+    data_type (int | float | str | list | dict | set | bool | None): 検証するデータの型
+
+Returns:
+    int | float | str | list | dict | set | bool | None: 検証したデータ
+
+'''
 def validate(
     data: int | float | str | list | dict | set | bool | None,
     data_type: int | float | str | list | dict | set | bool | None
@@ -44,6 +58,21 @@ def query_convert(
     return query[:-2], values[:-2], insert
 
 
+def chek_float(data: any) -> bool:
+    if math.isnan(data):
+        return False
+    if data is None:
+        return False
+    if isinstance(data, float):
+        return True
+    if data.__class__.__name__ == 'Decimal':
+        return True
+    return False
+
+
+'''
+指定された年月の日付範囲を作成し、返す
+'''
 def build_date_map(
     start: int = 2010,
     end: int = 2024,
@@ -64,6 +93,21 @@ def build_date_map(
             })
     
     return date_ranges
+
+'''
+指定された日付と、指定された日数分前の日付から
+その間の日付のリストを作成し、返す
+'''
+def date_map_before_date(
+    date: datetime.date,
+    days: int,
+):
+    date_list = []
+
+    for i in range(days):
+        date_list.append(date - datetime.timedelta(days=i))
+
+    return date_list
 
 '''
 値動きから角度を計算し、返す

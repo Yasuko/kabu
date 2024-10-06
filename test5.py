@@ -1,4 +1,5 @@
 import csv
+import math
 import time
 import yfinance as yf
 
@@ -55,6 +56,13 @@ for row in company_codes:
             workout = False
             continue
         for timestamp, d in data.to_dict(orient='index').items():
+
+            # Open, High, Low, Closeのいずれかが数値以外か、math.isnanがFalseの場合はスキップ
+            for key in ['Open', 'High', 'Low', 'Close']:
+                if type(d[key]) is not float or math.isnan(d[key]):
+                    continue
+                
+             
 
             d['companyCode'] = row[1]
             d['Date'] = timestamp.strftime('%Y-%m-%d')
