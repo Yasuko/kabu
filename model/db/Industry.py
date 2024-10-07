@@ -81,6 +81,21 @@ class Industry:
         query = "SELECT DISTINCT ON (companyCode) * FROM industry;"
         records = self.DB.fetch_all(query)
         return records
+    
+    # company_codeaでソート、重複を排除し、指定のCompanyCodeから後のレコードを取得し返す
+    def get_records_by_company_code(self, company_code):
+        query = f"""
+        SELECT DISTINCT ON (companyCode)
+            *
+        FROM
+            industry
+        WHERE
+            companyCode >= %s
+        ORDER BY
+            companyCode;
+        """
+        records = self.DB.fetch_all(query, (company_code,))
+        return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の5件を取得し返す
     def get_latest_5_records_by_company_code(self, company_code):

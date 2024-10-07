@@ -43,7 +43,7 @@ class VectorDate:
     ) -> bool:
         query = f"""
         SELECT
-            COUNT(*)
+            *
         FROM
             vector_date
         WHERE
@@ -51,9 +51,11 @@ class VectorDate:
         AND
             companyCode = %s
         """
-        if self.DB.fetch_one(query, (date, companyCode)) == 0:
+        r = self.DB.fetch_all(query, (date, companyCode))
+        if len(r) <= 0:
             self.insert_record(data)
             return True
+
         return False
 
     # idからレコードを1件検索し返す

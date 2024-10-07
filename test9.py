@@ -14,6 +14,7 @@ from lib.analysis import rate, vector_angle
 
 company_codes = Industry().get_all_records()
 day = datetime.datetime.now()
+db = Industry().DB()
 print(company_codes)
 #print(date_map)
 
@@ -45,16 +46,26 @@ for row in company_codes:
             'PressThree': r[3]['pressure'],
             'PressWeekOne': r[4]['pressure'],
             'PressWeekTwo': r[5]['pressure'],
-            'Rad1': v[0],
-            'Rad2': v[1],
-            'Rad3': v[2],
-            'Rad4': v[3],
-            'Rad5': v[4],
-            'Rad6': v[5],
-            'Rad7': v[6],
-            'Rad8': v[7],
-            'Rad9': v[8],
-            'Rad10': v[9]
+            'After1': v[0]['price'],
+            'After1Pressure': v[0]['pressure'],
+            'After2': v[1]['price'],
+            'After2Pressure': v[1]['pressure'],
+            'After3': v[2]['price'],
+            'After3Pressure': v[2]['pressure'],
+            'After4': v[3]['price'],
+            'After4Pressure': v[3]['pressure'],
+            'After5': v[4]['price'],
+            'After5Pressure': v[4]['pressure'],
+            'After6': v[5]['price'],
+            'After6Pressure': v[5]['pressure'],
+            'After7': v[6]['price'],
+            'After7Pressure': v[6]['pressure'],
+            'After8': v[7]['price'],
+            'After8Pressure': v[7]['pressure'],
+            'After9': v[8]['price'],
+            'After9Pressure': v[8]['pressure'],
+            'After10': v[9]['price'],
+            'After10Pressure': v[9]['pressure']
         })
     #print('Analysis :', r)
     #time.sleep(20)

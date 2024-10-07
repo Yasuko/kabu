@@ -166,7 +166,13 @@ def vector_angle(
         # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
         h = HistoryDate().get_data_by_date_range(_r[1], _r[0], _r[0] + datetime.timedelta(days=15))
         # 価格の変動を角度に変換
-        results.append(angle([item[3] for item in h]))
+        # results.append(angle([item[3] for item in h]))
+
+        # Open価格の動きと、圧力を計算
+        results.append({
+            'pressure': ([convert_pressure(item) for item in h]),
+            'price': [item[3] for item in h]
+        })
 
     return results
 
