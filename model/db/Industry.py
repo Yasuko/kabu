@@ -8,13 +8,17 @@ from lib.utils import query_convert
 
 class Industry:
 
-    DB = None
+    _DB = None
 
     def __init__(self, DB = None):
         if DB is not None:
-            self.DB = DB
+            self._DB = DB
         else:
-            self.DB = PgSQL().connect()
+            self._DB = PgSQL().connect()
+    
+    @property
+    def DB(self):
+        return self._DB
     
     # レコードの登録
     def insert_record(self, data: IndustryType):
@@ -32,7 +36,7 @@ class Industry:
             NOW()
         )
         """
-        new_id = self.DB.execute(query, (i))
+        new_id = self._DB.execute(query, (i))
         #print('Insert Industory new_id:', new_id)
         return new_id
 
@@ -48,7 +52,7 @@ class Industry:
         AND
             createdAt >= NOW() - INTERVAL '72 hours';
         """
-        record = self.DB.fetch_one(query, (data['companyCode'],))
+        record = self._DB.fetch_one(query, (data['companyCode'],))
         if record is None:
             self.insert_record(data)
 
@@ -63,23 +67,23 @@ class Industry:
         WHERE
             id = %s;
         """
-        self.DB.execute(query, (id, *kwargs))
+        self._DB.execute(query, (id, *kwargs))
 
     # レコードの削除
     def delete_record(self, id):
         query = "DELETE FROM industry WHERE id = %s;"
-        self.DB.execute(query, (id,))
+        self._DB.execute(query, (id,))
 
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
         query = "SELECT * FROM industry WHERE id = %s;"
-        record = self.DB.fetch_one(query, (id,))
+        record = self._DB.fetch_one(query, (id,))
         return record
 
     # company_codeの重複を排除し、全てのレコードを取得し返す
     def get_all_records(self):
         query = "SELECT DISTINCT ON (companyCode) * FROM industry;"
-        records = self.DB.fetch_all(query)
+        records = self._DB.fetch_all(query)
         return records
     
     # company_codeaでソート、重複を排除し、指定のCompanyCodeから後のレコードを取得し返す
@@ -94,7 +98,7 @@ class Industry:
         ORDER BY
             companyCode;
         """
-        records = self.DB.fetch_all(query, (company_code,))
+        records = self._DB.fetch_all(query, (company_code,))
         return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の5件を取得し返す
@@ -108,7 +112,7 @@ class Industry:
             createdAt DESC
         LIMIT 5;
         """
-        records = self.DB.fetch_all(query, (company_code,))
+        records = self._DB.fetch_all(query, (company_code,))
         return records
 
     # company_codeからレコードを検索、createdAtでソートし最新の1件を取得し返す
@@ -122,7 +126,7 @@ class Industry:
             createdAt DESC
         LIMIT 1;
         """
-        record = self.DB.fetch_one(query, (company_code,))
+        record = self._DB.fetch_one(query, (company_code,))
         return record
 
     # idからレコードを1件検索し、他のテーブルをcompany_codeでjoinし返す
@@ -147,7 +151,7 @@ class Industry:
         WHERE
             i.id = %s;
         """
-        record = self.DB.fetch_one(query, (id,))
+        record = self._DB.fetch_one(query, (id,))
         return record
 
     # company_codeからレコードを検索し、他のテーブルをcompany_codeでjoinし、createdAtでソートし最新の5件を取得し返す
@@ -175,5 +179,5 @@ class Industry:
             i.createdAt DESC
         LIMIT 5;
         """
-        records = self.DB.fetch_all(query, (company_code,))
+        records = self._DB.fetch_all(query, (company_code,))
         return records

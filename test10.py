@@ -44,7 +44,7 @@ for row in company_codes:
                 #print(data)
                 break
             print('API Result is None')
-            time.sleep(2)
+            time.sleep(1.8)
             count += 1
             continue
 
@@ -71,4 +71,4 @@ for row in company_codes:
             d
         )
     
-    time.sleep(2)
+    time.sleep(1.8)

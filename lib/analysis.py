@@ -51,7 +51,7 @@ def rate(
     )
 
     # データが存在しない場合
-    if len(df) == 0:
+    if len(df) == 0 or len(df) <= 9:
         return None
 
     results = []

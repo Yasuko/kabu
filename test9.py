@@ -14,8 +14,7 @@ from lib.analysis import rate, vector_angle
 
 company_codes = Industry().get_all_records()
 day = datetime.datetime.now()
-db = Industry().DB()
-print(company_codes)
+db = Industry().DB
 #print(date_map)
 
 for row in company_codes:
