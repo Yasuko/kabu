@@ -42,9 +42,10 @@ def convert_pressure(
 def rate(
     company_code: str,
     date: pd.Timestamp,
+    DB = None
 ):
     
-    df = HistoryDate().get_data_by_date_range(
+    df = HistoryDate(DB).get_data_by_date_range(
         company_code,
         date - datetime.timedelta(days=30),
         date
@@ -53,6 +54,10 @@ def rate(
     # データが存在しない場合
     if len(df) == 0 or len(df) <= 9:
         return None
+    # math.isnoneが含まれている場合はNoneを返す
+    for record in df:
+        if math.isnan(record[3]) or math.isnan(record[6]) or math.isnan(record[4]) or math.isnan(record[5]):
+            return None
 
     results = []
     i = len(df) - 1
@@ -146,9 +151,9 @@ def normalize(
 def vector_angle(
     company_code: str,
     date: datetime.date,
+    DB = None
 ) -> list:
-    
-    df = HistoryDate().get_data_by_date_range(
+    df = HistoryDate(DB).get_data_by_date_range(
         company_code,
         date - datetime.timedelta(days=30),
         date
@@ -159,19 +164,19 @@ def vector_angle(
     # ノーマライズ
     v = normalize(df[0:10])
     # 内積計算で近似べクトルデータを取得
-    r = VectorDate().get_dot_by_vec(v, 10)
+    r = VectorDate(DB).get_dot_by_vec(v, 10)
 
     results = []
     for _r in r:
         # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
-        h = HistoryDate().get_data_by_date_range(_r[1], _r[0], _r[0] + datetime.timedelta(days=15))
+        h = HistoryDate(DB).get_data_by_date_range(_r[1], _r[0], _r[0] + datetime.timedelta(days=15))
         # 価格の変動を角度に変換
         # results.append(angle([item[3] for item in h]))
 
         # Open価格の動きと、圧力を計算
         results.append({
             'pressure': ([convert_pressure(item) for item in h]),
-            'price': [item[3] for item in h]
+            'price': normalize(h)
         })
 
     return results

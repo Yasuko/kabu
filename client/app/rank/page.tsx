@@ -1,69 +1,51 @@
-import { getRankByDayOneAction } from "@/src/domain/rank/action";
+import React from "react"
+import {
+    getRankByDayAction,
+    getRankByDayOneAction,
+    getRankByDayTwoAction,
+    getRankByDayThreeAction,
+    getRankByWeekOneAction,
+    getRankByWeekTwoAction
+} from "@/src/domain/rank/action"
 
-export default async function Home() {
+import Graph from "../(components)/graph"
+import List from "../(components)/list"
 
-    const r = await getRankByDayOneAction("2021-10-01", 10)
+export default async function Page() {
+
+    // 今日の日付を「YYYY-MM-DD」形式の文字列で取得
+    const today = new Date().toISOString().split('T')[0]
     
+    //const r = await getRankByDayAction('2024-10-08', 10)
+    const r2 = await getRankByDayOneAction(today, 10)
+    const r3 = await getRankByDayTwoAction(today, 10)
+    const r4 = await getRankByDayThreeAction(today, 10)
+    const r5 = await getRankByWeekOneAction(today, 10)
+    const r6 = await getRankByWeekTwoAction(today, 10)
+
     return (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-
-            <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-            <li className="mb-2">
-                Get started by editing{" "}
-                <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-                src/app/page.tsx
-                </code>
-                .
-            </li>
-            <li>Save and see your changes instantly.</li>
-            </ol>
+            <div className="flex gap-4 items-center flex-col sm:flex-row">
+                <List list={r2} />
+            </div>
+            <div className="flex gap-4 items-center flex-col sm:flex-row">
+                <List list={r3} />
+            </div>
+            <div className="flex gap-4 items-center flex-col sm:flex-row">
+                <List list={r4} />
+            </div>
+            <div className="flex gap-4 items-center flex-col sm:flex-row">
+                <List list={r5} />
+            </div>
+            <div className="flex gap-4 items-center flex-col sm:flex-row">
+                <List list={r6} />
+            </div>
 
             <div className="flex gap-4 items-center flex-col sm:flex-row">
-            <a
-                className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-                href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Deploy now
-            </a>
-            <a
-                className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-                href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Read our docs
-            </a>
+                <Graph list={r2} />
             </div>
         </main>
-        <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-            <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            >
-            Learn
-            </a>
-            <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            >
-            Examples
-            </a>
-            <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            >
-            Go to nextjs.org →
-            </a>
-        </footer>
         </div>
-    );
+    )
 }

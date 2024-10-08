@@ -82,7 +82,14 @@ class Industry:
 
     # company_codeの重複を排除し、全てのレコードを取得し返す
     def get_all_records(self):
-        query = "SELECT DISTINCT ON (companyCode) * FROM industry;"
+        query = f"""
+        SELECT DISTINCT ON
+            (companyCode) *
+        FROM
+            industry
+        ORDER BY
+            companyCode, createdAt DESC
+        ;"""
         records = self._DB.fetch_all(query)
         return records
     

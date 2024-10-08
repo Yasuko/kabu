@@ -18,7 +18,6 @@ export const getRankByDay = async (
     `
     const values = [date]
     const r = await pgService.getMany(query, values)
-    console.log(r)
     return r
 }
 
@@ -39,8 +38,7 @@ export const getRankByDayOne = async (
         limit $2
     `
     const values = [date, limit]
-    const r = await pgService.getOne(query, values)
-    console.log(r)
+    const r = await pgService.getMany(query, values)
     return r
 }
 
@@ -61,8 +59,7 @@ export const getRankByDayTwo = async (
         limit $2
     `
     const values = [date, limit]
-    const r = await pgService.getOne(query, values)
-    console.log(r)
+    const r = await pgService.getMany(query, values)
     return r
 }
 
@@ -83,8 +80,7 @@ export const getRankByDayThree = async (
         limit $2
     `
     const values = [date, limit]
-    const r = await pgService.getOne(query, values)
-    console.log(r)
+    const r = await pgService.getMany(query, values)
     return r
 }
 
@@ -105,8 +101,7 @@ export const getRankByWeekOne = async (
         limit $2
     `
     const values = [date, limit]
-    const r = await pgService.getOne(query, values)
-    console.log(r)
+    const r = await pgService.getMany(query, values)
     return r
 }
 
@@ -127,7 +122,6 @@ export const getRankByWeekTwo = async (
         limit $2
     `
     const values = [date, limit]
-    const r = await pgService.getOne(query, values)
-    console.log(r)
+    const r = await pgService.getMany(query, values)
     return r
 }

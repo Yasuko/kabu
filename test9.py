@@ -19,15 +19,15 @@ db = Industry().DB
 
 for row in company_codes:
     print('Getting data for : ' + row[1])
-    r = rate(row[1], day)
+    r = rate(row[1], day, db)
     if r == None:
         print('Unable to get data for : ' + row[1])
         continue
-    v = vector_angle(row[1], day)
+    v = vector_angle(row[1], day, db)
     if v == None:
         print('Unable to get data for : ' + row[1])
         continue
-    r = AnalysisDate().add_exists_by_date_and_company_code(
+    r = AnalysisDate(db).add_exists_by_date_and_company_code(
         day.strftime("%Y-%m-%d"),
         row[1],
          {

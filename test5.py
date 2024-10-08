@@ -14,11 +14,14 @@ DBに保存された企業情報から、株価情報を取得し、DBに登録�
 
 
 # ファイルパスを指定
-company_codes = Industry().get_all_records()
+#company_codes = Industry().get_all_records()
+company_codes = Industry().get_records_by_company_code('4415')
 date_map = build_date_map()
 
 #print(company_codes)
 #print(date_map)
+
+intervalTime = 1.7
 
 for row in company_codes:
     count = 0
@@ -41,13 +44,13 @@ for row in company_codes:
                     #print(data)
                     break
                 print('API Result is None')
-                time.sleep(2)
+                time.sleep(intervalTime)
                 count += 1
                 continue
 
             except Exception as e:
                 print(e)
-                time.sleep(2)
+                time.sleep(intervalTime)
                 count += 1
                 continue
         
@@ -75,8 +78,8 @@ for row in company_codes:
                 d
             )
         
-        time.sleep(2)
+        time.sleep(intervalTime)
 
 
-    time.sleep(3)
+    time.sleep(intervalTime)
     
