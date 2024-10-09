@@ -1,7 +1,7 @@
 import time
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.VectorDate import VectorDate
+from model.db.Vector20 import Vector20
 
 from lib.analysis import normalize
 
@@ -15,7 +15,7 @@ db = Industry().DB
 #print(company_codes)
 #print(date_map)
 
-dimension = 10
+dimension = 20
 
 for row in company_codes:
     historys = HistoryDate(db).get_all_data_by_company_code(row[1])
@@ -26,8 +26,8 @@ for row in company_codes:
         if len(v) == 0:
             continue
 
-        # 指定の日付から、10日前までのベクトルデータを保存
-        _r = VectorDate(db).insert_exists_by_date_and_company_code(
+        # 指定の日付から、20日前までのベクトルデータを保存
+        _r = Vector20(db).insert_exists_by_date_and_company_code(
                             historys[i+dimension][2],
                             historys[i+dimension][1],
                             {

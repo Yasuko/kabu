@@ -2,11 +2,11 @@
 リスク情報 (RiskInfo) テーブルのスキーマを定義する
 '''
 
-from model.schema.VectorMonth import VectorMonthType
+from model.schema.Vector20 import Vector20Type
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
-class VectorMonth:
+class Vector20:
     DB = None
 
     def __init__(self, DB = None):
@@ -16,11 +16,11 @@ class VectorMonth:
             self.DB = PgSQL().connect()
     
     # レコードの登録
-    def insert_record(self, data: VectorMonthType):
-        q, v, i = query_convert(data, VectorMonthType)
+    def insert_record(self, data: Vector20Type):
+        q, v, i = query_convert(data, Vector20Type)
         query = f"""
         INSERT INTO
-            vector_month
+            vector_20
         (
             {q},
             createdAt
@@ -36,9 +36,9 @@ class VectorMonth:
 
     # DateとcompanyCodeの重複がない場合のみ、データの追加
     def insert_exists_by_date_and_company_code(
-        self, date, companyCode, data: VectorMonthType
+        self, date, companyCode, data: Vector20Type
     ) -> bool:
-        query = "SELECT COUNT(*) FROM vector_month WHERE Date = %s AND companyCode = %s"
+        query = "SELECT COUNT(*) FROM vector_20 WHERE Date = %s AND companyCode = %s"
         if self.DB.fetch_one(query, (date, companyCode)) == 0:
             self.insert_record(data)
             return True
@@ -46,7 +46,7 @@ class VectorMonth:
 
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
-        query = "SELECT * FROM vector_month WHERE id = %s"
+        query = "SELECT * FROM vector_20 WHERE id = %s"
         record = self.DB.fetch_one(query, (id,))
         return record
 
@@ -57,7 +57,7 @@ class VectorMonth:
             *,
             vec <-> %s AS distance
         FROM
-            vector_month
+            vector_20
         ORDER BY
             distance
         LIMIT {limit}
@@ -72,7 +72,7 @@ class VectorMonth:
             *,
             (vec <#> %s AS) * -1 AS dot
         FROM
-            vector_month
+            vector_20
         ORDER BY
             dot
         LIMIT {limit}
@@ -87,7 +87,7 @@ class VectorMonth:
             *,
             1 - (vec <=> %s) AS similality
         FROM
-            vector_month
+            vector_20
         ORDER BY
             cosine
         LIMIT {limit}
