@@ -15,6 +15,7 @@ DBに保存された企業情報から、株価情報を取得し、DBに登録�
 
 # ファイルパスを指定
 company_codes = Industry().get_all_records()
+db = Industry().DB
 
 #今日の日付を取得する
 day = datetime.datetime.now()
@@ -65,7 +66,7 @@ for row in company_codes:
         d['StockSplits'] = d['Stock Splits']
         del d['Stock Splits']
 
-        HistoryDate().add_data_if_not_exists_by_date_and_company_code(
+        HistoryDate(db).add_data_if_not_exists_by_date_and_company_code(
             d['Date'],
             d['companyCode'],
             d
