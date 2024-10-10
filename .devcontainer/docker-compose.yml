@@ -27,6 +27,7 @@ services:
       POSTGRES_USER: yasuko
       POSTGRES_PASSWORD: yasukosan
       POSTGRES_DB: kabu
+      MAX_CONNECTIONS: 200
 
 volumes:
   node_modules-store:

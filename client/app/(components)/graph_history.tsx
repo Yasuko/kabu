@@ -35,22 +35,13 @@ const getRandomColor = () => {
 
 const colormap = Array.from({ length: 10 }, getRandomColor)
 
-export default function Graph({
+export default function GraphHistory({
     list,
     label,
-    key
 }: {
     list: any,
     label: string,
-    key: string
 }) {
-    if (list === undefined || list.length === 0) {
-        return (
-            <div>
-                None
-            </div>
-        )
-    }
     // listの数だけ1~順番の数値の配列を作成
     // 例: ['1', '2', '3', '4', '5']
     const labels = Object.keys(list).map((_key, index) => {
@@ -58,18 +49,19 @@ export default function Graph({
     })
 
 
-    const datasets = Object.keys(list).map((_key, index) => {
-        return {
+    const datasets = {
+            title: label,
             label: label,
-            data: list[_key][key],
+            data: list,
             fill: false,
-            borderColor: colormap[index],
+            borderColor: colormap[1],
             tension: 0.1
         }
-    })
+
+
     const data: ChartData<'line'> = {
         labels: labels,
-        datasets: datasets
+        datasets: [datasets]
     }
 
     return (

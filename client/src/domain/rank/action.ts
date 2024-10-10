@@ -5,50 +5,69 @@ import {
     getRankByDayThree, getRankByWeekOne, getRankByWeekTwo
 } from '@/src/model/analisis.date.model'
 
-export async function getRankByDayAction(
+import {
+    getByBeforeDate,
+} from '@/src/model/history.date.model'
+
+export const getRankAction = async (
     date: string,
-    limit: number = 10
-) {
-    const r = await getRankByDay(date, limit)
-    return r
+    limit: number = 10,
+    target: 'day' | 'dayOne' | 'dayTwo' | 'dayThree' | 'weekOne' | 'weekTwo',
+) => {
+    switch (target) {
+        case 'day':
+            return getRankByDay(date, limit)
+        case 'dayOne':
+            return getRankByDayOne(date, limit)
+        case 'dayTwo':
+            return getRankByDayTwo(date, limit)
+        case 'dayThree':
+            return getRankByDayThree(date, limit)
+        case 'weekOne':
+            return getRankByWeekOne(date, limit)
+        case 'weekTwo':
+            return getRankByWeekTwo(date, limit)
+        default:
+            return getRankByDay(date, limit)
+    }
 }
 
-export async function getRankByDayOneAction(
+export const getHistoryAction = async (
+    companyCode: string,
     date: string,
-    limit: number = 10
-) {
-    const r = await getRankByDayOne(date, limit)
-    return r
-}
+    limit: number = 30,
+) => {
+    const r = await getByBeforeDate(companyCode, date, limit)
 
-export async function getRankByDayTwoAction(
-    date: string,
-    limit: number = 10
-) {
-    const r = await getRankByDayTwo(date, limit)
-    return r
-}
+    if (r.status === false) {
+        return {
+            status: false,
+            message: 'Error'
+        }
+    }
 
-export async function getRankByDayThreeAction(
-    date: string,
-    limit: number = 10
-) {
-    const r = await getRankByDayThree(date, limit)
-    return r
-}
+    const open = []
+    const close = []
+    const high = []
+    const low = []
+    const volume = []
 
-export async function getRankByWeekOneAction(
-    date: string,
-    limit: number = 10
-) {
-    const r = await getRankByWeekOne(date, limit)
-    return r
-}
+    for (let i = r.data.length; i > 0; i--) {
+        open.push(r.data[i - 1].open)
+        close.push(r.data[i - 1].close)
+        high.push(r.data[i - 1].high)
+        low.push(r.data[i - 1].low)
+        volume.push(r.data[i - 1].volume)
+    }
 
-export async function getRankByWeekTwoAction(
-    date: string,
-    limit: number = 10
-) {
-    const r = await getRankByWeekTwo(date, limit)
-    return r
+    return {
+        status: true,
+        data: {
+            open,
+            close,
+            high,
+            low,
+            volume
+        }
+    }
 }

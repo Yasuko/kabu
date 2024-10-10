@@ -1,13 +1,17 @@
-'use client'
 import React from "react"
+import {
+    getRankAction,
+} from "@/src/domain/rank/action"
+import Link from "next/link"
 
-export default function List({
-    list,
-    callback
+export default async function List({
+    date,
+    target
 }: {
-    list: any,
-    callback: any
+    date: any,
+    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo',
 }) {
+    const list = await fetchDataList(date, target)
     return (
     <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -39,21 +43,28 @@ export default function List({
                 </tr>
             </thead>
             <tbody>
-                { buildList(list, callback) }
+                { buildList(list) }
             </tbody>
         </table>
     </div>
     )
 }
 
-const buildList = (list: any, callback: any): JSX.Element[] => {
+const buildList = async (
+    list: any,
+): Promise<JSX.Element[]> => {
     return Object.keys(list).map((key, index) => {
         return (
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="text-center px-6 py-4 font-medium">
-                    <a href="#" onClick={() => callback(list[key]['companycode'])}>
+            <tr
+                key={index}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                    scope="row"
+                    className="text-center px-6 py-4 font-medium cursor-pointer"
+                    >
+                    <Link href={"/rank/" + list[key]['companycode']}>
                         { list[key]['companycode'] }
-                    </a>
+                    </Link>
                 </th>
                 <td className="px-6 py-4">
                     { strSplit(list[key]['day']) }
@@ -80,4 +91,27 @@ const buildList = (list: any, callback: any): JSX.Element[] => {
 
 const strSplit = (str: string, len: number = 8): string => {
     return str.length > len ? str.slice(0, len) + '...' : str
+}
+
+
+const fetchDataList = async (
+    today: string,
+    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo'
+): Promise<any> => {
+    switch (target) {
+        case 'day':
+            return await getRankAction(today, 10, 'day')
+        case 'dayone':
+            return await getRankAction(today, 10, 'dayOne')
+        case 'daytwo':
+            return await getRankAction(today, 10, 'dayTwo')
+        case 'daythree':
+            return await getRankAction(today, 10, 'dayThree')
+        case 'weekone':
+            return await getRankAction(today, 10, 'weekOne')
+        case 'weektwo':
+            return await getRankAction(today, 10, 'weekTwo')
+        default:
+            return []
+    }
 }

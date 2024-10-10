@@ -40,12 +40,7 @@ export default function RootLayout({
       <meta name="description" content="Comprehensive overview with charts, tables, and a streamlined dashboard layout for easy data visualization and analysis." />
     
       <title>KABU</title>
-    
       <link rel="shortcut icon" href="../../favicon.ico" />
-    
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    
-      <link rel="stylesheet" href="https://preline.co/assets/css/main.min.css" />
     </head>
       <body
         className='antialiased'
