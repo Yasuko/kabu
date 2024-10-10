@@ -3,7 +3,12 @@
 import {
     getRankByDay, getRankByDayOne, getRankByDayTwo,
     getRankByDayThree, getRankByWeekOne, getRankByWeekTwo
-} from '@/src/model/analisis.date.model'
+} from '../../model/analisis.history.model'
+
+import {
+    getPressureByDay, getPressureByDayOne, getPressureByDayTwo,
+    getPressureByWeekOne, getPressureByWeekTwo
+} from '../../model/analisis.pressure.model'
 
 import {
     getByBeforeDate,
@@ -29,6 +34,27 @@ export const getRankAction = async (
             return getRankByWeekTwo(date, limit)
         default:
             return getRankByDay(date, limit)
+    }
+}
+
+export const getPressureAction = async (
+    date: string,
+    limit: number = 10,
+    target: 'day' | 'dayOne' | 'dayTwo' | 'dayThree' | 'weekOne' | 'weekTwo',
+) => {
+    switch (target) {
+        case 'day':
+            return getPressureByDay(date, limit)
+        case 'dayOne':
+            return getPressureByDayOne(date, limit)
+        case 'dayTwo':
+            return getPressureByDayTwo(date, limit)
+        case 'weekOne':
+            return getPressureByWeekOne(date, limit)
+        case 'weekTwo':
+            return getPressureByWeekTwo(date, limit)
+        default:
+            return getPressureByDay(date, limit)
     }
 }
 

@@ -1,6 +1,6 @@
 import { PGService } from '@/src/_lib/db/pg.service'
 
-export const getRankByDay = async (
+export const getPressureByDay = async (
     date: string,
     limit: number = 10
 ) => {
@@ -11,9 +11,9 @@ export const getRankByDay = async (
         FROM
             analysis_date as a
         WHERE
-            a.Date = $1
+            a.date = $1
         ORDER BY
-            a.Day DESC
+            a.pressday DESC
         LIMIT $2
     `
     const values = [date]
@@ -21,7 +21,7 @@ export const getRankByDay = async (
     return r
 }
 
-export const getRankByDayOne = async (
+export const getPressureByDayOne = async (
     date: string,
     limit: number = 10
 ) => {
@@ -34,7 +34,7 @@ export const getRankByDayOne = async (
         WHERE
             a.Date = $1
         ORDER BY
-            a.DayOne DESC
+            a.pressone DESC
         limit $2
     `
     const values = [date, limit]
@@ -42,7 +42,7 @@ export const getRankByDayOne = async (
     return r
 }
 
-export const getRankByDayTwo = async (
+export const getPressureByDayTwo = async (
     date: string,
     limit: number = 10
 ) => {
@@ -55,7 +55,7 @@ export const getRankByDayTwo = async (
         WHERE
             a.Date = $1
         ORDER BY
-            a.DayTwo DESC
+            a.presstwo DESC
         limit $2
     `
     const values = [date, limit]
@@ -63,7 +63,7 @@ export const getRankByDayTwo = async (
     return r
 }
 
-export const getRankByDayThree = async (
+export const getPressureByDayThree = async (
     date: string,
     limit: number = 10
 ) => {
@@ -76,7 +76,7 @@ export const getRankByDayThree = async (
         WHERE
             a.Date = $1
         ORDER BY
-            a.DayThree DESC
+            a.pressthree DESC
         limit $2
     `
     const values = [date, limit]
@@ -84,7 +84,7 @@ export const getRankByDayThree = async (
     return r
 }
 
-export const getRankByWeekOne = async (
+export const getPressureByWeekOne = async (
     date: string,
     limit: number = 10
 ) => {
@@ -97,7 +97,7 @@ export const getRankByWeekOne = async (
         WHERE
             a.Date = $1
         ORDER BY
-            a.WeekOne DESC
+            a.pressweekone DESC
         limit $2
     `
     const values = [date, limit]
@@ -105,7 +105,7 @@ export const getRankByWeekOne = async (
     return r
 }
 
-export const getRankByWeekTwo = async (
+export const getPressureByWeekTwo = async (
     date: string,
     limit: number = 10
 ) => {
@@ -118,7 +118,7 @@ export const getRankByWeekTwo = async (
         WHERE
             a.Date = $1
         ORDER BY
-            a.WeekTwo DESC
+            a.pressweektwo DESC
         limit $2
     `
     const values = [date, limit]

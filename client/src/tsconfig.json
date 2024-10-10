@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/app/*": ["../app/*"],
+      "@/src/*": ["../src/*"],
+    }
+  },
+  "exclude": [
+    "_lib/*",
+  ]
+}

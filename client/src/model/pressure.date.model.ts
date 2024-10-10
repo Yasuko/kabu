@@ -20,7 +20,7 @@ export const getByBeforeDate = async (
         SELECT
             *
         FROM
-            history_date as h
+            pressure_date as p
         WHERE
             h.companyCode = $1
         AND
