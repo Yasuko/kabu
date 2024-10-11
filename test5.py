@@ -6,7 +6,7 @@ import yfinance as yf
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
 
-from lib.utils import build_date_map
+from lib.utils import build_month_map
 
 '''
 DBに保存された企業情報から、株価情報を取得し、DBに登録する試験
@@ -16,7 +16,7 @@ DBに保存された企業情報から、株価情報を取得し、DBに登録�
 # ファイルパスを指定
 #company_codes = Industry().get_all_records()
 company_codes = Industry().get_records_by_company_code('4875')
-date_map = build_date_map()
+date_map = build_month_map()
 
 #print(company_codes)
 #print(date_map)
@@ -38,7 +38,8 @@ for row in company_codes:
 
                 msft = yf.Ticker(row[1] + '.T')
                 data = msft.history(start=date['start'], end=date['end'], period="1d")
-                #print('Return API Result :', data)
+                #data = msft.history(start='2020-01-01', end='2020-12-31', period="1d")
+                print('Return API Result :', data)
                 
                 if 'Open' in data:
                     #print(data)
@@ -53,7 +54,7 @@ for row in company_codes:
                 time.sleep(intervalTime)
                 count += 1
                 continue
-        
+        """
         if workout:
             print('Unable to get data for : ' + row[1])
             workout = False
@@ -77,7 +78,7 @@ for row in company_codes:
                 d['companyCode'],
                 d
             )
-        
+        """
         time.sleep(intervalTime)
 
 

@@ -94,6 +94,26 @@ def build_date_map(
     
     return date_ranges
 
+def build_month_map(
+    start: int = 2010,
+    end: int = 2024,
+):
+    date_ranges = []
+
+    for year in range(start, end + 1):
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+
+        # 日付が現在の日付よりも未来の場合は処理を終了
+        if end_date > datetime.date.today():
+            break
+        date_ranges.append({
+            "start": start_date.strftime("%Y-%m-%d"),
+            "end": end_date.strftime("%Y-%m-%d")
+        })
+    
+    return date_ranges
+
 '''
 指定された日付と、指定された日数分前の日付から
 その間の日付のリストを作成し、返す
