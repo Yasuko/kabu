@@ -38,11 +38,9 @@ const colormap = Array.from({ length: 10 }, getRandomColor)
 export default function Graph({
     list,
     label,
-    key
 }: {
     list: any,
     label: string,
-    key: string
 }) {
     if (list === undefined || list.length === 0) {
         return (
@@ -61,7 +59,7 @@ export default function Graph({
     const datasets = Object.keys(list).map((_key, index) => {
         return {
             label: label,
-            data: list[_key][key],
+            data: list[_key],
             fill: false,
             borderColor: colormap[index],
             tension: 0.1

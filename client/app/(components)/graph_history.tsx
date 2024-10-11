@@ -10,6 +10,7 @@ import {
     ChartData,
 } from "chart.js"
 import { Line } from 'react-chartjs-2'
+
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement)
 
 export const options: ChartOptions<'line'> = {
@@ -35,36 +36,35 @@ const getRandomColor = () => {
 
 const colormap = Array.from({ length: 10 }, getRandomColor)
 
-export default function GraphHistory({
-    list,
-    label,
-}: {
-    list: any,
+export const GraphHistory = (
+    historys: any,
     label: string,
-}) {
-    // listの数だけ1~順番の数値の配列を作成
-    // 例: ['1', '2', '3', '4', '5']
-    const labels = Object.keys(list).map((_key, index) => {
-        return (index + 1).toString()
+) => {
+
+    // 数値の連番で初期化された、30個の配列を作成
+    // 例: [1, 2, 3, 4, 5]
+    const labels = Array.from({ length: 30 }, (_v, i) => {
+        return i
     })
-
-
-    const datasets = {
-            title: label,
-            label: label,
-            data: list,
-            fill: false,
-            borderColor: colormap[1],
-            tension: 0.1
-        }
-
+    const datasets = Object.keys(historys.list).map((_key, index) => {
+        console.log(historys.list[_key])
+        return {
+                label: _key,
+                data: historys.list[_key],
+                fill: false,
+                borderColor: colormap[index],
+                tension: 0.1,
+            }
+    })
 
     const data: ChartData<'line'> = {
         labels: labels,
-        datasets: [datasets]
+        datasets: datasets,
     }
 
     return (
         <Line options={options} data={data} />
     )
 }
+
+export default GraphHistory

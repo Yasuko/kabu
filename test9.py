@@ -14,19 +14,23 @@ from lib.analysis import rate, vector_angle
 
 company_codes = Industry().get_all_records()
 day = datetime.datetime.now()
+day = day - datetime.timedelta(days=1)
 db = Industry().DB
 #print(date_map)
 
 for row in company_codes:
     print('Getting data for : ' + row[1])
+    
     r = rate(row[1], day, db)
     if r == None:
         print('Unable to get data for : ' + row[1])
         continue
+    
     v = vector_angle(row[1], day, db)
     if v == None:
         print('Unable to get data for : ' + row[1])
         continue
+    
     r = AnalysisDate(db).add_exists_by_date_and_company_code(
         day.strftime("%Y-%m-%d"),
         row[1],
@@ -66,8 +70,9 @@ for row in company_codes:
             'After10': v[9]['price'],
             'After10Pressure': v[9]['pressure']
         })
+        
     #print('Analysis :', r)
-    #time.sleep(20)
+    #time.sleep(2)
 
 
 

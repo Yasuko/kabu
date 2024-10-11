@@ -1,8 +1,10 @@
 import React from 'react'
 //import { notFound } from 'remix'
 import GraphHistory from '../../(components)/graph_history'
+import Graph from '../../(components)/graph'
 
 import {
+    getAnalysisAction,
     getHistoryAction
 } from '@/src/domain/rank/action'
 import Link from 'next/link'
@@ -14,13 +16,29 @@ export default async function Page({
 }) {
     const today = new Date(Date.now() - 86400000).toISOString().split('T')[0]
     const historys = await getHistoryAction(params.id, today, 30)
-    console.log(historys)
+    const analysis = await getAnalysisAction(params.id, today)
+    
+    const op_close  = {
+        open: historys.data.open,
+        close: historys.data.close,
+    }
+    const high_low  = {
+        high: historys.data.high,
+        low: historys.data.low,
+    }
+    const volumes = {
+        volume: historys.data.volume
+    }
+
+    const pressure = {
+        pressure: historys.data.pressure
+    }
     return (
 
-    <div className="max-w-[300rem] px-4 py-12 sm:px-6 lg:px-8  mx-auto">
+    <div className="w-full max-w-[600rem] px-4 py-6 sm:px-6 lg:px-8  mx-auto">
         <div className='px-10 py-2'>
             <Link href="/rank">
-                Return ⇐
+                Return ⇐ {params.id}
             </Link>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
@@ -31,12 +49,12 @@ export default async function Page({
             <div className="p-4 md:p-5">
                 <div className="flex items-center gap-x-2">
                     <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                        Open
+                        Open/Close
                     </p>
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={historys.data.open} label='Open' />
+                    <GraphHistory list={op_close} />
                 </div>
             </div>
             </div>
@@ -47,12 +65,12 @@ export default async function Page({
             <div className="p-4 md:p-5">
                 <div className="flex items-center gap-x-2">
                     <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                        Close
+                        High/Low
                     </p>
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={historys.data.close} label='Open' />
+                    <GraphHistory list={high_low} />
                 </div>
             </div>
             </div>
@@ -63,12 +81,12 @@ export default async function Page({
             <div className="p-4 md:p-5">
                 <div className="flex items-center gap-x-2">
                     <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                        High
+                        Volumes
                     </p>
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={historys.data.high} label='Open' />
+                    <GraphHistory list={volumes} />
                 </div>
             </div>
             </div>
@@ -79,12 +97,12 @@ export default async function Page({
             <div className="p-4 md:p-5">
                 <div className="flex items-center gap-x-2">
                     <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                        Low
+                        Pressure
                     </p>
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={historys.data.low} label='Open' />
+                    <GraphHistory list={pressure} />
                 </div>
             </div>
             </div>
@@ -95,12 +113,12 @@ export default async function Page({
             <div className="p-4 md:p-5">
                 <div className="flex items-center gap-x-2">
                     <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                        Volume
+                        AFter
                     </p>
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={historys.data.volume} label='Open' />
+                    <Graph list={analysis.data.afters} label='Open' />
                 </div>
             </div>
             </div>

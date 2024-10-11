@@ -1,9 +1,19 @@
 import { PGService } from '@/src/_lib/db/pg.service'
 
+type ReturnSuccessType = {
+    status: true
+    data: any
+}
+
+type ReturnErrorType = {
+    status: false
+    message: string
+}
+
 export const getByCompanyCode = async (
     companyCode: string,
     date: string
-) => {
+): Promise<ReturnSuccessType | ReturnErrorType> => {
     const pgService = PGService.call()
     const query = `
         SELECT
@@ -16,8 +26,14 @@ export const getByCompanyCode = async (
             a.Date = $2
     `
     const values = [companyCode, date]
-    const r = await pgService.getMany(query, values)
-    return r
+    const r = await pgService.getOne(query, values)
+    return (r === false) ? {
+        status: false,
+        message: 'Error'
+    } : {
+        status: true,
+        data: r
+    }
 }
 
 export const getRankByDay = async (

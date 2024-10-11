@@ -13,6 +13,7 @@ from lib.utils import angle
 def convert_pressure(
     record: list,
 ) -> float:
+
     open_price = record[3]
     close_price = record[6]
     high_price = record[4]
@@ -22,6 +23,7 @@ def convert_pressure(
     if math.isnan(open_price) or math.isnan(close_price) or math.isnan(high_price) or math.isnan(low_price):
         return 0
 
+    # ローソクの足の上下の長さが、どちら方向に大きいかを計算
     if close_price > open_price:  # 陽線の場合
         upper_wick = high_price - close_price
         lower_wick = open_price - low_price
@@ -31,10 +33,11 @@ def convert_pressure(
     
     wick_difference = upper_wick - lower_wick
 
+    # ローソク足の伸び率を計算
     if wick_difference < 0: # ローソク足が負の場合
-        percentage = (wick_difference / (10 * low_price)) * 100
+        percentage = ((low_price / close_price) * 100) - 100
     else: # ローソク足が正の場合
-        percentage = (wick_difference / (10 * high_price)) * 100
+        percentage = ((high_price / close_price) * 100) - 100
 
     return percentage
     
@@ -118,7 +121,6 @@ def normalize(
     records: list[list],
 ) -> list:
     # recordsに数値以外の値が含まれている場合は空のリストを返す
-
 
     # Open値の最大値と最小値を取得
     open_values = [float(record[3]) for record in records]

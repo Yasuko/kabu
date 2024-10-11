@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import Breadcrumbs from '../(components)/breadcrumbs'
 
 export default function RankLayout(
     {
@@ -11,6 +12,15 @@ export default function RankLayout(
 
     return (
         <div className="w-full lg:ps-64">
+
+            <nav className="inline-flex items-center gap-x-6 p-6 text-lg">
+                <Breadcrumbs
+                    breadcrumbs={[
+                        { label: 'Home', href: '/' },
+                        { label: 'Rank', href: '/rank' },
+                    ]}
+                />
+            </nav>
             <div
                 className="
                     grid tems-center justify-items-center
