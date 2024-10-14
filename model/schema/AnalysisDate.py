@@ -12,33 +12,12 @@ class AnalysisDateType:
     DayThree: float
     WeekOne: float
     WeekTwo: float
-    PressDay: float
-    PressOne: float
-    PressTwo: float
-    PressThree: float
-    PressWeekOne: float
-    PressWeekTwo: float
-    After1: list
-    After1Pressure: list
-    After2: list
-    After2Pressure: list
-    After3: list
-    After3Pressure: list
-    After4: list
-    After4Pressure: list
-    After5: list
-    After5Pressure: list
-    After6: list
-    After6Pressure: list
-    After7: list
-    After7Pressure: list
-    After8: list
-    After8Pressure: list
-    After9: list
-    After9Pressure: list
-    After10: list
-    After10Pressure: list
-
+    VolumeDay: float
+    VolumeOne: float
+    VolumeTwo: float
+    VolumeThree: float
+    VolumeWeekOne: float
+    VolumeWeekTwo: float
 
 class AnalysisDateDBType(AnalysisDateType):
     id: str
@@ -66,32 +45,12 @@ class AnalysisDate:
         DayThree NUMERIC NOT NULL,
         WeekOne NUMERIC NOT NULL,
         WeekTwo NUMERIC NOT NULL,
-        PressDay NUMERIC NOT NULL,
-        PressOne NUMERIC NOT NULL,
-        PressTwo NUMERIC NOT NULL,
-        PressThree NUMERIC NOT NULL,
-        PressWeekOne NUMERIC NOT NULL,
-        PressWeekTwo NUMERIC NOT NULL,
-        After1 NUMERIC[] NOT NULL,
-        After1Pressure NUMERIC[] NOT NULL,
-        After2 NUMERIC[] NOT NULL,
-        After2Pressure NUMERIC[] NOT NULL,
-        After3 NUMERIC[] NOT NULL,
-        After3Pressure NUMERIC[] NOT NULL,
-        After4 NUMERIC[] NOT NULL,
-        After4Pressure NUMERIC[] NOT NULL,
-        After5 NUMERIC[] NOT NULL,
-        After5Pressure NUMERIC[] NOT NULL,
-        After6 NUMERIC[] NOT NULL,
-        After6Pressure NUMERIC[] NOT NULL,
-        After7 NUMERIC[] NOT NULL,
-        After7Pressure NUMERIC[] NOT NULL,
-        After8 NUMERIC[] NOT NULL,
-        After8Pressure NUMERIC[] NOT NULL,
-        After9 NUMERIC[] NOT NULL,
-        After9Pressure NUMERIC[] NOT NULL,
-        After10 NUMERIC[] NOT NULL,
-        After10Pressure NUMERIC[] NOT NULL,
+        VolumeDay NUMERIC NOT NULL,
+        VolumeOne NUMERIC NOT NULL,
+        VolumeTwo NUMERIC NOT NULL,
+        VolumeThree NUMERIC NOT NULL,
+        VolumeWeekOne NUMERIC NOT NULL,
+        VolumeWeekTwo NUMERIC NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX ON analysis_date (companyCode);

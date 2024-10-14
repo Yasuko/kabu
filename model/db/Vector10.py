@@ -2,11 +2,11 @@
 リスク情報 (RiskInfo) テーブルのスキーマを定義する
 '''
 
-from model.schema.VectorDate import VectorDateType
+from model.schema.Vector10 import Vector10Type
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
-class VectorDate:
+class Vector10:
     DB = None
 
     def __init__(self, DB = None):
@@ -16,11 +16,11 @@ class VectorDate:
             self.DB = PgSQL().connect()
     
     # レコードの登録
-    def insert_record(self, data: VectorDateType):
-        q, v, i = query_convert(data, VectorDateType)
+    def insert_record(self, data: Vector10Type):
+        q, v, i = query_convert(data, Vector10Type)
         query = f"""
         INSERT INTO
-            vector_date
+            vector_10
         (
             {q},
             createdAt
@@ -39,13 +39,13 @@ class VectorDate:
         self,
         date,
         companyCode,
-        data: VectorDateType,
+        data: Vector10Type,
     ) -> bool:
         query = f"""
         SELECT
             *
         FROM
-            vector_date
+            vector_10
         WHERE
             Date = %s
         AND
@@ -60,7 +60,7 @@ class VectorDate:
 
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
-        query = "SELECT * FROM vector_date WHERE id = %s"
+        query = "SELECT * FROM vector_10 WHERE id = %s"
         record = self.DB.fetch_one(query, (id,))
         return record
 
@@ -69,12 +69,13 @@ class VectorDate:
         array_str = '[' + ', '.join([str(d) for d in vec]) + ']'
         query = f"""
         SELECT
-            Date, companyCode,
+            Date,
+            companyCode,
             Vec <-> %s AS distance
         FROM
-            vector_date
+            vector_10
         ORDER BY
-            distance
+            distance DESC
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))
@@ -85,12 +86,13 @@ class VectorDate:
         array_str = '[' + ', '.join([str(d) for d in vec]) + ']'
         query = f"""
         SELECT
-            Date, companyCode,
+            Date,
+            companyCode,
             (Vec <#> %s ) * -1 AS dot
         FROM
-            vector_date
+            vector_10
         ORDER BY
-            dot
+            dot ASC
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))
@@ -102,10 +104,11 @@ class VectorDate:
         print(array_str)
         query = f"""
         SELECT
-            Date, companyCode,
+            Date,
+            companyCode,
             1 - (Vec <=> %s) AS similality
         FROM
-            vector_date
+            vector_10
         ORDER BY
             similality DESC
         LIMIT {limit}

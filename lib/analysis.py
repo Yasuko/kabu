@@ -3,7 +3,9 @@ import datetime
 import math
 
 from model.db.HistoryDate import HistoryDate
-from model.db.VectorDate import VectorDate
+from model.db.AnalysisDate import AnalysisDate
+from model.db.Vector10 import Vector10
+from model.db.Vector20 import Vector20
 
 from lib.utils import angle
 
@@ -65,36 +67,36 @@ def rate(
     results = []
     i = len(df) - 1
 
-    # 今日のOpenとCloseの差を計算
+    # 今日のOpenとCloseの差、Volumeの差を計算
     results.append({
         'rate': diff_rate(df[i][3], df[i][6]),
-        'pressure': convert_pressure(df[i])
+        'volume': df[i][7] - df[i-1][7] 
     })
 
-    # 1日前のOpen値と当日のOpen値の差を計算
+    # 1日前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
         'rate': diff_rate(df[i][3], df[i-1][3]),
-        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-1])) / 2
+        'volume': df[i][7] - df[i-1][7]
     })
-    # 2日前のOpen値と当日のOpen値の差を計算
+    # 2日前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
         'rate': diff_rate(df[i][3], df[i-2][3]),
-        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-2])) / 2
+        'volume': df[i][7] - df[i-2][7]
     })
-    # 3日前のOpen値と当日のOpen値の差を計算
+    # 3日前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
         'rate': diff_rate(df[i][3], df[i-3][3]),
-        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-3])) / 2
+        'volume': df[i][7] - df[i-3][7]
     })
-    # 1週間前のOpen値と当日のOpen値の差を計算
+    # 1週間前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
         'rate': diff_rate(df[i][3], df[i-5][3]),
-        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-5])) / 2
+        'volume': df[i][7] - df[i-5][7]
     })
-    # 2週間前のOpen値と当日のOpen値の差を計算
+    # 2週間前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
         'rate': diff_rate(df[i][3], df[i-10][3]),
-        'pressure': (convert_pressure(df[i]) + convert_pressure(df[i-10])) / 2
+        'volume': df[i][7] - df[i-10][7]
     })
 
     return results
@@ -150,7 +152,7 @@ def normalize(
     return normalized_open_values
 
 
-def vector_angle(
+def vector(
     company_code: str,
     date: datetime.date,
     DB = None
@@ -161,25 +163,60 @@ def vector_angle(
         date
     )
     # データが存在しない場合, Noneを返す
-    if len(df) <= 9:
+    if len(df) <= 29:
         return None
     # ノーマライズ
-    v = normalize(df[0:10])
+    v10 = normalize(df[0:10])
+    v20 = normalize(df[0:20])
+    v30 = normalize(df[0:30])
+
     # 内積計算で近似べクトルデータを取得
-    r = VectorDate(DB).get_dot_by_vec(v, 10)
+    r10 = Vector10(DB).get_dot_by_vec(v10, 10)
+    r20 = Vector20(DB).get_dot_by_vec(v20, 10)
+    r30 = Vector20(DB).get_dot_by_vec(v30, 10)
 
     results = []
-    for _r in r:
+    for _r in [r10, r20, r30]:
         # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
         h = HistoryDate(DB).get_data_by_date_range(_r[1], _r[0], _r[0] + datetime.timedelta(days=15))
-        # 価格の変動を角度に変換
-        # results.append(angle([item[3] for item in h]))
 
         # Open価格の動きと、圧力を計算
         results.append({
             'pressure': ([convert_pressure(item) for item in h]),
+            'volume': [item[7] for item in h],
             'price': normalize(h)
         })
 
     return results
+
+
+def ranking(
+    date: datetime.date,
+    DB = None
+) -> list:
+    targets = ['Day', 'DayOne', 'DayTwo', 'DayThree', 'WeekOne', 'WeekTwo']
+    resultsUpper = []
+    resultsLower = []
+    for target in targets:
+        # 与えられた日付のデータを取得
+        df = AnalysisDate(DB).get_by_day_and_target(
+            date, target, 'DESC'
+        )
+        resultsUpper.append({
+            'target': target,
+            'data': df
+        })
+
+    for target in targets:
+        # 与えられた日付のデータを取得
+        df = AnalysisDate(DB).get_by_day_and_target(
+            date, target, 'ASC'
+        )
+        resultsLower.append({
+            'target': target,
+            'data': df
+        })
+
+    return resultsUpper, resultsLower
+
 

@@ -4,7 +4,7 @@ import yfinance as yf
 
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.VectorDate import VectorDate
+from model.db.Vector10 import VectorDate
 
 from lib.utils import build_date_map
 from lib.analysis import normalize

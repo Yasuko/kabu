@@ -3,7 +3,7 @@ import datetime
 import math
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.VectorDate import VectorDate
+from model.db.Vector10 import Vector10
 
 from lib.analysis import normalize
 from lib.utils import angle
@@ -49,7 +49,7 @@ for i in range(len(historys) - 9):
     v = normalize(historys[i:i+10])
     #print(v)
     # 内積計算で近似べクトルデータを取得
-    r = VectorDate().get_dot_by_vec(v, 10)
+    r = Vector10().get_dot_by_vec(v, 10)
     #print(r)
 
     results = []

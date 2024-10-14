@@ -17,13 +17,18 @@ DBに保存された企業情報から、株価情報を取得し、DBに登録�
 company_codes = Industry().get_all_records()
 db = Industry().DB
 
-#今日の日付を取得する
+# 今日の日付を取得する
 day = datetime.datetime.now()
+# 3日前の日付を取得する
+day = day - datetime.timedelta(days=3)
+
 # 30日前の日付を取得する
 day_before = day - datetime.timedelta(days=30)
 
 print(day)
 print(day_before)
+
+interval = 1.7
 
 for row in company_codes:
     count = 0
@@ -45,13 +50,13 @@ for row in company_codes:
                 #print(data)
                 break
             print('API Result is None')
-            time.sleep(1.8)
+            time.sleep(interval)
             count += 1
             continue
 
         except Exception as e:
             print(e)
-            time.sleep(2)
+            time.sleep(interval)
             count += 1
             continue
         
@@ -72,4 +77,4 @@ for row in company_codes:
             d
         )
     
-    time.sleep(1.8)
+    time.sleep(interval)

@@ -91,6 +91,7 @@ class AnalysisDate:
         """
         return self._DB.fetch_all(query, (date, companyCode))
 
+    # CompanyCodeからデータを取得
     def get_all_by_company_code(self, companyCode, getQuery = False):
         query = f"""
         SELECT
@@ -119,6 +120,29 @@ class AnalysisDate:
         LIMIT %s
         """
         return self._DB.fetch_all(query, (date, limit))
+    
+    # Dateから指定要素から
+    # もっとも大きいor小さいデータを指定件数取得
+    def get_by_day_and_target(
+        self,
+        date,
+        target = "Day" or "DayOne" or "DayTwo" or "DayThree" or "WeekOne" or "WeekTwo",
+        sort = "DESC" or "ASC",
+        limit = 30
+    ) -> list:
+        query = f"""
+        SELECT
+            *
+        FROM
+            analysis_date
+        WHERE
+            Date = %s
+        ORDER BY
+            {target} {sort}
+        LIMIT %s
+        """
+        return self._DB.fetch_all(query, (date, limit))
+
 
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(

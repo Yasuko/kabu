@@ -3,36 +3,36 @@
 """
 from lib.utils import validate
 
-class VectorDateType:
+class Vector10Type:
     companyCode: str
     Date: str
     Vec: list
 
-class VectorDateDBType(VectorDateType):
+class VectorDateDBType(Vector10Type):
     id: str
     createdAt: str
 
-def ConvertToVectorDateType(data: dict) -> VectorDateType:
+def ConvertToVector10Type(data: dict) -> Vector10Type:
     result = {}
-    for key in VectorDateType.__annotations__.keys():
+    for key in Vector10Type.__annotations__.keys():
         if key in data:
-            result[key] = validate(data[key], VectorDateType.__annotations__[key])
+            result[key] = validate(data[key], Vector10Type.__annotations__[key])
         else:
-            result[key] = validate('', VectorDateType.__annotations__[key])
+            result[key] = validate('', Vector10Type.__annotations__[key])
     #print('Validate Test: ', result)
     return result
 
-class VectorDate:
+class Vector10:
     create_table_query = """
-    CREATE TABLE IF NOT EXISTS vector_date (
+    CREATE TABLE IF NOT EXISTS vector_10 (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
         Vec vector(10) NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    CREATE INDEX ON vector_date (companyCode);
-    CREATE INDEX ON vector_date (Date);
+    CREATE INDEX ON vector_10 (companyCode);
+    CREATE INDEX ON vector_10 (Date);
     """
 
     DB = None

@@ -52,45 +52,51 @@ class Vector20:
 
     # ベクトルデータからユークリッド距離で検索
     def get_distance_by_vec(self, vec, limit = 10):
+        array_str = '[' + ', '.join([str(d) for d in vec]) + ']'
         query = f"""
         SELECT
-            *,
+            Date,
+            CompanyCode,
             vec <-> %s AS distance
         FROM
             vector_20
         ORDER BY
-            distance
+            distance DESC
         LIMIT {limit}
         """
-        records = self.DB.fetch_all(query, (vec,))
+        records = self.DB.fetch_all(query, (array_str,))
         return records
     
     # ベクトルデータから内積で検索
     def get_dot_by_vec(self, vec, limit = 10):
+        array_str = '[' + ', '.join([str(d) for d in vec]) + ']'
         query = f"""
         SELECT
-            *,
-            (vec <#> %s AS) * -1 AS dot
+            Date,
+            CompanyCode,
+            (vec <#> %s) * -1 AS dot
         FROM
             vector_20
         ORDER BY
-            dot
+            dot ASC
         LIMIT {limit}
         """
-        records = self.DB.fetch_all(query, (vec,))
+        records = self.DB.fetch_all(query, (array_str,))
         return records
 
     # ベクトルデータからコサイン類似度で検索
     def get_similarity_by_vec(self, vec, limit = 10):
+        array_str = '[' + ', '.join([str(d) for d in vec]) + ']'
         query = f"""
         SELECT
-            *,
+            Date,
+            CompanyCode,
             1 - (vec <=> %s) AS similality
         FROM
             vector_20
         ORDER BY
-            cosine
+            cosine DESC
         LIMIT {limit}
         """
-        records = self.DB.fetch_all(query, (vec,))
+        records = self.DB.fetch_all(query, (array_str,))
         return records
