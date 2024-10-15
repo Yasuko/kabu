@@ -5,7 +5,7 @@ from lib.utils import validate
 
 class RankUnderType:
     Date: str
-    Day: float
+    Day: list
     DayOne: list
     DayTwo: list
     DayThree: list
@@ -31,12 +31,12 @@ class RankUnder:
     CREATE TABLE IF NOT EXISTS rank_under (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         Date DATE NOT NULL,
-        Day NUMERIC[] NOT NULL,
-        DayOne NUMERIC[] NOT NULL,
-        DayTwo NUMERIC[] NOT NULL,
-        DayThree NUMERIC[] NOT NULL,
-        WeekOne NUMERIC[] NOT NULL,
-        WeekTwo NUMERIC[] NOT NULL,
+        Day VARCHAR[] NOT NULL,
+        DayOne VARCHAR[] NOT NULL,
+        DayTwo VARCHAR[] NOT NULL,
+        DayThree VARCHAR[] NOT NULL,
+        WeekOne VARCHAR[] NOT NULL,
+        WeekTwo VARCHAR[] NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX ON rank_under (Date);

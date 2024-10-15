@@ -20,7 +20,7 @@ db = Industry().DB
 # 今日の日付を取得する
 day = datetime.datetime.now()
 # 3日前の日付を取得する
-day = day - datetime.timedelta(days=3)
+#day = day - datetime.timedelta(days=3)
 
 # 30日前の日付を取得する
 day_before = day - datetime.timedelta(days=30)

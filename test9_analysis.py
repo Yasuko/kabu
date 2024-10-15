@@ -13,7 +13,7 @@ from lib.analysis import rate
 
 company_codes = Industry().get_all_records()
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=4)
+#day = day - datetime.timedelta(days=4)
 
 db = Industry().DB
 #print(date_map)

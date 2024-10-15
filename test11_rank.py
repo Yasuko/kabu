@@ -12,7 +12,7 @@ from lib.analysis import ranking, vector
 '''
 
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=5)
+day = day - datetime.timedelta(days=7)
 
 db = Industry().DB
 
@@ -22,28 +22,21 @@ upper, lower = ranking(day.strftime("%Y-%m-%d"), db)
 if upper == None or lower == None:
     print('Unable to get data for : ')
 
-for row in upper:
+upper['Date'] = day.strftime("%Y-%m-%d")
+lower['Date'] = day.strftime("%Y-%m-%d")
 
-    print('Upper : ', row)
-
-
-    time.sleep(10)
-    for r in row['data']:
-        print('Upper : ', r)
-        v10, v20, v30 = vector(r, day, db)
-
-        print('Vectore : ', v10)
-        print('Vectore : ', v20)
-        print('Vectore : ', v30)
+Rank(db).add_exists_by_date(day.strftime("%Y-%m-%d"), upper)
+RankUnder(db).add_exists_by_date(day.strftime("%Y-%m-%d"), lower)
 
 
 """
-v = vector_angle(row[1], day, db)
-if v == None:
-    print('Unable to get data for : ' + row[1])
-    continue
+for r in row['data']:
+    print('Upper : ', r)
+    v10, v20, v30 = vector(r, day, db)
 
-print(v)
+    print('Vectore : ', v10)
+    print('Vectore : ', v20)
+    print('Vectore : ', v30)
 """
 
 

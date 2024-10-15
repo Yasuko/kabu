@@ -43,7 +43,7 @@ class RankVector10:
 
     # companyCodeとDateでデータの削除
     def delete_by_date_and_company_code(self, date):
-        query = """
+        query = f"""
         DELETE FROM
             rank_vector_10
         WHERE
@@ -51,11 +51,23 @@ class RankVector10:
         """
         self._DB.execute(query, (date))
 
-    # Dateの重複がない場合のみ、データの追加
+    # DateとCompanyCodeの重複がない場合のみ、データの追加
     def add_exists_by_date_and_company_code(
-        self, date, data: RankVector10Type
+        self,
+        date: str,
+        companyCode: str,
+        data: RankVector10Type,
     ) -> bool:
-        print(date)
+        if not self.check_exists_by_date_and_company_code(date, companyCode):
+            #self.add_data(data)
+            return True
+        return False
+
+    def check_exists_by_date_and_company_code(
+        self,
+        date: str,
+        companyCode: str
+    ) -> bool:
         query = f"""
         SELECT
             *
@@ -63,13 +75,13 @@ class RankVector10:
             rank_vector_10
         WHERE
             Date = %s
+        AND
+            companyCode = %s
         """
-        r = self._DB.fetch_all(query, (date))
-
+        r = self._DB.fetch_all(query, (date, companyCode,))
         if len(r) <= 0:
-            self.add_data(data)
-            return True
-        return None
+            return False
+        return True
 
     # Dateから最新のデータを取得
     def get_latest_data(self, date):
@@ -81,7 +93,7 @@ class RankVector10:
         WHERE
             Date = %s
         """
-        return self._DB.fetch_one(query, (date))
+        return self._DB.fetch_one(query, (date,))
 
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(

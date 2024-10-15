@@ -178,9 +178,9 @@ def vector(
     r20 = Vector20(DB).get_dot_by_vec(v20, 10)
     r30 = Vector30(DB).get_dot_by_vec(v30, 10)
 
-    resultsv10 = []
-    resultsv20 = []
-    resultsv30 = []
+    resultsv10 = {}
+    resultsv20 = {}
+    resultsv30 = {}
 
     for idx, _r in enumerate([r10, r20, r30]):
         # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
@@ -188,17 +188,18 @@ def vector(
         edate = (_r[0][0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
         h = HistoryDate(DB).get_data_by_date_range(_r[0][1], sdate, edate)
         r = {
-            'pressure': ([convert_pressure(item) for item in h]),
-            'volume': [item[7] for item in h],
-            'price': normalize(h)
+            'VecPressure': ([convert_pressure(item) for item in h]),
+            'VecVolume': [item[7] for item in h],
+            'VecPrice': normalize(h),
+            'Date': date,
+            'companyCode': company_code,
         }
-        print(r)        
         if idx == 0:
-            resultsv10.append(r)
+            resultsv10 = r
         elif idx == 1:
-            resultsv20.append(r)
+            resultsv20 = r
         else:
-            resultsv30.append(r)
+            resultsv30 = r
 
     return resultsv10, resultsv20, resultsv30
 
@@ -215,18 +216,16 @@ def ranking(
     DB = None
 ) -> list:
     targets = ['Day', 'DayOne', 'DayTwo', 'DayThree', 'WeekOne', 'WeekTwo']
-    resultsUpper = []
-    resultsLower = []
+    resultsUpper = {}
+    resultsLower = {}
     # 上昇幅の高い順にデータを取得
     for target in targets:
         # 与えられた日付の解析データを取得
         df = AnalysisDate(DB).get_by_day_and_target(
             date, target, 'DESC'
         )
-        resultsUpper.append({
-            'target': target,
-            'data': [item[1] for item in df]
-        })
+        resultsUpper[target] = [item[1] for item in df]
+
 
     # 下降幅の高い順にデータを取得
     for target in targets:
@@ -234,10 +233,7 @@ def ranking(
         df = AnalysisDate(DB).get_by_day_and_target(
             date, target, 'ASC'
         )
-        resultsLower.append({
-            'target': target,
-            'data': [item[1] for item in df]
-        })
+        resultsLower[target] = [item[1] for item in df]
 
     return resultsUpper, resultsLower
 

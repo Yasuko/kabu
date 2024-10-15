@@ -42,7 +42,7 @@ class RankUnder:
         self._DB.execute(query, (id,))
 
     # companyCodeとDateでデータの削除
-    def delete_by_date_and_company_code(self, date):
+    def delete_by_date(self, date):
         query = """
         DELETE FROM
             rank_under
@@ -52,10 +52,9 @@ class RankUnder:
         self._DB.execute(query, (date))
 
     # Dateの重複がない場合のみ、データの追加
-    def add_exists_by_date_and_company_code(
+    def add_exists_by_date(
         self, date, data: RankUnderType
     ) -> bool:
-        print(date)
         query = f"""
         SELECT
             *
@@ -64,8 +63,7 @@ class RankUnder:
         WHERE
             Date = %s
         """
-        r = self._DB.fetch_all(query, (date))
-
+        r = self._DB.fetch_all(query, (date,))
         if len(r) <= 0:
             self.add_data(data)
             return True
@@ -82,6 +80,17 @@ class RankUnder:
             Date = %s
         """
         return self._DB.fetch_one(query, (date))
+
+    def get_by_date(self, date):
+        query = f"""
+        SELECT
+            *
+        FROM
+            rank_under
+        WHERE
+            Date = %s
+        """
+        return self._DB.fetch_all(query, (date,))
 
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(
