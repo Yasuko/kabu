@@ -105,7 +105,7 @@ def build_month_map(
         end_date = datetime.date(year, 12, 31)
 
         # 日付が現在の日付よりも未来の場合は処理を終了
-        if end_date > datetime.date.today():
+        if start_date > datetime.date.today():
             break
         date_ranges.append({
             "start": start_date.strftime("%Y-%m-%d"),

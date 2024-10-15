@@ -4,6 +4,8 @@
 from lib.utils import validate
 
 class RankVector30Type:
+    Date: str
+    companyCode: str
     Vec1: str
     Vec1After: list
     Vec2: str
@@ -44,6 +46,7 @@ class RankVector10:
     CREATE TABLE IF NOT EXISTS rank_vector_30 (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         Date DATE NOT NULL,
+        companyCode VARCHAR(20) NOT NULL,
         Vec1 VARCHAR(20) NOT NULL,
         Vec1After NUMERIC[] NOT NULL,
         Vec2 VARCHAR(20) NOT NULL,

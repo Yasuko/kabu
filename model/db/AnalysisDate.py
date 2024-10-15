@@ -141,6 +141,7 @@ class AnalysisDate:
             {target} {sort}
         LIMIT %s
         """
+
         return self._DB.fetch_all(query, (date, limit))
 
 

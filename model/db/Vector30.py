@@ -38,7 +38,16 @@ class Vector30:
     def insert_exists_by_date_and_company_code(
         self, date, companyCode, data: Vector30Type
     ) -> bool:
-        query = "SELECT COUNT(*) FROM vector_30 WHERE Date = %s AND companyCode = %s"
+        query = f"""
+        SELECT
+            COUNT(*)
+        FROM
+            vector_30
+        WHERE
+            Date = %s
+        AND
+            companyCode = %s
+        """
         if self.DB.fetch_one(query, (date, companyCode)) == 0:
             self.insert_record(data)
             return True

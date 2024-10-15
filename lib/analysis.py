@@ -6,6 +6,7 @@ from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
 from model.db.Vector10 import Vector10
 from model.db.Vector20 import Vector20
+from model.db.Vector30 import Vector30
 
 from lib.utils import angle
 
@@ -157,11 +158,13 @@ def vector(
     date: datetime.date,
     DB = None
 ) -> list:
+    sdate = date - datetime.timedelta(days=60)
     df = HistoryDate(DB).get_data_by_date_range(
         company_code,
-        date - datetime.timedelta(days=30),
-        date
+        sdate.strftime('%Y-%m-%d'),
+        date.strftime('%Y-%m-%d')
     )
+    
     # データが存在しない場合, Noneを返す
     if len(df) <= 29:
         return None
@@ -169,27 +172,44 @@ def vector(
     v10 = normalize(df[0:10])
     v20 = normalize(df[0:20])
     v30 = normalize(df[0:30])
-
+    
     # 内積計算で近似べクトルデータを取得
     r10 = Vector10(DB).get_dot_by_vec(v10, 10)
     r20 = Vector20(DB).get_dot_by_vec(v20, 10)
-    r30 = Vector20(DB).get_dot_by_vec(v30, 10)
+    r30 = Vector30(DB).get_dot_by_vec(v30, 10)
 
-    results = []
-    for _r in [r10, r20, r30]:
+    resultsv10 = []
+    resultsv20 = []
+    resultsv30 = []
+
+    for idx, _r in enumerate([r10, r20, r30]):
         # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
-        h = HistoryDate(DB).get_data_by_date_range(_r[1], _r[0], _r[0] + datetime.timedelta(days=15))
-
-        # Open価格の動きと、圧力を計算
-        results.append({
+        sdate = _r[0][0].strftime('%Y-%m-%d')
+        edate = (_r[0][0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
+        h = HistoryDate(DB).get_data_by_date_range(_r[0][1], sdate, edate)
+        r = {
             'pressure': ([convert_pressure(item) for item in h]),
             'volume': [item[7] for item in h],
             'price': normalize(h)
-        })
+        }
+        print(r)        
+        if idx == 0:
+            resultsv10.append(r)
+        elif idx == 1:
+            resultsv20.append(r)
+        else:
+            resultsv30.append(r)
 
-    return results
+    return resultsv10, resultsv20, resultsv30
 
-
+"""
+指定された日付に基づいて、上昇幅および下降幅の高い順にデータを取得し、ランキングを生成します。
+Args:
+    date (datetime.date): 解析対象の日付。
+    DB: データベース接続オブジェクト（省略可能）。
+Returns:
+    list: 上昇幅の高い順のデータと下降幅の高い順のデータを含むリスト。
+"""
 def ranking(
     date: datetime.date,
     DB = None
@@ -197,16 +217,18 @@ def ranking(
     targets = ['Day', 'DayOne', 'DayTwo', 'DayThree', 'WeekOne', 'WeekTwo']
     resultsUpper = []
     resultsLower = []
+    # 上昇幅の高い順にデータを取得
     for target in targets:
-        # 与えられた日付のデータを取得
+        # 与えられた日付の解析データを取得
         df = AnalysisDate(DB).get_by_day_and_target(
             date, target, 'DESC'
         )
         resultsUpper.append({
             'target': target,
-            'data': df
+            'data': [item[1] for item in df]
         })
 
+    # 下降幅の高い順にデータを取得
     for target in targets:
         # 与えられた日付のデータを取得
         df = AnalysisDate(DB).get_by_day_and_target(
@@ -214,7 +236,7 @@ def ranking(
         )
         resultsLower.append({
             'target': target,
-            'data': df
+            'data': [item[1] for item in df]
         })
 
     return resultsUpper, resultsLower

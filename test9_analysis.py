@@ -4,7 +4,7 @@ from model.db.Industry import Industry
 from model.db.AnalysisDate import AnalysisDate
 
 
-from lib.analysis import rate, vector_angle
+from lib.analysis import rate
 
 '''
 １日前、２日前、３日前、１週間前、２週間前からの株価から
@@ -13,7 +13,7 @@ from lib.analysis import rate, vector_angle
 
 company_codes = Industry().get_all_records()
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=7)
+day = day - datetime.timedelta(days=4)
 
 db = Industry().DB
 #print(date_map)

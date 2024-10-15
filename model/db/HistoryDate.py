@@ -126,9 +126,9 @@ class HistoryDate:
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(
         self,
-        companyCode,
-        start_date,
-        end_date
+        companyCode: str,
+        start_date: str,
+        end_date: str
     ) -> list:
         query = f"""
         SELECT
@@ -142,4 +142,5 @@ class HistoryDate:
         AND
             Date <= %s
         """
+        #print(query % (companyCode, start_date, end_date))
         return self._DB.fetch_all(query, (companyCode, start_date, end_date))

@@ -88,20 +88,20 @@ class Vector10:
         SELECT
             Date,
             companyCode,
-            (Vec <#> %s ) * -1 AS dot
+            (Vec <#> %s) * -1 AS dot
         FROM
             vector_10
         ORDER BY
             dot ASC
         LIMIT {limit}
         """
+        #print(query % array_str)
         records = self.DB.fetch_all(query, (array_str,))
         return records
 
     # ベクトルデータからコサイン類似度で検索
     def get_similarity_by_vec(self, vec, limit = 10):
         array_str = '[' + ', '.join([str(d) for d in vec]) + ']'
-        print(array_str)
         query = f"""
         SELECT
             Date,
