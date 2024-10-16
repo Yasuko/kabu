@@ -42,3 +42,33 @@ export const getByBeforeDate = async (
         data: r
     }
 }
+
+export const getByLatest = async (
+    companyCode: string,
+    limit: number = 20
+): Promise<ReturnSuccessType | ReturnErrorType> => {
+    const pgService = PGService.call()
+    const query = `
+        SELECT
+            *
+        FROM
+            history_date as h
+        WHERE
+            h.companyCode = $1
+        ORDER BY
+            h.Date DESC
+        LIMIT $2
+    `
+    const values = [companyCode, limit]
+    const r = await pgService.getMany(query, values)
+    if (r === false) {
+        return {
+            status: false,
+            message: 'Error'
+        }
+    }
+    return {
+        status: true,
+        data: r
+    }
+}

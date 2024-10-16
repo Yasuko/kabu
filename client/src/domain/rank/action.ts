@@ -1,5 +1,7 @@
 'use server'
 
+import axios from 'axios'
+
 import {
     getByCompanyCode,
     getRankByDay, getRankByDayOne, getRankByDayTwo,
@@ -14,6 +16,14 @@ import {
 import {
     getByBeforeDate,
 } from '@/src/model/history.date.model'
+
+import {
+    getByLatest as UpperRank
+} from '@/src/model/rank.model'
+import {
+    getByLatest as LowerRank
+} from '@/src/model/rank_under.model'
+
 
 import {
     convert_pressure
@@ -105,6 +115,21 @@ export const getRankAction = async (
     }
 }
 
+export const getRankActionV2 = async (
+    rank: 'upper' | 'lower'
+): Promise<any> => {
+    const upper = await UpperRank()
+    const lower = await LowerRank()
+
+    if (upper.status === false || lower.status === false) {
+        throw new Error('Error')
+    }
+
+    return {
+        upper: upper.data,
+        lower: lower.data
+    }
+}
 export const getPressureAction = async (
     date: string,
     limit: number = 10,

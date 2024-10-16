@@ -178,28 +178,30 @@ def vector(
     r20 = Vector20(DB).get_dot_by_vec(v20, 10)
     r30 = Vector30(DB).get_dot_by_vec(v30, 10)
 
-    resultsv10 = {}
-    resultsv20 = {}
-    resultsv30 = {}
+    resultsv10 = []
+    resultsv20 = []
+    resultsv30 = []
 
     for idx, _r in enumerate([r10, r20, r30]):
-        # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
-        sdate = _r[0][0].strftime('%Y-%m-%d')
-        edate = (_r[0][0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
-        h = HistoryDate(DB).get_data_by_date_range(_r[0][1], sdate, edate)
-        r = {
-            'VecPressure': ([convert_pressure(item) for item in h]),
-            'VecVolume': [item[7] for item in h],
-            'VecPrice': normalize(h),
-            'Date': date,
-            'companyCode': company_code,
-        }
-        if idx == 0:
-            resultsv10 = r
-        elif idx == 1:
-            resultsv20 = r
-        else:
-            resultsv30 = r
+
+        for v in _r:
+
+            # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
+            sdate = v[0].strftime('%Y-%m-%d')
+            edate = (v[0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
+            h = HistoryDate(DB).get_data_by_date_range(v[1], sdate, edate)
+            r = {
+                'VecVolume': [item[7] for item in h],
+                'VecPrice': normalize(h),
+                'Date': date,
+                'companyCode': company_code,
+            }
+            if idx == 0:
+                resultsv10.append(r)
+            elif idx == 1:
+                resultsv20.append(r)
+            else:
+                resultsv30.append(r)
 
     return resultsv10, resultsv20, resultsv30
 

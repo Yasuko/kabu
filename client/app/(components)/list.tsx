@@ -1,17 +1,61 @@
+'use client'
 import React from "react"
+import useSWR from "swr"
 import {
-    getRankAction,
+    getRankAction, getRankActionV2
 } from "@/src/domain/rank/action"
+import {
+    getHistoryAction
+} from "@/src/domain/history/action"
+
+import History from "@/app/(components)/history"
+
 import Link from "next/link"
 
-export default async function List({
+type rankType = {
+    upper: any,
+    lower: any
+}
+
+const ranks: rankType = {
+    upper: {
+        day: [],
+        dayOne: [],
+        dayTwo: [],
+        dayThree: [],
+        weekOne: [],
+        weekTwo: [],
+    },
+    lower: {
+        day: [],
+        dayOne: [],
+        dayTwo: [],
+        dayThree: [],
+        weekOne: [],
+        weekTwo: [],
+    }
+}
+
+export default function List({
     date,
-    target
+    target,
+    sort = 'upper'
 }: {
     date: any,
     target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo',
+    sort: 'upper' | 'lower'
 }) {
-    const list = await fetchDataList(date, target)
+
+    const { data, error } = useSWR<any>('ranks', getRankActionV2)
+
+    // const list = await fetchDataList(date, target)
+    if (error) return <div>Loading...</div>
+    if (!data) return <div>Loading...</div>
+
+    ranks.upper = data.upper
+    ranks.lower = data.lower
+
+
     return (
     <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -20,30 +64,20 @@ export default async function List({
                 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" className="px-6 py-3">
+                        rank
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                         Company Code
                     </th>
                     <th scope="col" className="px-6 py-3">
-                        Day
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        DayOne
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        DayTwo
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        DayThree
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        WeekOne
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        WeekTwo
+                        History
                     </th>
                 </tr>
             </thead>
             <tbody>
-                { buildList(list) }
+                { 
+                buildList(target, sort) 
+                }
             </tbody>
         </table>
     </div>
@@ -51,67 +85,30 @@ export default async function List({
 }
 
 const buildList = async (
-    list: any,
+    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo',
+    sort: 'upper' | 'lower' = 'upper'
 ): Promise<JSX.Element[]> => {
-    return Object.keys(list).map((key, index) => {
+
+    return ranks[sort][target].map((val, index) => {
         return (
             <tr
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th className="px-6 py-4">
+                    { index + 1 }
+                </th>
                 <th
                     scope="row"
                     className="text-center px-6 py-4 font-medium cursor-pointer"
                     >
-                    <Link href={"/rank/" + list[key]['companycode']}>
-                        { list[key]['companycode'] }
+                    <Link href={"/rank/" + val}>
+                        { val }
                     </Link>
                 </th>
                 <td className="px-6 py-4">
-                    { strSplit(list[key]['day']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['dayone']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['daytwo']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['daythree']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['weekone']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['weektwo']) }
+                    <History companyCode={val} />
                 </td>
             </tr>
         )
     })
-}
-
-const strSplit = (str: string, len: number = 8): string => {
-    return str.length > len ? str.slice(0, len) + '...' : str
-}
-
-
-const fetchDataList = async (
-    today: string,
-    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo'
-): Promise<any> => {
-    switch (target) {
-        case 'day':
-            return await getRankAction(today, 10, 'day')
-        case 'dayone':
-            return await getRankAction(today, 10, 'dayOne')
-        case 'daytwo':
-            return await getRankAction(today, 10, 'dayTwo')
-        case 'daythree':
-            return await getRankAction(today, 10, 'dayThree')
-        case 'weekone':
-            return await getRankAction(today, 10, 'weekOne')
-        case 'weektwo':
-            return await getRankAction(today, 10, 'weekTwo')
-        default:
-            return []
-    }
 }

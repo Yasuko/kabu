@@ -14,7 +14,7 @@ from lib.analysis import ranking, vector
 '''
 
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=5)
+day = day - datetime.timedelta(days=6)
 
 db = Industry().DB
 
@@ -31,15 +31,24 @@ for r in upper:
     
     for target in [2,3,4,5,6,7]:
         for _r in r[target]:
+            v10, v20, v30 = vector(_r, r[1], db)
+
+            [RankVector10(db).add_data(_v10) for _v10 in v10]
+            [RankVector20(db).add_data(_v20) for _v20 in v20]
+            [RankVector30(db).add_data(_v30) for _v30 in v30]
+
+            """
             if not RankVector10(db).check_exists_by_date_and_company_code(today, _r):
                 print('Upper : ', _r)
                 v10, v20, v30 = vector(_r, r[1], db)
-
-                RankVector10(db).add_exists_by_date_and_company_code(today, _r, v10)
-                RankVector20(db).add_exists_by_date_and_company_code(today, _r, v20)
-                RankVector30(db).add_exists_by_date_and_company_code(today, _r, v30)
+                print('Vector : ', v10, v20, v30)
+                #RankVector10(db).add_exists_by_date_and_company_code(today, _r, v10)
+                #RankVector20(db).add_exists_by_date_and_company_code(today, _r, v20)
+                #RankVector30(db).add_exists_by_date_and_company_code(today, _r, v30)
             else:
                 print('Upper : ', _r, ' already exists')
+            """
+            # time.sleep(10)
 
 
 

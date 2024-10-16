@@ -33,6 +33,7 @@ class RankVector10:
                 {v}
             )
         """
+
         result = self._DB.execute(query, (i))
         return result
     
@@ -59,7 +60,7 @@ class RankVector10:
         data: RankVector10Type,
     ) -> bool:
         if not self.check_exists_by_date_and_company_code(date, companyCode):
-            #self.add_data(data)
+            self.add_data(data)
             return True
         return False
 
