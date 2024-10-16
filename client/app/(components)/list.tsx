@@ -2,11 +2,8 @@
 import React from "react"
 import useSWR from "swr"
 import {
-    getRankAction, getRankActionV2
+    getRankActionV2
 } from "@/src/domain/rank/action"
-import {
-    getHistoryAction
-} from "@/src/domain/history/action"
 
 import History from "@/app/(components)/history"
 
@@ -46,7 +43,7 @@ export default function List({
     sort: 'upper' | 'lower'
 }) {
 
-    const { data, error } = useSWR<any>('ranks', getRankActionV2)
+    const { data, error } = useSWR<rankType>('ranks', getRankActionV2, {})
 
     // const list = await fetchDataList(date, target)
     if (error) return <div>Loading...</div>
@@ -89,7 +86,7 @@ const buildList = async (
     sort: 'upper' | 'lower' = 'upper'
 ): Promise<JSX.Element[]> => {
 
-    return ranks[sort][target].map((val, index) => {
+    return ranks[sort][target].map((val: string, index: number) => {
         return (
             <tr
                 key={index}

@@ -1,4 +1,12 @@
+export type ReturnSuccessType = {
+    status: true
+    data: any
+}
 
+export type ReturnErrorType = {
+    status: false
+    message: string
+}
 
 export type AnalysisType = {
     companyCode: string,

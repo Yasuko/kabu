@@ -1,6 +1,7 @@
 'use server'
-
-import axios from 'axios'
+import {
+    ReturnSuccessType, ReturnErrorType
+} from '@/src/domain/rank/definitions'
 
 import {
     getByCompanyCode,
@@ -32,7 +33,7 @@ import {
 export const getAnalysisAction = async (
     companyCode: string,
     date: string,
-) => {
+): Promise<ReturnSuccessType | ReturnErrorType> => {
     const r = await getByCompanyCode(companyCode, date)
 
     if (r.status === false) {
@@ -155,7 +156,7 @@ export const getHistoryAction = async (
     companyCode: string,
     date: string,
     limit: number = 30,
-) => {
+): Promise<ReturnSuccessType | ReturnErrorType> => {
     const r = await getByBeforeDate(companyCode, date, limit)
 
     if (r.status === false) {

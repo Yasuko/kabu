@@ -4,14 +4,23 @@ type ReturnSuccessType = {
     status: true
     data: {
         id: string
-        date: string
-        day: number
-        dayOne: number
-        daytwo: number
-        daythree: number
-        weekone: number
-        weektwo: number
-        createdat: string
+        companyCode: string
+        address1: string
+        address2: string
+        city: string
+        zip: string
+        country: string
+        phone: string
+        website: string
+        industry: string
+        industryKey: string
+        industryDisp: string
+        sector: string
+        sectorKey: string
+        sectorDisp: string
+        longbusinessummary: string
+        fullTimeEmployees: number
+        createdAt: string
     }[]
 }
 
@@ -20,7 +29,7 @@ type ReturnErrorType = {
     message: string
 }
 
-export const getByDate = async (
+export const getNameAll = async (
     date: string
 ): Promise<ReturnSuccessType | ReturnErrorType> => {
     const pgService = PGService.call()

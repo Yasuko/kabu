@@ -18,6 +18,10 @@ export default async function Page({
     const historys = await getHistoryAction(params.id, today, 30)
     const analysis = await getAnalysisAction(params.id, today)
     
+    if (historys.status === false || analysis.status === false) {
+        return <div>Loading...</div>
+    }
+
     const op_close  = {
         open: historys.data.open,
         close: historys.data.close,

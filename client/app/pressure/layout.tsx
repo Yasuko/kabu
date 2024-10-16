@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 
-export default function RankLayout(
+export default function PressureLayout(
     {
         children,
     }: Readonly<{
