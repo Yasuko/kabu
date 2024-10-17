@@ -141,3 +141,85 @@ def angle(data: list) -> list:
         angles.append(angle)
 
     return angles
+
+
+"""
+与えられたレコードの「Open」値を正規化します。
+この関数は、各レコードがさまざまな財務データを含むリストであるレコードのリストを受け取ります。
+各レコードのインデックス3にあると仮定される「Open」値を抽出し、
+データセット内の最小および最大の「Open」値に基づいてこれらの値を0から1の範囲に正規化します。
+最大および最小の「Open」値が同じ場合、ゼロ除算を避けるためにすべての正規化された値に0を返します。
+引数:
+    records (list[list]): 各レコードが財務データを含むリストであるレコードのリスト。
+                        「Open」値はインデックス3にある必要があります。
+戻り値:
+    dict: 正規化された「Open」値を含む辞書。
+"""
+def normalize(
+    records: list[list],
+    decimal: int = 18
+) -> list:
+    # recordsに数値以外の値が含まれている場合は空のリストを返す
+
+    # Open値の最大値と最小値を取得
+    open_values = [float(record[3]) for record in records]
+    # 配列が空の場合は0を返す
+    if len(open_values) == 0:
+        return [0]
+    max_open = max(open_values)
+    min_open = min(open_values)
+
+    # 正規化
+    #normalized_open_values = [(open - min_open) / (max_open - min_open) for open in open_values]
+    normalized_open_values = []
+    for open in open_values:
+        # 分母が0の場合は0を返す
+        if max_open - min_open == 0:
+            normalized_open_values.append(0)
+        else:
+            r = (open - min_open) / (max_open - min_open)
+            # 数値以外の場合は0を返す
+            if math.isnan(r):
+                normalized_open_values.append(0)
+            else:
+                # 小数点以下をdecimalで指定された桁数に丸める
+                normalized_open_values.append(round(r, decimal))
+
+
+    # 結果を辞書形式で返す
+    return normalized_open_values
+
+
+'''
+ローソク足から、上げ下げの圧力を計算する
+'''
+def convert_pressure(
+    record: list
+) -> float:
+
+    open_price = record[3]
+    close_price = record[6]
+    high_price = record[4]
+    low_price = record[5]
+
+    # nanがいずれかに含まれている場合は0を返す
+    if math.isnan(open_price) or math.isnan(close_price) or math.isnan(high_price) or math.isnan(low_price):
+        return 0
+
+    # ローソクの足の上下の長さが、どちら方向に大きいかを計算
+    if close_price > open_price:  # 陽線の場合
+        upper_wick = high_price - close_price
+        lower_wick = open_price - low_price
+    else:  # 陰線の場合
+        upper_wick = high_price - open_price
+        lower_wick = close_price - low_price
+    
+    wick_difference = upper_wick - lower_wick
+
+    # ローソク足の伸び率を計算
+    if wick_difference < 0: # ローソク足が負の場合
+        percentage = ((low_price / close_price) * 100) - 100
+    else: # ローソク足が正の場合
+        percentage = ((high_price / close_price) * 100) - 100
+
+    return percentage

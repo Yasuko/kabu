@@ -12,7 +12,7 @@ from lib.analysis import ranking, vector
 '''
 
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=1)
+#day = day - datetime.timedelta(days=1)
 
 db = Industry().DB
 
@@ -24,6 +24,9 @@ if upper == None or lower == None:
 
 upper['Date'] = day.strftime("%Y-%m-%d")
 lower['Date'] = day.strftime("%Y-%m-%d")
+
+#print('Upper : ', upper)
+
 
 Rank(db).add_exists_by_date(day.strftime("%Y-%m-%d"), upper)
 RankUnder(db).add_exists_by_date(day.strftime("%Y-%m-%d"), lower)

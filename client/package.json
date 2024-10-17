@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
+    "@preline/tabs": "^2.5.0",
     "@types/pg": "^8.11.10",
     "audio-decode": "^2.2.2",
     "chart.js": "^4.4.4",

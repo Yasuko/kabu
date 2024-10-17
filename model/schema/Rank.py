@@ -5,13 +5,12 @@ from lib.utils import validate
 
 class RankType:
     Date: str
-    Day: list
-    DayOne: list
-    DayTwo: list
-    DayThree: list
-    WeekOne: list
-    WeekTwo: list
-
+    Day: str
+    DayOne: str
+    DayTwo: str
+    DayThree: str
+    WeekOne: str
+    WeekTwo: str
 
 class RankDBType(RankType):
     id: str
@@ -32,12 +31,12 @@ class Rank:
     CREATE TABLE IF NOT EXISTS rank (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         Date DATE NOT NULL,
-        Day VARCHAR[] NOT NULL,
-        DayOne VARCHAR[] NOT NULL,
-        DayTwo VARCHAR[] NOT NULL,
-        DayThree VARCHAR[] NOT NULL,
-        WeekOne VARCHAR[] NOT NULL,
-        WeekTwo VARCHAR[] NOT NULL,
+        Day TEXT NOT NULL,
+        DayOne TEXT NOT NULL,
+        DayTwo TEXT NOT NULL,
+        DayThree TEXT NOT NULL,
+        WeekOne TEXT NOT NULL,
+        WeekTwo TEXT NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX ON rank (Date);

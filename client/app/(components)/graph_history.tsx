@@ -20,8 +20,15 @@ export const options: ChartOptions<'line'> = {
             position: 'top',
         },
         title: {
-            display: true,
-            text: 'Chart.js Line Chart'
+            display: false,
+        }
+    },
+    scales: {
+        x: {
+            display: false,
+        },
+        y: {
+            display: false,
         }
     }
 }
@@ -34,36 +41,24 @@ const getRandomColor = () => {
     return `rgba(${r}, ${g}, ${b}, ${a})`
 }
 
-const colormap = Array.from({ length: 10 }, getRandomColor)
-
 export const GraphHistory = (
-    historys: any,
-    label: string,
+    list: any,
 ) => {
-
-    // 数値の連番で初期化された、30個の配列を作成
-    // 例: [1, 2, 3, 4, 5]
-    const labels = Array.from({ length: 30 }, (_v, i) => {
-        return i
-    })
-    const datasets = Object.keys(historys.list).map((_key, index) => {
-        console.log(historys.list[_key])
-        return {
-                label: _key,
-                data: historys.list[_key],
-                fill: false,
-                borderColor: colormap[index],
-                tension: 0.1,
-            }
-    })
-
     const data: ChartData<'line'> = {
-        labels: labels,
-        datasets: datasets,
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+                '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+                '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'],
+        datasets: [{
+            label: 'Open/Close',
+            data: list.list,
+            fill: false,
+            borderColor: getRandomColor(),
+            tension: 0.1,
+        }]
     }
 
     return (
-        <Line options={options} data={data} />
+        <Line options={options} data={data}/>
     )
 }
 

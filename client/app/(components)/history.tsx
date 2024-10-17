@@ -7,25 +7,27 @@ import {
 } from "@/src/domain/history/action"
 
 export default function History({
-    companyCode = '0000',
+    //companyCode = '0000',
+    historys
 }: {
-    companyCode: string
+    //companyCode: string
+    historys: number[]
 }) {
-    console.log(companyCode)
-    const { data: history, error: historyError } = useSWR(companyCode, getHistoryAction)
+    //console.log(companyCode)
+    //const { data: history, error: historyError } = useSWR(companyCode, getHistoryAction)
 
-    if (historyError) return <div>failed to load</div>
-    if (!history) return <div>loading...</div>
+    //if (historyError) return <div>failed to load</div>
+    //if (!history) return <div>loading...</div>
 
     
     return (
         <>
-            { buildHistoryList(history.data) }
+            { buildHistoryList(historys) }
         </>
     )
 }
 
-
+/*
 const buildHistoryList = (history: any) => {
     const r = history.map((item: any) => {
         return item.open
@@ -35,4 +37,16 @@ const buildHistoryList = (history: any) => {
     r.reverse()
 
     return r.join(', ')
+}*/
+
+const buildHistoryList = (history: number[]) => {
+    // 10以降は削除
+    if (history.length > 10) {
+        history = history.slice(0, 10)
+    }
+
+    // 配列を逆に並べ替える
+    history.reverse()
+
+    return history.join(', ')
 }

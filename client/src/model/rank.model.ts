@@ -1,21 +1,26 @@
 import { PGService } from '@/src/_lib/db/pg.service'
 
-type ReturnSuccessType = {
+export type RankPropertiesType = {
+    Rank: string[]
+    History: number[][]
+    Move: number[][]
+}
+export type ReturnSuccessType = {
     status: true
     data: {
         id: string
         date: string
-        day: number
-        dayOne: number
-        daytwo: number
-        daythree: number
-        weekone: number
-        weektwo: number
+        day: RankPropertiesType
+        dayone: RankPropertiesType
+        daytwo: RankPropertiesType
+        daythree: RankPropertiesType
+        weekone: RankPropertiesType
+        weektwo: RankPropertiesType
         createdat: string
-    }[]
+    }
 }
 
-type ReturnErrorType = {
+export type ReturnErrorType = {
     status: false
     message: string
 }
@@ -34,12 +39,14 @@ export const getByDate = async (
     `
     const values = [date]
     const r = await pgService.getOne(query, values)
-    return (r === false) ? {
+
+    return (r === false)
+    ? {
         status: false,
         message: 'Error'
     } : {
         status: true,
-        data: r
+        data: toObject(r)
     }
 }
 
@@ -61,6 +68,21 @@ export const getByLatest = async (
         message: 'Error'
     } : {
         status: true,
-        data: r
+        data: toObject(r)
+    }
+}
+
+
+const toObject = (r: any) => {
+    return {
+        id: r.id,
+        date: r.date,
+        day: JSON.parse(r.day),
+        dayone: JSON.parse(r.dayone),
+        daytwo: JSON.parse(r.daytwo),
+        daythree: JSON.parse(r.daythree),
+        weekone: JSON.parse(r.weekone),
+        weektwo: JSON.parse(r.weektwo),
+        createdat: r.createdat
     }
 }

@@ -3,7 +3,7 @@ from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
 from model.db.Vector30 import Vector30
 
-from lib.analysis import normalize
+from lib.utils import normalize
 
 '''
 株価情報から、ベクトルデータを作成しDBに登録する試験

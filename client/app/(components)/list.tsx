@@ -6,12 +6,19 @@ import {
 } from "@/src/domain/rank/action"
 
 import History from "@/app/(components)/history"
+import GraphHistory from "@/app/(components)/graph_history"
 
 import Link from "next/link"
 
 type rankType = {
     upper: any,
     lower: any
+}
+
+type rankPropertiesType = {
+    Rank: string[],
+    History: number[][],
+    Move: number[][]
 }
 
 const ranks: rankType = {
@@ -33,13 +40,15 @@ const ranks: rankType = {
     }
 }
 
+type TargetType = 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo'
+
 export default function List({
     date,
     target,
     sort = 'upper'
 }: {
     date: any,
-    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo',
+    target: TargetType,
     sort: 'upper' | 'lower'
 }) {
 
@@ -64,7 +73,7 @@ export default function List({
                         rank
                     </th>
                     <th scope="col" className="px-6 py-3">
-                        Company Code
+                        Code
                     </th>
                     <th scope="col" className="px-6 py-3">
                         History
@@ -82,16 +91,16 @@ export default function List({
 }
 
 const buildList = async (
-    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo',
+    target: TargetType,
     sort: 'upper' | 'lower' = 'upper'
 ): Promise<JSX.Element[]> => {
 
-    return ranks[sort][target].map((val: string, index: number) => {
+    return ranks[sort][target]['Rank'].map((val: string, index: number) => {
         return (
             <tr
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th className="px-6 py-4">
+                <th className="px-6 py-4 text-center">
                     { index + 1 }
                 </th>
                 <th
@@ -103,7 +112,8 @@ const buildList = async (
                     </Link>
                 </th>
                 <td className="px-6 py-4">
-                    <History companyCode={val} />
+                    <History historys={ranks[sort][target]['History'][index]} />
+                    <GraphHistory list={ranks[sort][target]['Move'][index]} className="h-10" />
                 </td>
             </tr>
         )

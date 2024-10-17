@@ -5,8 +5,7 @@ from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
 from model.db.Vector10 import Vector10
 
-from lib.analysis import normalize
-from lib.utils import angle
+from lib.utils import angle, normalize
 
 
 '''

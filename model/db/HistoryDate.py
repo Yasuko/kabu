@@ -109,7 +109,11 @@ class HistoryDate:
         return self._DB.fetch_all(query)
 
     # Dateから最新のデータ30件を取得
-    def get_latest_data(self, date, limit = 30):
+    def get_latest_data(
+        self,
+        date: str,
+        limit = 30
+    ):
         query = f"""
         SELECT
             *
@@ -122,6 +126,24 @@ class HistoryDate:
         LIMIT %s
         """
         return self._DB.fetch_all(query, (date, limit))
+    
+    def get_latest_by_company_code(
+        self,
+        companyCode: str,
+        limit = 30
+    ):
+        query = f"""
+        SELECT
+            *
+        FROM
+            history_date
+        WHERE
+            companyCode = %s
+        ORDER BY
+            Date DESC
+        LIMIT %s
+        """
+        return self._DB.fetch_all(query, (companyCode, limit))
 
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(
