@@ -28,7 +28,7 @@ def ConvertToRankType(data: dict) -> RankType:
 
 class Rank:
     create_table_query = """
-    CREATE TABLE IF NOT EXISTS rank (
+    CREATE TABLE IF NOT EXISTS rank ( 
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         Date DATE NOT NULL,
         Day TEXT NOT NULL,

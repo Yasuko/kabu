@@ -10,7 +10,7 @@ from model.db.Vector20 import Vector20
 from model.db.Vector30 import Vector30
 
 from lib.utils import angle, normalize
-   
+
 
 def rate(
     company_code: str,
