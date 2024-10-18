@@ -5,84 +5,17 @@ import json
 
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
-from model.db.Vector10 import Vector10
-from model.db.Vector20 import Vector20
-from model.db.Vector30 import Vector30
 
 from lib.utils import angle, normalize
 
 
-def rate(
-    company_code: str,
-    date: pd.Timestamp,
-    DB = None
-):
-    
-    df = HistoryDate(DB).get_data_by_date_range(
-        company_code,
-        date - datetime.timedelta(days=30),
-        date
-    )
 
-    # データが存在しない場合
-    if len(df) == 0 or len(df) <= 9:
-        return None
-    # math.isnoneが含まれている場合はNoneを返す
-    for record in df:
-        if math.isnan(record[3]) or math.isnan(record[6]) or math.isnan(record[4]) or math.isnan(record[5]):
-            return None
-
-    results = []
-    i = len(df) - 1
-
-    # 今日のOpenとCloseの差、Volumeの差を計算
-    results.append({
-        'rate': diff_rate(df[i][3], df[i][6]),
-        'volume': df[i][7] - df[i-1][7] 
-    })
-
-    # 1日前のOpen値と当日のOpen値の差、Volumeの差を計算
-    results.append({
-        'rate': diff_rate(df[i][3], df[i-1][3]),
-        'volume': df[i][7] - df[i-1][7]
-    })
-    # 2日前のOpen値と当日のOpen値の差、Volumeの差を計算
-    results.append({
-        'rate': diff_rate(df[i][3], df[i-2][3]),
-        'volume': df[i][7] - df[i-2][7]
-    })
-    # 3日前のOpen値と当日のOpen値の差、Volumeの差を計算
-    results.append({
-        'rate': diff_rate(df[i][3], df[i-3][3]),
-        'volume': df[i][7] - df[i-3][7]
-    })
-    # 1週間前のOpen値と当日のOpen値の差、Volumeの差を計算
-    results.append({
-        'rate': diff_rate(df[i][3], df[i-5][3]),
-        'volume': df[i][7] - df[i-5][7]
-    })
-    # 2週間前のOpen値と当日のOpen値の差、Volumeの差を計算
-    results.append({
-        'rate': diff_rate(df[i][3], df[i-10][3]),
-        'volume': df[i][7] - df[i-10][7]
-    })
-
-    return results
-
-def diff_rate(
-    data1: float,
-    data2: float
-) -> float:
-    return ((data1 - data2) / data2) * 100
-
-
-
-def vector(
+def press_converter(
     company_code: str,
     date: datetime.date,
     DB = None
 ) -> list:
-    sdate = date - datetime.timedelta(days=60)
+    sdate = date - datetime.timedelta(days=50)
     df = HistoryDate(DB).get_data_by_date_range(
         company_code,
         sdate.strftime('%Y-%m-%d'),
@@ -93,6 +26,8 @@ def vector(
     if len(df) <= 29:
         return None
 
+    press_specs = []
+
     for idx, _r in df:
         open = _r[3]
         high = _r[4]
@@ -100,8 +35,75 @@ def vector(
         close = _r[6]
 
         diff_open = close - open
-        diff_high = close - high
-        diff_low = close - low
         diff_width = high - low
 
-    return []
+        # 単純な上昇率 0~1
+        up_point = 0
+        # 上昇圧 1が最大 0~1
+        up_rate = 0
+        # 単純な下降率 0~1
+        down_point = 0
+        # 下降圧 1が最大 0~1
+        down_rate = 0
+        # 相場の混沌度, 1が最大 -1が最小
+        caos_point = 0
+        # 上げ下げどちら方向に乱れているか、1が最大-1が最小
+        caos_rate = 0
+
+        up_point = round(diff_open / open, 4)
+        up_rate =  round((close - open) / (high - low), 4)
+
+        down_point = round(diff_open / close, 4)
+        down_rate = round((close - open) / (high - low), 4)
+
+        caos_point = round((high-open+high-close) / (high + low) / (low-open+low-close)/(high+low), 4) + 1
+
+        press_specs.append({
+            'up_point': up_point,
+            'up_rate': up_rate,
+            'down_point': down_point,
+            'down_rate': down_rate,
+            'caos_point': caos_point,
+            'caos_rate': caos_rate
+        })
+    return 0, 0
+
+
+def identify_candlestick(open_price, close_price, high_price, low_price):
+    if open_price == close_price == high_price == low_price:
+        return "四値同事"
+    elif open_price == low_price and close_price == high_price:
+        return "陽丸坊主"
+    elif open_price == high_price and close_price == low_price:
+        return "陰丸坊主"
+    elif open_price == low_price and high_price > close_price:
+        return "陽寄付坊主"
+    elif open_price == high_price and low_price < close_price:
+        return "陰寄付坊主"
+    elif open_price != close_price and high_price == low_price:
+        return "大引坊主"
+    elif abs(open_price - close_price) < (high_price - low_price) * 0.1:
+        return "極線"
+    elif open_price == close_price and low_price < open_price and high_price == open_price:
+        return "トンボ"
+    elif open_price == close_price and high_price > open_price and low_price == open_price:
+        return "塔場"
+    elif open_price == close_price and high_price > open_price and low_price < open_price:
+        return "足長同事"
+    elif open_price == close_price and high_price - open_price < open_price - low_price:
+        return "たぐり線"
+    elif open_price == close_price and low_price < open_price:
+        return "カラカサ"
+    else:
+        return "該当なし"
+
+# テスト
+print(identify_candlestick(100, 100, 100, 100))  # 四値同事
+print(identify_candlestick(100, 100, 110, 90))   # 寄付坊主
+print(identify_candlestick(100, 110, 110, 100))  # 大引坊主
+print(identify_candlestick(100, 101, 110, 90))   # 極線
+print(identify_candlestick(100, 100, 100, 90))   # トンボ
+print(identify_candlestick(100, 100, 110, 100))  # 塔場
+print(identify_candlestick(100, 100, 110, 90))   # 足長同事
+print(identify_candlestick(100, 100, 105, 90))   # たぐり線
+print(identify_candlestick(100, 100, 105, 80))   # カラカサ
