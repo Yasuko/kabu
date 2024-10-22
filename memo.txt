@@ -358,3 +358,68 @@ price_market_info
 dividends
 financial_data
 other_information
+
+
+
+/* 
+ * 陽場
+ */
+ # 弱上げ
+strong_hummer_sun : 強トンカチ
+weak_hummer_sun : 弱トンカチ陽
+tower_top : 塔場陽
+upper_shadow_top_sun : 上影コマ陽線
+
+# 上げ
+strong_umbrella_sun : 強カラカサ陽
+weak_umbrella_sun : 弱いカラカサ陽
+dragonfly_sun : トンボ陽
+lower_shadow_top_sun : 下影コマ陽
+
+# 安定上げ
+bold_head_sun : 丸坊主陽
+open_bold_head_sun : 寄付き坊主陽
+close_bold_head_sun : 大引け坊主陽
+large_sun : 大陽線
+small_sun : 小陽線
+upper_shadow_sun : 上影陽線
+lower_shadow_sun : 下影陽線
+whisker_sun : ヒゲ陽線
+
+
+
+/* 
+ * 陰場
+ */
+ # 下げ
+strong_hummer_shadow : 強トンカチ陰
+weak_hummer_shadow : 弱トンカチ
+tower_bottom : 塔場陰
+upper_shadow_bottom_shadow : 上影コマ陰線
+
+# 弱下げ
+strong_umbrella_shadow : 強カラカサ陰
+weak_umbrella_shadow : 弱カラカサ陰
+dragonfly_shadow : トンボ陰
+lower_shadow_bottom_shadow : 下影コマ陰線
+
+# 安定下げ
+bold_head_shadow : 丸坊主陰
+close_bold_head_shadow : 大引け坊主陰
+open_bold_head_shadow : 寄付き坊主陰
+large_shadow : 大陰線
+small_shadow : 小陰線
+upper_shadow_shadow : 上影陰線
+lower_shadow_shadow : 下影陰線
+
+
+/* 
+ * 見
+ */
+whisker_shadow : ヒゲ陰線
+tower : 塔場
+upper_shadow_cross : うわひげ十字
+cross : 十字
+dragonfly : トンボ
+lower_shadow_cross : しもひげ十字
+four_value_same : 四値同事

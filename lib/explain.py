@@ -3,16 +3,31 @@ import time
 
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
+from model.schema.CandlePattern import CandlePattern
 
 from lib.utils import angle, normalize
 
-
+class PressSpecType:
+    candle: dict[
+        'key'   : str,
+        'name'  : str,
+        'code'  : str,
+        'trend' : 'sun' or 'shadow' or 'edge',
+        'position'  : 'top' or 'middle' or 'low',
+        'score' : float
+    ]
+    price: dict[
+        'open'  : float,
+        'close' : float,
+        'high'  : float,
+        'low'   : float
+    ]
 
 def press_converter(
     company_code: str,
     date: datetime.date,
     DB = None
-) -> list:
+) -> list[PressSpecType]:
     company_code = '4014'
     sdate = date - datetime.timedelta(days=100)
     df = HistoryDate(DB).get_data_by_date_range(
@@ -34,10 +49,26 @@ def press_converter(
         high = _r[4]
         low = _r[5]
         close = _r[6]
-        r = identify_candle(open, close, high, low)
-        print(open, high, low, close, r)
-        time.sleep(0.3)
-    return 0, 0
+        r, position, score = identify_candle(open, close, high, low)
+        #print(open, high, low, close, r, position, score)
+
+        press_specs.append({
+            'candle': {
+                'key': r,
+                'name': CandlePattern[0][r]['name'],
+                'code': CandlePattern[0][r]['code'],
+                'trend': CandlePattern[0][r]['trend'],
+                'position': position,
+                'score': score
+            },
+            'price': {
+                'open': open,
+                'close': close,
+                'high': high,
+                'low': low
+            }
+        })
+    return press_specs
 
 '''
 価格情報からローソク足の種類を返す
@@ -50,108 +81,137 @@ def identify_candle(
 ) -> tuple:
     position, cp, op = band_position(open_price, close_price, high_price, low_price)
     
+    result = []
 
     # 陽場
     if open_price < close_price:
         # 始値と終値が中央値より低い
         if position == 'low':
             if op == 0 and cp >= 2:
-                return "強トンカチ陽", 'low', op + cp
+                result = ["strong_hummer_sun", 'low']
             elif op == 0 and cp >= 3:
-                return "弱トンカチ陽", 'low', op + cp
-            elif op == 0 and cp >= 2:
-                return "強トンカチ陽", 'low', op + cp
+                result = ["weak_hummer_sun", 'low']
             elif op == 2 and cp == 2 or op == 1 and cp == 1 or op == 0 and cp == 0:
-                return "塔場陽", 'low', op + cp
-            return "上影コマ陽線", 'low', op + cp
+                result = ["tower_top", 'low']
+            else:
+                result = ["upper_shadow_top_sun", 'low']
         
         # 始値と終値が中央値より高い
         elif position == 'high':
             if cp == 8 and op <= 5:
-                return "強カラカサ陽", 'high', op + cp
+                result = ["strong_umbrella_sun", 'high']
             elif cp == 8 and op <= 6:
-                return "弱いカラカサ陽", 'high', op + cp
+                result = ["weak_umbrella_sun", 'high']
             elif cp == 6 and op == 6 or cp == 7 and op == 7 or cp == 8 and op == 8:
-                return "トンボ陽", 'high', op + cp
-            return "下影コマ陽", 'high', op + cp
+                result = ["dragonfly_sun", 'high']
+            else:
+                result = ["lower_shadow_top_sun", 'high']
 
         # 始値が中央値より低く、終値が中央値より高い
-        if cp == 8 and op == 0:
-            return "丸坊主陽", 'middle', op + cp
-        if cp == 8 and op > 0 and op < 2:
-            return "寄付き坊主陽", 'middle', op + cp
-        if op == 0 and cp < 8 and cp > 6:
-            return "大引け坊主陽", 'middle', op + cp
-        elif cp == 7 and op == 1 or cp == 6 and op == 2 or cp == 5 and op == 3:
-            return "小陽線", 'middle', op + cp
-        elif cp >= 4 and op <= 2:
-            return "上影陽線", 'middle', op + cp
-        elif cp >= 7 and op <= 4:
-            return "下影陽線", 'middle', op + cp
         else:
-            return "ヒゲ陽線", 'middle', op + cp
-    
+            if cp == 8 and op == 0:
+                result = ["bold_head_sun", 'middle']
+            if cp == 8 and op > 0 and op < 2:
+                result = ["open_bold_head_sun", 'middle']
+            if op == 0 and cp < 8 and cp > 6:
+                result = ["close_bold_head_sun", 'middle']
+            elif cp == 7 and op == 1:
+                result = ["large_sun", 'middle']
+            elif cp == 6 and op == 2 or cp == 5 and op == 3:
+                result = ["small_sun", 'middle']
+            elif cp >= 4 and op <= 2:
+                result = ["upper_shadow_sun", 'middle']
+            elif cp >= 7 and op <= 4:
+                result = ["lower_shadow_sun", 'middle']
+            else:
+                result = ["whisker_sun", 'middle']
+            # OPをスコア計算用に補正
+            op = 8 - op
+
     # 陰場
     elif open_price > close_price:
         # 始値と終値が中央値より低い
         if position == 'low':
             if cp == 0 and op >= 2:
-                return "強トンカチ陰", 'low', op + cp
+                result = ["strong_hummer_shadow", 'low']
             elif cp == 0 and op >= 3:
-                return "弱トンカチ", 'low', op + cp
+                result = ["weak_hummer_shadow", 'low']
             elif op == 2 and cp == 2 or op == 1 and cp == 1 or op == 0 and cp == 0:
-                return "塔場陰", 'low', op + cp
-            return "上影コマ陰線", 'low', op + cp
+                result = ["tower_bottom", 'low']
+            else:
+                result = ["upper_shadow_bottom_shadow", 'low']
+            cp = 8 - cp
+            op = 8 - op
         
         # 始値と終値が中央値より高い
         elif position == 'high':
             if op == 8 and cp <= 5:
-                return "強カラカサ陰", 'high', op + cp
+                result = ["strong_umbrella_shadow", 'high']
             if op == 8 and cp <= 6:
-                return "弱カラカサ影", 'high', op + cp
+                result = ["weak_umbrella_shadow", 'high']
             elif cp == 6 and op == 6 or cp == 7 and op == 7 or cp == 8 and op == 8:
-                return "トンボ陰", 'high', op + cp
-            return "下影コマ陰線", 'high', op + cp
+                result = ["dragonfly_shadow", 'high']
+            else:
+                result = ["lower_shadow_bottom_shadow", 'high']
+            cp = 8 - cp
 
         # 始値が中央値より低く、終値が中央値より高い
-        if op == 8 and cp == 0:
-            return "丸坊主陰", 'middle', op + cp
-        if op == 8 and cp < 2:
-            return "大引け坊主陰", 'middle', op + cp
-        if cp == 0 and op > 6:
-            return "寄付き坊主陰", 'middle', op + cp
-        elif op == 7 and cp == 1 or op == 6 and cp == 2 or op == 5 and cp == 3:
-            return "小陰線",  'middle', op + cp
-        elif op >= 4 and cp <= 2:
-            return "上影陰線", 'middle', op + cp
-        elif op >= 7 and cp <= 4:
-            return "下影陰線", 'middle', op + cp
         else:
-            return "ヒゲ飲泉", 'middle', op + cp
-    
+            if op == 8 and cp == 0:
+                result = ["bold_head_shadow", 'middle']
+            if op == 8 and cp < 2:
+                result = ["close_bold_head_shadow", 'middle']
+            if cp == 0 and op > 6:
+                result = ["open_bold_head_shadow", 'middle']
+            elif op == 7 and cp == 1:
+                result = ["large_shadow", 'middle']
+            elif op == 6 and cp == 2 or op == 5 and cp == 3:
+                result = ["small_shadow",  'middle']
+            elif op >= 4 and cp <= 2:
+                result = ["upper_shadow_shadow", 'middle']
+            elif op >= 7 and cp <= 4:
+                result = ["lower_shadow_shadow", 'middle']
+            else:
+                result = ["whisker_shadow", 'middle']
+            # OPをスコア計算用に補正
+            cp = 8 - cp
+
     # 始値と終値が同じ
     else:
+        # 0~3の場合
         if position == 'low':
             if op == 0 or op == 1:
-                return "塔場", 'low', op + cp
+                result = ["tower", 'low']
             elif op == 2 or op == 3:
-                return "うわひげ十字", 'low', op + cp
+                result = ["upper_shadow_cross", 'low']
             elif op == 4:
-                return "十字", 'low', op + cp
-            return "十字", 'low', op + cp
-        
+                result = ["cross", 'low']
+            else:
+                result = ["cross", 'low']
+        # 5~8の場合
         elif position == 'high':
             if op == 8 or op == 7:
-                return "トンボ", 'high', op + cp
+                result = ["dragonfly", 'high']
             elif op == 6 or op == 5:
-                return "しもひげ十字", 'high', op + cp
+                result = ["lower_shadow_cross", 'high']
             elif op == 4:
-                return "十字", 'high', op + cp
-            return "十字", 'high', op + cp
-        
+                result = ["cross", 'high']
+            else:
+                result = ["cross", 'high']
+        # 4の場合
         else:
-            return "？？", 'middle', op + cp
+            result = ["four_value_same", 'middle']
 
+    result.append(score_result(op, cp))
+    return tuple(result)
+
+def score_result(
+    op: int,
+    cp: int,
+) -> int:
+    # 16で正規化し、小数点以下2桁で四捨五入
+    return round((op + cp) / 16, 2)
+    
 
 '''
 ローソクが、ローソク足の中でどの位置にあるかを返す
