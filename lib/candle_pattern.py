@@ -1,6 +1,8 @@
 
-
-def pattern1(
+'''
+3本のローソクがトレンドに反するパターンのスコアを計算する
+'''
+def pattern1_sun(
     candle1: dict,
     candle2: dict,
     candle3: dict,

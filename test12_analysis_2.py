@@ -4,7 +4,25 @@ from model.db.Industry import Industry
 from model.db.AnalysisDate import AnalysisDate
 
 from lib.explain import press_converter
-from lib.candle_pattern import detect_three_soldiers, detect_three_gaps
+from lib.trend_pattern_base import (
+    detect_bullish_engulfing, 
+    detect_bearish_engulfing, 
+    detect_bullish_harami, 
+    detect_bearish_harami,
+    is_dark_cloud_cover,
+    detect_piercing_pattern,
+    detect_harami_pattern,
+    detect_in_neck_pattern,
+    detect_on_neck_pattern,
+    detect_meeting_lines_pattern,
+    detect_bearish_meeting_lines_pattern,
+    detect_separating_lines_pattern,
+    detect_bearish_separating_lines_pattern,
+    detect_tasukigap_pattern,
+    detect_bearish_tasukigap_pattern,
+    detect_tweezer_top_pattern,
+    detect_tweezer_bottom_pattern
+)
 
 '''
 １日前、２日前、３日前、１週間前、２週間前からの株価から
