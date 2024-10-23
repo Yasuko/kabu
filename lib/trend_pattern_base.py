@@ -1,7 +1,12 @@
 '''
 陽の包み線を検出する
 
-上げシグナル
+陰線をつけた翌日に、陽線をつけて尚且つ
+1日目の始値よりも、2日目の始値が低く
+1日目の終値よりも、2日目の終値が高い場合
+
+シグナル
+    上げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
@@ -10,14 +15,15 @@
     bool: 陽の包み線パターンが検出された場合はTrue、それ以外はFalse
 '''
 def detect_bullish_engulfing(
-    day1,
-    day2
+    prev_candle,
+    candle
 ) -> bool:
-    # 「陽の包み線」パターンの条件をチェック
-    if (day1['close'] < day1['open'] and  # 1日目は陰線
-        day2['open'] < day1['close'] and  # 2日目の始値が1日目の終値より低い
-        day2['close'] > day1['open'] and  # 2日目の終値が1日目の始値より高い
-        day2['close'] > day2['open']):  # 2日目は陽線
+    # 陰線をつけた翌日に、陽線をつけて尚且つ
+    if (prev_candle['close'] < prev_candle['open'] and candle['close'] > candle['open']
+        # 1日目の始値よりも、2日目の始値が低く(1%以上)
+        and candle['open'] < (prev_candle['close'] - (prev_candle['close'] * 0.01))
+        # 1日目の終値よりも、2日目の終値が高い(1%以上)
+        and candle['close'] > (prev_candle['open'] + (prev_candle['open'] * 0.01))):
         return True
     
     return False
@@ -25,7 +31,12 @@ def detect_bullish_engulfing(
 '''
 陰の包み線を検出する
 
-下げシグナル
+陽線をつけた翌日に、陰線をつけて尚且つ
+1日目の始値よりも、2日目の終値が低く
+1日目の終値よりも、2日目の始値が高い場合
+
+シグナル
+    下げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
@@ -34,14 +45,15 @@ def detect_bullish_engulfing(
     bool: 陰の包み線パターンが検出された場合はTrue、それ以外はFalse
 '''
 def detect_bearish_engulfing(
-    day1,
-    day2
+    prev_candle,
+    candle
 ) -> bool:
-    # 「陰の包み線」パターンの条件をチェック
-    if (day1['close'] > day1['open'] and  # 1日目は陽線
-        day2['open'] > day1['close'] and  # 2日目の始値が1日目の終値より高い
-        day2['close'] < day1['open'] and  # 2日目の終値が1日目の始値より低い
-        day2['close'] < day2['open']):  # 2日目は陰線
+    # 陽線をつけた翌日に、陰線をつけて尚且つ
+    if (prev_candle['close'] > prev_candle['open'] and candle['close'] < candle['open']
+        # 1日目の始値よりも、2日目の終値が低く(1%以上)
+        and candle['open'] > (prev_candle['close'] + (prev_candle['close'] * 0.01))
+        # 1日目の終値よりも、2日目の始値が高い(1%以上)
+        and candle['close'] < (prev_candle['open'] - (prev_candle['open'] * 0.01))):
         return True
     
     return False
@@ -49,7 +61,12 @@ def detect_bearish_engulfing(
 '''
 陽のはらみ線を検出する
 
-上げシグナル
+陽線を付けた翌日に、陽線か陰線を付けて尚且つ
+1日目のローソクの足が、2日目のローソクの足より長く
+2日目のローソクの足が、1日目のローソクの足の始値と終値の間にある場合
+
+シグナル
+    下げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
@@ -58,27 +75,33 @@ def detect_bearish_engulfing(
     bool: 陽のはらみ線パターンが検出された場合はTrue、それ以外はFalse
 '''
 def detect_bullish_harami(
-    day1,
-    day2
+    prev_candle,
+    candle
 ) -> bool:
-    # 「陽のはらみ線」パターンの条件をチェック
-    if (day1['close'] < day1['open'] and  # 1日目は陰線
-        day2['open'] > day1['low'] and  # 2日目の始値が1日目の安値より高い
-        day2['close'] < day1['open'] and  # 2日目の終値が1日目の始値より低い
-        day2['close'] > day2['open']):  # 2日目は陽線
+    # 1日目が陽線、2日目が陽線
+    if (prev_candle['close'] > prev_candle['open']
+        and candle['close'] > candle['open']
+        and candle['open'] > (prev_candle['open'] + (prev_candle['open'] * 0.01))
+        and candle['close'] < (prev_candle['open'] - (prev_candle['open'] * 0.01))):
         return True
     
+    # 1日目が陽線、2日目が陰線
+    if (prev_candle['close'] < prev_candle['open']
+        and candle['close'] < candle['open']
+        and candle['open'] < (prev_candle['close'] - (prev_candle['close'] * 0.01))
+        and candle['close'] > (prev_candle['close'] + (prev_candle['close'] * 0.01))):
+        return True
     return False
 
 '''
 陰のはらみ線を検出する
 
-前日が陽線で、当日が陰線で尚且つ
-前日のローソクの足が、翌日のローソクの足より短く
-前日のローソクの足が、翌日のローソクの足の中にある場合
+前日が陰線で、当日が陰線か陽線で尚且つ
+前日のローソクの足が、当日のローソクの足より長く
+当日のローソクの足が、前日のローソクの足の始値と終値の間にある場合
 
 シグナル
-    下げ
+    上げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
@@ -90,11 +113,22 @@ def detect_bearish_harami(
     prev_candle,
     candle
 ) -> bool:
-    # 「陰のはらみ線」パターンの条件をチェック
-    if (prev_candle['close'] > prev_candle['open'] and  # 1日目は陽線
-        candle['open'] < prev_candle['close'] and  # 2日目の始値が1日目の終値より低い
-        candle['close'] > prev_candle['open'] and  # 2日目の終値が1日目の始値より高い
-        candle['close'] < candle['open']):  # 2日目は陰線
+    # 1日目が陰線、2日目が陰線
+    if (prev_candle['close'] < prev_candle['open']
+        and candle['close'] < candle['open']
+        # 1日目のローソクの足が、2日目のローソクの足より長く
+        # 2日目のローソクの足が、1日目のローソクの足の始値と終値の間にある
+        and candle['open'] < (prev_candle['open'] - (prev_candle['open'] * 0.01))
+        and candle['close'] > (prev_candle['close'] + (prev_candle['close'] * 0.01))):
+        return True
+    
+    # 1日目が陰線、2日目が陽線
+    if (prev_candle['close'] < prev_candle['open']
+        and candle['close'] > candle['open']
+        # 1日目のローソクの足が、2日目のローソクの足より長く
+        # 2日目のローソクの足が、1日目のローソクの足の始値と終値の間にある
+        and candle['open'] > (prev_candle['close'] + (prev_candle['close'] * 0.01))
+        and candle['close'] < (prev_candle['open'] - (prev_candle['open'] * 0.01))):
         return True
     
     return False
@@ -106,7 +140,8 @@ def detect_bearish_harami(
 2日目の始値が1日目の終値よりも高く
 2日目の終値が1日目の始値と終値の中間値と始値の間にある場合
 
-下げシグナル
+シグナル
+    下げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
@@ -119,12 +154,14 @@ def is_dark_cloud_cover(
     curr_candle
 ):
     # 1日目が大陽線、2日目が大陰線
-    if prev_candle['open'] < prev_candle['close'] and curr_candle['open'] > curr_candle['close']:
+    if (prev_candle['open'] < prev_candle['close']
+        and curr_candle['open'] > curr_candle['close']):
             # 2日目の始値が1日目の終値よりも高く
             # 2日目の終値が1日目の始値と終値の中間値と始値の間にある
             if (curr_candle['open'] > prev_candle['close']
-                and curr_candle['close'] > (prev_candle['open'] + prev_candle['close']) / 2
-                and curr_candle['close'] < prev_candle['open']):
+                and curr_candle['open']  > prev_candle['close']
+                and curr_candle['close'] < (prev_candle['open'] + prev_candle['close']) / 2
+                and curr_candle['close'] > prev_candle['open']):
                     return True
     return False
 
@@ -152,7 +189,9 @@ def detect_piercing_pattern(
         # 2日目の始値が1日目の終値よりも低く
         # 2日目の終値が1日目の始値と終値の中間値を超えている
         if (curr_candle['open'] < prev_candle['close']
-            and curr_candle['close'] > (prev_candle['open'] + prev_candle['close']) / 2):
+            and curr_candle['open'] < prev_candle['close']
+            and curr_candle['close'] > (prev_candle['open'] + prev_candle['close']) / 2
+            and curr_candle['close'] < prev_candle['open']):
             return True
     
     return False
@@ -181,8 +220,12 @@ def detect_harami_pattern(
         # 2日目の始値が1日目の終値、始値と終値の中間値にあり
         # 2日目の最高値が1日目の始値と終値の中心値を超えている
         if (curr_candle['open'] > prev_candle['close']
-            and curr_candle['open'] < (prev_candle['close'] + prev_candle['open'] / 2)
-            and curr_candle['high'] > (prev_candle['close'] + prev_candle['open'] / 2)):
+            # 2日目の始値が1日目の終値よりも低い
+            and curr_candle['open'] < (prev_candle['close'] - prev_candle['open']) / 2
+            # 2日目の最高値が1日目の始値と終値の中心値を超えている
+            and curr_candle['close'] < (prev_candle['close'] + prev_candle['open']) / 2
+            and curr_candle['close'] > prev_candle['close']
+            and curr_candle['high'] > (prev_candle['close'] + prev_candle['open']) / 2):
             return True
     
     return False
@@ -191,8 +234,8 @@ def detect_harami_pattern(
 入り首線を検出する
 
 大陰線を付けた翌日に、陽線を付けて尚且つ
-2日目の開始値が、前日の終値、最低値よりも高く
-2日目の最高値が、1日目の始値と終値の中心値まで届かなかった場合
+2日目の開始値が、前日の終値、最低値よりも低く
+2日目の最高値が、1日目の終値より高く、始値と終値の中心値まで届かなかった場合
 
 シグナル
     買い弱
@@ -210,8 +253,8 @@ def detect_in_neck_pattern(
     # 1日目が陰線、2日目が陽線
     if prev_candle['open'] > prev_candle['close'] and curr_candle['open'] < curr_candle['close']:
         # 2日目の始値が1日目の終値、最低値よりも高く、2日目の最高値が、1日目の始値と終値の中心値の間にある
-        if (curr_candle['open'] > prev_candle['close']
-            and curr_candle['open'] > prev_candle['high']
+        if (curr_candle['open'] < prev_candle['close']
+            and curr_candle['open'] < prev_candle['low']
             and curr_candle['open'] < (prev_candle['open'] + prev_candle['close']) / 2
             and curr_candle['high'] < (prev_candle['open'] + prev_candle['close']) / 2):
             return True
@@ -225,7 +268,7 @@ def detect_in_neck_pattern(
 2日目の開始値と1日目の開始値が離れて、隙間がある場合
 
 シグナル
-    下げ弱
+    下げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
@@ -239,9 +282,8 @@ def detect_on_neck_pattern(
 ) -> bool:
     # 1日目が陰線、2日目が陽線
     if prev_candle['open'] > prev_candle['close'] and curr_candle['open'] < curr_candle['close']:
-        # 2日目の始値が1日目の終値よりも1段低い（1%以上）
-        if (curr_candle['open'] < prev_candle['close']
-            and (prev_candle['close'] > prev_candle['open'] + (prev_candle['open'] * 0.01))):
+        # 2日目の始値が1日目の安値よりも1段低い（1%以上）
+        if ((prev_candle['low'] > prev_candle['high'] + (prev_candle['high'] * 0.01))):
             return True
     
     return False
@@ -342,7 +384,8 @@ def detect_separating_lines_pattern(
 大陽線を付けた翌日に、大陰線を付けて尚且つ
 2日目の始値が1日目の始値とほぼ同じ場合
 
-下げシグナル
+シグナル
+    下げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
@@ -369,7 +412,12 @@ def detect_bearish_separating_lines_pattern(
 '''
 タスキ線の陽線パターンを検出する
 
-上げシグナル
+陰線をつけた翌日に、陽線をつけて尚且つ
+2日目の始値が1日目の終値よりも高く、1日目の始値よりも低い
+2日目の終値が1日目の高値よりも高い場合
+
+シグナル
+    上げ
 
 パラメータ:
     prices1 (dict): 1日前の株価情報
