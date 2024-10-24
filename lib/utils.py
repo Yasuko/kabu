@@ -223,3 +223,28 @@ def convert_pressure(
         percentage = ((high_price / close_price) * 100) - 100
 
     return percentage
+
+
+'''
+日毎のローソク足データを指定された期間で集約し、返す
+'''
+def aggregate_stock_data(
+    data: list,
+    interval: int
+) -> list:
+    aggregated_data = []
+    for i in range(0, len(data), interval):
+        chunk = data[i:i+interval]
+        if not chunk:
+            continue
+        open_price = chunk[0]['open']
+        high_price = max(day['high'] for day in chunk)
+        low_price = min(day['low'] for day in chunk)
+        close_price = chunk[-1]['close']
+        aggregated_data.append({
+            "open": open_price,
+            "high": high_price,
+            "low": low_price,
+            "close": close_price
+        })
+    return aggregated_data

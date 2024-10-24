@@ -1,5 +1,6 @@
 import datetime
 import time
+import math
 
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
@@ -28,8 +29,8 @@ def press_converter(
     date: datetime.date,
     DB = None
 ) -> list[PressSpecType]:
-    company_code = '4014'
-    sdate = date - datetime.timedelta(days=100)
+    #company_code = '4014'
+    sdate = date - datetime.timedelta(days=150)
     df = HistoryDate(DB).get_data_by_date_range(
         company_code,
         sdate.strftime('%Y-%m-%d'),
@@ -39,7 +40,7 @@ def press_converter(
     #print('Data : ', df)
     
     # データが存在しない場合, Noneを返す
-    if len(df) <= 29:
+    if len(df) <= 49:
         return None
 
     press_specs = []
@@ -49,6 +50,9 @@ def press_converter(
         high = _r[4]
         low = _r[5]
         close = _r[6]
+        if math.isnan(open) or math.isnan(high) or math.isnan(low) or math.isnan(close):
+            continue
+        
         r, position, score = identify_candle(open, close, high, low)
         #print(open, high, low, close, r, position, score)
 
@@ -62,10 +66,10 @@ def press_converter(
                 'score': score
             },
             'price': {
-                'open': open,
-                'close': close,
-                'high': high,
-                'low': low
+                'open': float(open),
+                'close': float(close),
+                'high': float(high),
+                'low': float(low)
             }
         })
     return press_specs
@@ -205,6 +209,9 @@ def identify_candle(
     result.append(score_result(op, cp))
     return tuple(result)
 
+'''
+スコアを正規化する
+'''
 def score_result(
     op: int,
     cp: int,
@@ -223,13 +230,16 @@ def band_position(
     low_price: float
 ) -> tuple:
     mps = math_pice_set(high_price, low_price)
-
-    if open_price < mps[4] and close_price < mps[4]:
-        return 'low', check_mps(close_price, mps), check_mps(open_price, mps)
-    elif open_price > mps[4] and close_price > mps[4]:
-        return 'high', check_mps(close_price, mps), check_mps(open_price, mps)
-    else:
-        return 'middle', check_mps(close_price, mps), check_mps(open_price, mps)
+    try:
+        if open_price < mps[4] and close_price < mps[4]:
+            return 'low', check_mps(close_price, mps), check_mps(open_price, mps)
+        elif open_price > mps[4] and close_price > mps[4]:
+            return 'high', check_mps(close_price, mps), check_mps(open_price, mps)
+        else:
+            return 'middle', check_mps(close_price, mps), check_mps(open_price, mps)
+    except:
+        print('Error : ', open_price, close_price, high_price, low_price)
+        print('Error : ', mps)
 
 '''
 ローソクの幅とローソク足の幅の比率、ローソク足の幅と始値の比率を

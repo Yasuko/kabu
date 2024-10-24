@@ -19,6 +19,7 @@ from trend_pattern_base import (
     detect_tweezer_bottom_pattern
 )
 
+
 def test_detect_bullish_engulfing():
     assert detect_bullish_engulfing(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
@@ -41,8 +42,12 @@ def test_detect_bearish_engulfing():
 
 def test_detect_bullish_harami():
     assert detect_bullish_harami(
-        {'open': 100, 'close': 90, 'high': 110, 'low': 85},
-        {'open': 95, 'close': 98, 'high': 100, 'low': 90}
+        {'open': 90, 'close': 140, 'high': 150, 'low': 75},
+        {'open': 95, 'close': 120, 'high': 125, 'low': 90}
+    )
+    assert detect_bullish_harami(
+        {'open': 90, 'close': 140, 'high': 150, 'low': 75},
+        {'open': 120, 'close': 95, 'high': 125, 'low': 90}
     )
     assert not detect_bullish_harami(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
@@ -51,8 +56,12 @@ def test_detect_bullish_harami():
 
 def test_detect_bearish_harami():
     assert detect_bearish_harami(
-        {'open': 90, 'close': 100, 'high': 110, 'low': 85},
-        {'open': 95, 'close': 92, 'high': 100, 'low': 90}
+        {'open': 120, 'close': 90, 'high': 130, 'low': 85},
+        {'open': 110, 'close': 95, 'high': 115, 'low': 89}
+    )
+    assert detect_bearish_harami(
+        {'open': 130, 'close': 90, 'high': 140, 'low': 85},
+        {'open': 95, 'close': 110, 'high': 120, 'low': 90}
     )
     assert not detect_bearish_harami(
         {'open': 90, 'close': 100, 'high': 110, 'low': 85},
@@ -72,7 +81,7 @@ def test_is_dark_cloud_cover():
 def test_detect_piercing_pattern():
     assert detect_piercing_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
-        {'open': 85, 'close': 105, 'high': 110, 'low': 80}
+        {'open': 83, 'close': 98, 'high': 100, 'low': 80}
     )
     assert not detect_piercing_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
@@ -81,8 +90,8 @@ def test_detect_piercing_pattern():
 
 def test_detect_harami_pattern():
     assert detect_harami_pattern(
-        {'open': 100, 'close': 90, 'high': 110, 'low': 85},
-        {'open': 85, 'close': 95, 'high': 100, 'low': 80}
+        {'open': 110, 'close': 90, 'high': 115, 'low': 85},
+        {'open': 83, 'close': 95, 'high': 105, 'low': 80}
     )
     assert not detect_harami_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
@@ -92,7 +101,7 @@ def test_detect_harami_pattern():
 def test_detect_in_neck_pattern():
     assert detect_in_neck_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
-        {'open': 85, 'close': 90, 'high': 100, 'low': 80}
+        {'open': 65, 'close': 90, 'high': 92, 'low': 60}
     )
     assert not detect_in_neck_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
@@ -102,7 +111,7 @@ def test_detect_in_neck_pattern():
 def test_detect_on_neck_pattern():
     assert detect_on_neck_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
-        {'open': 85, 'close': 90, 'high': 100, 'low': 80}
+        {'open': 60, 'close': 80, 'high': 80, 'low': 50}
     )
     assert not detect_on_neck_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
@@ -152,7 +161,7 @@ def test_detect_bearish_separating_lines_pattern():
 def test_detect_tasukigap_pattern():
     assert detect_tasukigap_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
-        {'open': 85, 'close': 105, 'high': 110, 'low': 80}
+        {'open': 95, 'close': 118, 'high': 120, 'low': 80}
     )
     assert not detect_tasukigap_pattern(
         {'open': 100, 'close': 90, 'high': 110, 'low': 85},
