@@ -14,9 +14,9 @@ DBに保存された企業情報から、株価情報を取得し、DBに登録�
 
 
 # ファイルパスを指定
-#company_codes = Industry().get_all_records()
-company_codes = Industry().get_records_by_company_code('6208')
-date_map = build_month_map()
+company_codes = Industry().get_all_records()
+# company_codes = Industry().get_records_by_company_code('6208')
+date_map = build_month_map(2020, 2024)
 
 #print(company_codes)
 #print(date_map)
