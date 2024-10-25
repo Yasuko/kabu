@@ -6,7 +6,7 @@ from model.schema.RankCandleBase import RankCandleBaseType, RankCandleBaseDBType
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
-class Rank:
+class RankCandleBase:
     _DB = None
 
     def __init__(self, DB = None):

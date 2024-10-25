@@ -11,7 +11,10 @@ from model.db.Vector30 import Vector30
 
 from lib.utils import angle, normalize
 
-
+'''
+指定期間の株価情報を取得し
+株価の変動率と出来高の変動を計算する
+'''
 def rate(
     company_code: str,
     date: pd.Timestamp,
@@ -37,44 +40,68 @@ def rate(
 
     # 今日のOpenとCloseの差、Volumeの差を計算
     results.append({
-        'rate': diff_rate(df[i][3], df[i][6]),
-        'volume': df[i][7] - df[i-1][7] 
+        'rate': diff_rate1(df[i]),
+        'volume': df[i][7]
     })
 
     # 1日前のOpen値と当日のOpen値の差、Volumeの差を計算
+    r = diff_rate2(df, 1)
     results.append({
-        'rate': diff_rate(df[i][3], df[i-1][3]),
-        'volume': df[i][7] - df[i-1][7]
+        'rate': r[0],
+        'volume': r[4]
     })
-    # 2日前のOpen値と当日のOpen値の差、Volumeの差を計算
+    # 2日間の平均と当日の差、Volumeの差を計算
     results.append({
-        'rate': diff_rate(df[i][3], df[i-2][3]),
-        'volume': df[i][7] - df[i-2][7]
+        'rate': diff_rate2(df, 2),
+        'volume': (df[i][7] + df[i-1][7] + df[i-2][7]) / 3
     })
     # 3日前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
-        'rate': diff_rate(df[i][3], df[i-3][3]),
-        'volume': df[i][7] - df[i-3][7]
+        'rate': diff_rate2(df, 3),
+        'volume': (df[i][7] + df[i-1][7] + df[i-2][7] + df[i-3][7]) / 4
     })
     # 1週間前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
-        'rate': diff_rate(df[i][3], df[i-5][3]),
-        'volume': df[i][7] - df[i-5][7]
+        'rate': diff_rate2(df, 5),
+        'volume': (df[i][7] + df[i-1][7] + df[i-2][7] + df[i-3][7] + df[i-4][7] + df[i-5][7]) / 6
     })
     # 2週間前のOpen値と当日のOpen値の差、Volumeの差を計算
     results.append({
-        'rate': diff_rate(df[i][3], df[i-10][3]),
-        'volume': df[i][7] - df[i-10][7]
+        'rate': diff_rate2(df, 10),
+        'volume': (df[i][7] + df[i-1][7] + df[i-2][7] + df[i-3][7] + df[i-4][7] + df[i-5][7] + df[i-6][7] + df[i-7][7] + df[i-8][7] + df[i-9][7]) / 10
     })
 
     return results
 
-def diff_rate(
-    data1: float,
-    data2: float
+# OpenとCloseの差の変動率を計算
+def diff_rate1(
+    df: list
 ) -> float:
-    return ((data1 - data2) / data2) * 100
+    _o = ((df[3] - df[6]) / df[6]) * 100
+    _h = ((df[4] - df[6]) / df[6]) * 100
+    _l = ((df[5] - df[6]) / df[6]) * 100
+    _c = ((df[6] - df[6]) / df[6]) * 100
+    return _o, _h, _l, _c
 
+# 指定期間内のOpenの平均とHighの平均の差と当日のOpenの差の変動率を計算
+def diff_rate2(
+    df: list,
+    num: int
+) -> tuple:
+    _num = 1 + num
+    open = sum([item[3] for item in df[1:_num]]) / len(df[1:_num])
+    high = sum([item[4] for item in df[1:_num]]) / len(df[1:_num])
+    low = sum([item[5] for item in df[1:_num]]) / len(df[1:_num])
+    close = sum([item[6] for item in df[1:_num]]) / len(df[1:_num])
+
+    _o = ((df[0][3] - open) / open) * 100
+    _h = ((df[0][4] - high) / high) * 100
+    _l = ((df[0][5] - low) / low) * 100
+    _c = ((df[0][6] - close) / close) * 100
+
+    #num で指定された日数分のvolumeの平均を計算
+    _v = sum([item[7] for item in df[1:_num]]) / len(df[1:_num])
+    return _o, _h, _l, _c, _v
 
 
 def vector(

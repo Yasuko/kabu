@@ -1,7 +1,7 @@
 import datetime
 import time
 from model.db.Industry import Industry
-from model.db.AnalysisDate import AnalysisDate
+from model.db.AnalysisCandle import AnalysisCandle
 
 from lib.explain import press_converter
 from lib.trend_pattern_base import (
@@ -24,15 +24,14 @@ from lib.trend_pattern_base import (
     detect_tweezer_bottom_pattern
 )
 
-from lib.utils import aggregate_stock_data
-
-
 '''
 株価情報からローソクの種別を判定し
 トレンドパターンとの一致度をスコアリングする
 '''
 
 def trend_pattern_analysis(prices1, prices2):
+    up = 0
+    down = 0
     score = 0
     trendos = []
     scores = []
@@ -40,90 +39,90 @@ def trend_pattern_analysis(prices1, prices2):
     # 陽の包み線を検出
     if detect_bullish_engulfing(prices1, prices2):
         score += 2
+        up += 1
         trendos.append('陽の包み線')
-        scores.append(2)
     # 陰の包み線を検出
     if detect_bearish_engulfing(prices1, prices2):
         score -= 2
+        down += 1
         trendos.append('陰の包み線')
-        scores.append(-2)
     # 陽のハラミを検出
     if detect_bullish_harami(prices1, prices2):
         score -= 2
+        down += 1
         trendos.append('陽のハラミ')
-        scores.append(-2)
     # 陰のハラミを検出
     if detect_bearish_harami(prices1, prices2):
         score += 2
+        up += 1
         trendos.append('陰のハラミ')
-        scores.append(2)
     # かぶせ線を検出
     if is_dark_cloud_cover(prices1, prices2):
         score -= 4
+        down += 1
         trendos.append('かぶせ線')
-        scores.append(-4)
     # 切り込み線を検出
     if detect_piercing_pattern(prices1, prices2):
         score += 2
+        up += 1
         trendos.append('切り込み線')
-        scores.append(2)
     # 差し込み線を検出
     if detect_harami_pattern(prices1, prices2):
         score -= 2
+        down += 1
         trendos.append('差し込み線')
-        scores.append(-2)
     # 入り首を検出
     if detect_in_neck_pattern(prices1, prices2):
         score += 1
+        up += 1
         trendos.append('入り首')
-        scores.append(1)
     # あて首線を検出
     if detect_on_neck_pattern(prices1, prices2):
         score -= 4
+        down += 1
         trendos.append('あて首線')
-        scores.append(-4)
     # 出会い線陽を検出
     if detect_meeting_lines_pattern(prices1, prices2):
         score -= 1
+        down += 1
         trendos.append('出会い線陽')
-        scores.append(-1)
     # 出会い線陰を検出
     if detect_bearish_meeting_lines_pattern(prices1, prices2):
         score += 1
+        up += 1
         trendos.append('出会い線陰')
-        scores.append(1)
     # 振り分け線陽を検出
     if detect_separating_lines_pattern(prices1, prices2):
         score += 1
+        up += 1
         trendos.append('振り分け線陽')
-        scores.append(1)
     # 振り分け線陰を検出
     if detect_bearish_separating_lines_pattern(prices1, prices2):
         score -= 1
+        down += 1
         trendos.append('振り分け線陰')
-        scores.append(-1)
     # たすき線陽を検出
     if detect_tasukigap_pattern(prices1, prices2):
         score -= 1
+        down += 1
         trendos.append('たすき陽')
-        scores.append(-1)
     # たすき線陰を検出
     if detect_bearish_tasukigap_pattern(prices1, prices2):
         score += 1
+        up += 1
         trendos.append('たすき陰')
-        scores.append(1)
     # 毛抜き天井を検出
     if detect_tweezer_top_pattern(prices1, prices2):
         score -= 1
+        down += 1
         trendos.append('毛抜き天井')
-        scores.append(-1)
     # 毛抜き底を検出
     if detect_tweezer_bottom_pattern(prices1, prices2):
         score += 1
+        up += 1
         trendos.append('毛抜き底')
-        scores.append(1)
     
-    return score, trendos, scores
+    return up, down, score, trendos
 
 
 
@@ -134,39 +133,55 @@ day = datetime.datetime.now()
 db = Industry().DB
 #print(date_map)
 
-ranks = []
+ScoreColumns = ['DayScore', 'DayOneScore', 'DayTwoScore', 'DayThreeScore', 'WeekOneScore']
+UpColumns = ['DayUp', 'DayOneUp', 'DayTwoUp', 'DayThreeUp', 'WeekOneUp']
+DownColumns = ['DayDown', 'DayOneDown', 'DayTwoDown', 'DayThreeDown', 'WeekOneDown']
+TrendsColumns = ['DayTrends', 'DayOneTrends', 'DayTwoTrends', 'DayThreeTrends', 'WeekOneTrends']
 
 for row in company_codes:
     print('Getting data for : ' + row[1])
+    try:    
+        candle = press_converter(row[1], day, db)
+        scores_dict = {}
+
+        for i, c in enumerate(candle):
+            # candles要素の数をカウント
+            # print('Candle count : ', len(c))
+
+            score = 0
+            up = 0
+            down = 0
+            trendos = []
+
+            for index in range(9):
+                u, d, s, t = trend_pattern_analysis(c[index]['price'], c[index + 1]['price'])
+                
+                up += u
+                down += d
+                score += s
+                trendos.extend(t)
+
+            # 集計結果を辞書形式で格納
+            scores_dict[UpColumns[i]] = up
+            scores_dict[DownColumns[i]] = down
+            scores_dict[ScoreColumns[i]] = score
+            scores_dict[TrendsColumns[i]] = trendos
+            
+            #print('Score :', score)
+            #print('Trendos :', trendos)
+            #print('Scores :', scores)
+            #print('Scores Dict :', scores_dict)
+            #time.sleep(0.3)
+
+        # time.sleep(0.3)
+        scores_dict['companyCode'] = row[1]
+        scores_dict['Date'] = day.strftime('%Y-%m-%d')
+        (AnalysisCandle(db)
+            .add_exists_by_date_and_company_code(day.strftime('%Y-%m-%d'), row[1], scores_dict))
+    except Exception as e:
+        print(candle)
+        print(e)
+        
+        
     
-    candles = press_converter(row[1], day, db)
-
-    score = 0
-    trendos = []
-    scores = []
-
-    # candles要素の数をカウント
-    print('Candle count : ', len(candles))
-    for index in range(18):
-        #print('Candle : ', candles[index])
-
-        s, t, ss = trend_pattern_analysis(candles[index]['price'], candles[index + 1]['price'])
-        score += s
-        trendos.extend(t)
-        scores.extend(ss)
-
-    print('Score :', score)
-    print('Trendos :', trendos)
-    print('Scores :', scores)
-
-    # ranks内の
-    ranks.append([row[1], score])
-    #time.sleep(0.3)
-
-ranks.sort(key=lambda x: x[1], reverse=True)
-print(ranks)
-def score_ranking(ranks):
-    # スコアを降順にソート
-    ranks.sort(key=lambda x: x[1], reverse=True)
-    return ranks
 

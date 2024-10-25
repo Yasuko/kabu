@@ -5,11 +5,11 @@ from lib.utils import validate
 
 class RankCandleBaseType:
     Date: str
+    Day: str
     DayOne: str
     DayTwo: str
     DayThree: str
     WeekOne: str
-    WeekTwo: str
 
 class RankCandleBaseDBType(RankCandleBaseType):
     id: str
@@ -25,10 +25,12 @@ def ConvertToRankCandleBaseType(data: dict) -> RankCandleBaseType:
     #print('Validate Test: ', result)
     return result
 
-class Rank:
+class RankCandleBase:
     create_table_query = """
     CREATE TABLE IF NOT EXISTS rank_candle_base ( 
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        Date Date NOT NULL,
+        Day TEXT NOT NULL,
         DayOne TEXT NOT NULL,
         DayTwo TEXT NOT NULL,
         DayThree TEXT NOT NULL,
@@ -44,7 +46,7 @@ class Rank:
         self.DB = DB
     
     def create_table(self):
-        print('Creating table rank')
+        print('Creating table rank_candle_base')
         try:
             self.DB.execute(self.create_table_query)
         except Exception as e:

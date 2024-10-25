@@ -6,7 +6,7 @@ from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
 from model.schema.CandlePattern import CandlePattern
 
-from lib.utils import angle, normalize
+from lib.utils import angle, normalize, aggregate_stock_data
 
 class PressSpecType:
     candle: dict[
@@ -28,9 +28,9 @@ def press_converter(
     company_code: str,
     date: datetime.date,
     DB = None
-) -> list[PressSpecType]:
+) -> tuple:
     #company_code = '4014'
-    sdate = date - datetime.timedelta(days=150)
+    sdate = date - datetime.timedelta(days=100)
     df = HistoryDate(DB).get_data_by_date_range(
         company_code,
         sdate.strftime('%Y-%m-%d'),
@@ -42,17 +42,28 @@ def press_converter(
     # データが存在しない場合, Noneを返す
     if len(df) <= 49:
         return None
+    df1 = aggregate_stock_data(df, 1)
+    df2 = aggregate_stock_data(df, 2)
+    df3 = aggregate_stock_data(df, 3)
+    df4 = aggregate_stock_data(df, 4)
+    df5 = aggregate_stock_data(df, 5)
+    
+    return candle_converter(df1), candle_converter(df2), candle_converter(df3), candle_converter(df4), candle_converter(df5)
+
+def candle_converter(
+    df: list,
+) -> list[PressSpecType]:
 
     press_specs = []
-
+    
     for _r in df:
-        open = _r[3]
-        high = _r[4]
-        low = _r[5]
-        close = _r[6]
+        open = _r['open']
+        high = _r['high']
+        low = _r['low']
+        close = _r['close']
         if math.isnan(open) or math.isnan(high) or math.isnan(low) or math.isnan(close):
             continue
-        
+
         r, position, score = identify_candle(open, close, high, low)
         #print(open, high, low, close, r, position, score)
 
@@ -73,7 +84,6 @@ def press_converter(
             }
         })
     return press_specs
-
 '''
 価格情報からローソク足の種類を返す
 '''

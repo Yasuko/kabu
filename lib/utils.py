@@ -42,7 +42,10 @@ def validate(
     else:
         return None
 
-
+'''
+データと型情報から
+クエリのカラム名、値、値のリストを返す
+'''
 def query_convert(
     data: dict,
     types: dict,
@@ -50,14 +53,15 @@ def query_convert(
     query = ''
     values = ''
     insert = []
-    print(data)
     for key in types.__annotations__.keys():
         query += f"{key}, "
         values += f"%s, "
         insert.append(data[key])
     return query[:-2], values[:-2], insert
 
-
+'''
+欠損データをチェックし、float型であるかを返す
+'''
 def chek_float(data: any) -> bool:
     if math.isnan(data):
         return False
@@ -71,12 +75,13 @@ def chek_float(data: any) -> bool:
 
 
 '''
-指定された年月の日付範囲を作成し、返す
+指定された年月から
+1月単位の日付リストを作成し、返す
 '''
 def build_date_map(
     start: int = 2010,
     end: int = 2024,
-):
+) -> list:
     date_ranges = []
 
     for year in range(start, end + 1):
@@ -94,6 +99,10 @@ def build_date_map(
     
     return date_ranges
 
+'''
+指定された年から
+1年単位の日付リストを作成し、返す
+'''
 def build_month_map(
     start: int = 2010,
     end: int = 2024,
@@ -233,18 +242,21 @@ def aggregate_stock_data(
     interval: int
 ) -> list:
     aggregated_data = []
+    
     for i in range(0, len(data), interval):
         chunk = data[i:i+interval]
         if not chunk:
             continue
-        open_price = chunk[0]['open']
-        high_price = max(day['high'] for day in chunk)
-        low_price = min(day['low'] for day in chunk)
-        close_price = chunk[-1]['close']
+        open_price = chunk[0][3]
+        high_price = max(day[4] for day in chunk)
+        low_price = min(day[5] for day in chunk)
+        close_price = chunk[-1][6]
         aggregated_data.append({
             "open": open_price,
             "high": high_price,
             "low": low_price,
             "close": close_price
         })
-    return aggregated_data
+    
+    # 配列の後ろから20件までを返す
+    return aggregated_data[-20:]
