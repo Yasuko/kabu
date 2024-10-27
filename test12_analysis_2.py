@@ -34,7 +34,6 @@ def trend_pattern_analysis(prices1, prices2):
     down = 0
     score = 0
     trendos = []
-    scores = []
 
     # 陽の包み線を検出
     if detect_bullish_engulfing(prices1, prices2):
@@ -167,7 +166,7 @@ for row in company_codes:
             scores_dict[ScoreColumns[i]] = score
             scores_dict[TrendsColumns[i]] = trendos
             
-            #print('Score :', score)
+            print('Score :', score)
             #print('Trendos :', trendos)
             #print('Scores :', scores)
             #print('Scores Dict :', scores_dict)
@@ -176,8 +175,8 @@ for row in company_codes:
         # time.sleep(0.3)
         scores_dict['companyCode'] = row[1]
         scores_dict['Date'] = day.strftime('%Y-%m-%d')
-        (AnalysisCandle(db)
-            .add_exists_by_date_and_company_code(day.strftime('%Y-%m-%d'), row[1], scores_dict))
+        #(AnalysisCandle(db)
+        #    .add_exists_by_date_and_company_code(day.strftime('%Y-%m-%d'), row[1], scores_dict))
     except Exception as e:
         print(candle)
         print(e)

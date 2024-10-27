@@ -13,7 +13,7 @@ from lib.analysis import rate
 
 company_codes = Industry().get_all_records()
 day = datetime.datetime.now()
-#day = day - datetime.timedelta(days=4)
+day = day - datetime.timedelta(days=5)
 
 db = Industry().DB
 #print(date_map)
@@ -25,19 +25,19 @@ for row in company_codes:
     if r == None:
         print('Unable to get data for : ' + row[1])
         continue
-
+    
     r = AnalysisDate(db).add_exists_by_date_and_company_code(
         day.strftime("%Y-%m-%d"),
         row[1],
         {
             'companyCode': row[1],
             'Date': day,
-            'Day': r[0]['rate'],
-            'DayOne': r[1]['rate'],
-            'DayTwo': r[2]['rate'],
-            'DayThree': r[3]['rate'],
-            'WeekOne': r[4]['rate'],
-            'WeekTwo': r[5]['rate'],
+            'Day': r[0]['rate'][0],
+            'DayOne': r[1]['rate'][0],
+            'DayTwo': r[2]['rate'][0],
+            'DayThree': r[3]['rate'][0],
+            'WeekOne': r[4]['rate'][0],
+            'WeekTwo': r[5]['rate'][0],
             'VolumeDay': r[0]['volume'],
             'VolumeOne': r[1]['volume'],
             'VolumeTwo': r[2]['volume'],

@@ -436,8 +436,8 @@ def detect_tasukigap_pattern(
     if prev_candle['open'] > prev_candle['close'] and curr_candle['open'] < curr_candle['close']:
         # 2日目の始値が1日目の終値よりも高く、1日目の始値よりも低い
         if (curr_candle['open'] > prev_candle['close'] # low以上なので、マージンも含めてcloseで指定
-             and curr_candle['open'] < prev_candle['open']
-             # 2日目の終値が1日目の高値よりも高い(5%以上)
+            and curr_candle['open'] < prev_candle['open']
+            # 2日目の終値が1日目の高値よりも高い(5%以上)
              and curr_candle['close'] > prev_candle['high'] + (prev_candle['high'] * 0.05)):
             return True
     

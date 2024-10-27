@@ -12,13 +12,14 @@ from lib.analysis import ranking, vector
 '''
 
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=2)
+day = day - datetime.timedelta(days=6)
 
 db = Industry().DB
 
 print('Getting data for : ' + day.strftime("%Y-%m-%d"))
 upper, lower = ranking(day.strftime("%Y-%m-%d"), db)
 
+print(upper)
 if upper == None or lower == None:
     print('Unable to get data for : ')
 

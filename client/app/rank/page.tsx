@@ -5,9 +5,9 @@ import { useEffect } from "react"
 
 import { IStaticMethods } from "preline/preline"
 declare global {
-  interface Window {
-    HSStaticMethods: IStaticMethods;
-  }
+    interface Window {
+        HSStaticMethods: IStaticMethods;
+    }
 }
 import List from "../(components)/list"
 

@@ -130,6 +130,7 @@ class HistoryDate:
     def get_latest_by_company_code(
         self,
         companyCode: str,
+        date: str,
         limit = 30
     ):
         query = f"""
@@ -139,18 +140,21 @@ class HistoryDate:
             history_date
         WHERE
             companyCode = %s
+        AND
+            Date <= %s
         ORDER BY
             Date DESC
         LIMIT %s
         """
-        return self._DB.fetch_all(query, (companyCode, limit))
+        return self._DB.fetch_all(query, (companyCode, date, limit))
 
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(
         self,
         companyCode: str,
         start_date: str,
-        end_date: str
+        end_date: str,
+        order: str = 'ASC'
     ) -> list:
         query = f"""
         SELECT
@@ -163,6 +167,8 @@ class HistoryDate:
             Date >= %s
         AND
             Date <= %s
+        ORDER BY
+            Date {order}
         """
         #print(query % (companyCode, start_date, end_date))
         return self._DB.fetch_all(query, (companyCode, start_date, end_date))
