@@ -43,11 +43,9 @@ const ranks: rankType = {
 type TargetType = 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo'
 
 export default function List({
-    date,
     target,
     sort = 'upper'
 }: {
-    date: any,
     target: TargetType,
     sort: 'upper' | 'lower'
 }) {

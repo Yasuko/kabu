@@ -32,9 +32,8 @@ import {
 
 export const getAnalysisAction = async (
     companyCode: string,
-    date: string,
 ): Promise<ReturnSuccessType | ReturnErrorType> => {
-    const r = await getByCompanyCode(companyCode, date)
+    const r = await getByCompanyCode(companyCode)
 
     if (r.status === false) {
         return {
@@ -43,31 +42,6 @@ export const getAnalysisAction = async (
         }
     }
     
-    const afters = [
-        r.data.after1,
-        r.data.after2,
-        r.data.after3,
-        r.data.after4,
-        r.data.after5,
-        r.data.after6,
-        r.data.after7,
-        r.data.after8,
-        r.data.after9,
-        r.data.after10,
-    ]
-    const pressures = [
-        r.data.after1pressure,
-        r.data.after2pressure,
-        r.data.after3pressure,
-        r.data.after4pressure,
-        r.data.after5pressure,
-        r.data.after6pressure,
-        r.data.after7pressure,
-        r.data.after8pressure,
-        r.data.after9pressure,
-        r.data.after10pressure,
-    ]
-
     return {
         status: true,
         data: {
@@ -86,9 +60,6 @@ export const getAnalysisAction = async (
             pressureWeekTwo: r.data.pressweektwo,
             weekOne: r.data.weekone,
             weekTwo: r.data.weektwo,
-
-            afters,
-            pressures
         }
     }
 }
@@ -121,9 +92,9 @@ export const getRankActionV2 = async (
 ): Promise<any> => {
     const upper = await UpperRank()
     const lower = await LowerRank()
-    console.log(upper['data']['day']['Rank'])
-    console.log(upper['data']['day']['History'])
-    console.log(upper['data']['day']['Move'])
+    // console.log(upper['data']['day']['Rank'])
+    // console.log(upper['data']['day']['History'])
+    // console.log(upper['data']['day']['Move'])
     if (upper.status === false || lower.status === false) {
         throw new Error('Error')
     }
@@ -173,7 +144,6 @@ export const getHistoryAction = async (
     const high = []
     const low = []
     const volume = []
-    const pressure = []
 
     for (let i = r.data.length; i > 0; i--) {
         open.push(r.data[i - 1].open)
@@ -181,7 +151,6 @@ export const getHistoryAction = async (
         high.push(r.data[i - 1].high)
         low.push(r.data[i - 1].low)
         volume.push(r.data[i - 1].volume)
-        pressure.push(convert_pressure(r.data[i - 1]))
     }
 
     return {
@@ -192,7 +161,6 @@ export const getHistoryAction = async (
             high,
             low,
             volume,
-            pressure
         }
     }
 }

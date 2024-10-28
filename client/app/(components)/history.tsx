@@ -40,13 +40,15 @@ const buildHistoryList = (history: any) => {
 }*/
 
 const buildHistoryList = (history: number[]) => {
+    // 配列を逆に並べ替える
+    history.reverse()
     // 10以降は削除
     if (history.length > 10) {
         history = history.slice(0, 10)
     }
 
     // 配列を逆に並べ替える
-    history.reverse()
+    // history.reverse()
 
     return history.join(', ')
 }

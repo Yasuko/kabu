@@ -112,7 +112,8 @@ class HistoryDate:
     def get_latest_data(
         self,
         date: str,
-        limit = 30
+        limit: int = 30,
+        order: str = 'DESC'
     ):
         query = f"""
         SELECT
@@ -122,7 +123,7 @@ class HistoryDate:
         WHERE
             Date = %s
         ORDER BY
-            createdAt DESC
+            Date {order}
         LIMIT %s
         """
         return self._DB.fetch_all(query, (date, limit))

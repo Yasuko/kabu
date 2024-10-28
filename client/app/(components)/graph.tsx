@@ -52,6 +52,7 @@ export default function Graph({
             </div>
         )
     }
+    
     // listの数だけ1~順番の数値の配列を作成
     // 例: ['1', '2', '3', '4', '5']
     const labels = Object.keys(list).map((_key, index) => {

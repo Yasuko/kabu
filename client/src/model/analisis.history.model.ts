@@ -12,7 +12,6 @@ type ReturnErrorType = {
 
 export const getByCompanyCode = async (
     companyCode: string,
-    date: string
 ): Promise<ReturnSuccessType | ReturnErrorType> => {
     const pgService = PGService.call()
     const query = `
@@ -22,10 +21,11 @@ export const getByCompanyCode = async (
             analysis_date as a
         WHERE
             a.CompanyCode = $1
-        AND
-            a.Date = $2
+        ORDER BY
+            a.Date DESC
+        LIMIT 1
     `
-    const values = [companyCode, date]
+    const values = [companyCode]
     const r = await pgService.getOne(query, values)
     return (r === false) ? {
         status: false,

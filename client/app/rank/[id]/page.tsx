@@ -16,11 +16,12 @@ export default async function Page({
 }) {
     const today = new Date(Date.now() - 86400000).toISOString().split('T')[0]
     const historys = await getHistoryAction(params.id, today, 30)
-    const analysis = await getAnalysisAction(params.id, today)
+    const analysis = await getAnalysisAction(params.id)
     
     if (historys.status === false || analysis.status === false) {
         return <div>Loading...</div>
     }
+    console.log(historys.data)
 
     const op_close  = {
         open: historys.data.open,
@@ -74,7 +75,7 @@ export default async function Page({
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={high_low} />
+                    <GraphHistory list={high_low} label={'High/Low'} />
                 </div>
             </div>
             </div>
@@ -95,37 +96,6 @@ export default async function Page({
             </div>
             </div>
 
-            <div className="
-                flex flex-col bg-white border
-                shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-            <div className="p-4 md:p-5">
-                <div className="flex items-center gap-x-2">
-                    <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                        Pressure
-                    </p>
-                </div>
-
-                <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={pressure} />
-                </div>
-            </div>
-            </div>
-
-            <div className="
-                flex flex-col bg-white border
-                shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-            <div className="p-4 md:p-5">
-                <div className="flex items-center gap-x-2">
-                    <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                        AFter
-                    </p>
-                </div>
-
-                <div className="mt-1 flex items-center gap-x-2">
-                    <Graph list={analysis.data.afters} label='Open' />
-                </div>
-            </div>
-            </div>
         </div>
     </div>
 

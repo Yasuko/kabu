@@ -12,7 +12,7 @@ from lib.analysis import ranking, vector
 '''
 
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=6)
+day = day - datetime.timedelta(days=5)
 
 db = Industry().DB
 

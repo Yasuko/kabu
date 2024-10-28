@@ -9,7 +9,6 @@ export default function RankLayout(
         children: React.ReactNode
     }>
 ) {
-
     return (
         <div className="w-full lg:ps-64">
 

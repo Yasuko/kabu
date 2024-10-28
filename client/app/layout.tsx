@@ -1,34 +1,15 @@
 'use client'
 import React, { useEffect } from "react"
-import { usePathname } from "next/navigation"
-import { IStaticMethods } from "preline/preline"
 import "./globals.css"
 
 import LeftBar from "./(components)/left_bar"
-
-declare global {
-  interface Window {
-    HSStaticMethods: IStaticMethods;
-  }
-}
-
+import PrelineScript from "./(components)/PrelineScript"
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const path = usePathname()
-
-  useEffect(() => {
-    const loadPreline = async () => {
-      await import("preline/preline");
-
-      window.HSStaticMethods.autoInit();
-    };
-
-    loadPreline();
-  }, [path]);
 
   return (
   <html lang="ja" className="dark">
@@ -47,7 +28,7 @@ export default function RootLayout({
       >
         <LeftBar />
         {children}
-
+        <PrelineScript />
       </body>
   </html>
   )
