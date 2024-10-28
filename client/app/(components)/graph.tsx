@@ -53,13 +53,6 @@ export default function Graph({
         )
     }
     
-    // listの数だけ1~順番の数値の配列を作成
-    // 例: ['1', '2', '3', '4', '5']
-    const labels = Object.keys(list).map((_key, index) => {
-        return (index + 1).toString()
-    })
-
-
     const datasets = Object.keys(list).map((_key, index) => {
         return {
             label: label,
@@ -70,7 +63,9 @@ export default function Graph({
         }
     })
     const data: ChartData<'line'> = {
-        labels: labels,
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+            '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+            '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'],
         datasets: datasets
     }
 

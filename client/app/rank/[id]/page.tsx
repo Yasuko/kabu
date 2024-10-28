@@ -21,7 +21,6 @@ export default async function Page({
     if (historys.status === false || analysis.status === false) {
         return <div>Loading...</div>
     }
-    console.log(historys.data)
 
     const op_close  = {
         open: historys.data.open,
@@ -59,7 +58,7 @@ export default async function Page({
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={op_close} />
+                    <Graph list={op_close} label={'Open/Close'} />
                 </div>
             </div>
             </div>
@@ -75,7 +74,7 @@ export default async function Page({
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={high_low} label={'High/Low'} />
+                    <Graph list={high_low} label={'High/Low'} />
                 </div>
             </div>
             </div>
@@ -91,7 +90,7 @@ export default async function Page({
                 </div>
 
                 <div className="mt-1 flex items-center gap-x-2">
-                    <GraphHistory list={volumes} />
+                    <Graph list={volumes} label={'Volumes'} />
                 </div>
             </div>
             </div>
