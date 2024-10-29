@@ -28,7 +28,7 @@ interval = 1.7
 最新の株価取得
 
 '''
-
+'''
 for row in company_codes:
     count = 0
     workout = False
@@ -78,13 +78,13 @@ for row in company_codes:
     
     time.sleep(interval)
 
-
+'''
 '''
 
 株価解析
 
 '''
-
+time.sleep(5)
 
 for row in company_codes:
     print('Getting data for : ' + row[1])
@@ -100,12 +100,12 @@ for row in company_codes:
         {
             'companyCode': row[1],
             'Date': day,
-            'Day': r[0]['rate'],
-            'DayOne': r[1]['rate'],
-            'DayTwo': r[2]['rate'],
-            'DayThree': r[3]['rate'],
-            'WeekOne': r[4]['rate'],
-            'WeekTwo': r[5]['rate'],
+            'Day': r[0]['rate'][0],
+            'DayOne': r[1]['rate'][0],
+            'DayTwo': r[2]['rate'][0],
+            'DayThree': r[3]['rate'][0],
+            'WeekOne': r[4]['rate'][0],
+            'WeekTwo': r[5]['rate'][0],
             'VolumeDay': r[0]['volume'],
             'VolumeOne': r[1]['volume'],
             'VolumeTwo': r[2]['volume'],
@@ -120,6 +120,7 @@ for row in company_codes:
 ランキング生成
 
 '''
+time.sleep(5)
 
 print('Getting data for : ' + day.strftime("%Y-%m-%d"))
 upper, lower = ranking(day.strftime("%Y-%m-%d"), db)

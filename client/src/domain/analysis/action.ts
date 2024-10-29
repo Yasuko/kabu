@@ -18,8 +18,19 @@ export const getRankAction = async (
     if (d.status === false) {
         return []
     }
-    // dateフォーマットからYYYY-MM-DDに変換
-    const date = new Date(d.data['date']).toISOString().split('T')[0]
+    // timezoneをUTCからJSTに変換し、YYYY-MM-DDの形式に変換
+    const _d = new Date(d.data['date']).toLocaleString('ja-JP', {
+        timeZone: 'Asia/Tokyo',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    })
+
+    // 「/」を「-」に置き換え
+    const date = _d.split(' ')[0].replace(/\//g, '-')
     const limit = 20
     const sort = (p[2] === 'upper') ? 'up' : 'down'
 

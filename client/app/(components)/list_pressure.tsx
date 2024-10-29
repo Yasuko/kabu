@@ -63,7 +63,6 @@ export default function ListPressure({
         ranks.lower[target] = data.data
     }
 
-    console.log(ranks)
     return (
     <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -97,7 +96,7 @@ const buildList = async (
     sort: 'upper' | 'lower' = 'upper'
 ): Promise<JSX.Element[]> => {
 
-    return ranks[sort][target]['Rank'].map((val: string, index: number) => {
+    return ranks[sort][target].map((val: string, index: number) => {
         return (
             <tr
                 key={index}
@@ -109,13 +108,12 @@ const buildList = async (
                     scope="row"
                     className="text-center px-6 py-4 font-medium cursor-pointer"
                     >
-                    <Link href={"/rank/" + val}>
-                        { val }
+                    <Link href={"/rank/" + val['companycode']}>
+                        { val['companycode'] }
                     </Link>
                 </th>
                 <td className="px-6 py-4">
-                    <History historys={ranks[sort][target]['History'][index]} />
-                    <GraphHistory list={ranks[sort][target]['Move'][index]} className="h-10" />
+
                 </td>
             </tr>
         )
