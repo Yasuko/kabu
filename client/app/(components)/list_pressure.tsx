@@ -1,17 +1,69 @@
+'use client'
 import React from "react"
+import useSWR from "swr"
 import {
-    getPressureAction
-} from "@/src/domain/rank/action"
+    getRankAction
+} from "@/src/domain/analysis/action"
+
+import History from "@/app/(components)/history"
+import GraphHistory from "@/app/(components)/graph_history"
+
 import Link from "next/link"
 
-export default async function List({
-    date,
-    target
+type rankType = {
+    status: boolean,
+    data: any
+}
+
+type rankPropertiesType = {
+    Rank: string[],
+    History: number[][],
+    Move: number[][]
+}
+
+const ranks: any = {
+    upper: {
+        day: [],
+        dayOne: [],
+        dayTwo: [],
+        dayThree: [],
+        weekOne: [],
+    },
+    lower: {
+        day: [],
+        dayOne: [],
+        dayTwo: [],
+        dayThree: [],
+        weekOne: [],
+    }
+}
+
+type TargetType = 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone'
+
+export default function ListPressure({
+    target,
+    sort = 'upper'
 }: {
-    date: any,
-    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo',
+    target: TargetType,
+    sort: 'upper' | 'lower'
 }) {
-    const list = await fetchDataList(date, target)
+
+    const { data, error } = useSWR<rankType>(
+                'rank_pressure/' + target + '/' + sort,
+                getRankAction, {}
+            )
+
+    // const list = await fetchDataList(date, target)
+    if (error) return <div>Loading...</div>
+    if (!data) return <div>Loading...</div>
+
+    if (sort === 'upper') {
+        ranks.upper[target] = data.data
+    } else {
+        ranks.lower[target] = data.data
+    }
+
+    console.log(ranks)
     return (
     <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -20,30 +72,20 @@ export default async function List({
                 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" className="px-6 py-3">
-                        Company Code
+                        rank
                     </th>
                     <th scope="col" className="px-6 py-3">
-                        Day
+                        Code
                     </th>
                     <th scope="col" className="px-6 py-3">
-                        DayOne
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        DayTwo
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        DayThree
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        WeekOne
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        WeekTwo
+                        History
                     </th>
                 </tr>
             </thead>
             <tbody>
-                { buildList(list) }
+                { 
+                buildList(target, sort) 
+                }
             </tbody>
         </table>
     </div>
@@ -51,67 +93,31 @@ export default async function List({
 }
 
 const buildList = async (
-    list: any,
+    target: TargetType,
+    sort: 'upper' | 'lower' = 'upper'
 ): Promise<JSX.Element[]> => {
-    return Object.keys(list).map((key, index) => {
+
+    return ranks[sort][target]['Rank'].map((val: string, index: number) => {
         return (
             <tr
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th className="px-6 py-4 text-center">
+                    { index + 1 }
+                </th>
                 <th
                     scope="row"
                     className="text-center px-6 py-4 font-medium cursor-pointer"
                     >
-                    <Link href={"/rank/" + list[key]['companycode']}>
-                        { list[key]['companycode'] }
+                    <Link href={"/rank/" + val}>
+                        { val }
                     </Link>
                 </th>
                 <td className="px-6 py-4">
-                    { strSplit(list[key]['day']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['dayone']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['daytwo']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['daythree']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['weekone']) }
-                </td>
-                <td className="px-6 py-4">
-                    { strSplit(list[key]['weektwo']) }
+                    <History historys={ranks[sort][target]['History'][index]} />
+                    <GraphHistory list={ranks[sort][target]['Move'][index]} className="h-10" />
                 </td>
             </tr>
         )
     })
-}
-
-const strSplit = (str: string, len: number = 8): string => {
-    return str.length > len ? str.slice(0, len) + '...' : str
-}
-
-
-const fetchDataList = async (
-    today: string,
-    target: 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo'
-): Promise<any> => {
-    switch (target) {
-        case 'day':
-            return await getPressureAction(today, 10, 'day')
-        case 'dayone':
-            return await getPressureAction(today, 10, 'dayOne')
-        case 'daytwo':
-            return await getPressureAction(today, 10, 'dayTwo')
-        case 'daythree':
-            return await getPressureAction(today, 10, 'dayThree')
-        case 'weekone':
-            return await getPressureAction(today, 10, 'weekOne')
-        case 'weektwo':
-            return await getPressureAction(today, 10, 'weekTwo')
-        default:
-            return []
-    }
 }

@@ -12,7 +12,7 @@ import {
 import {
     getPressureByDay, getPressureByDayOne, getPressureByDayTwo,
     getPressureByWeekOne, getPressureByWeekTwo
-} from '@/src/model/analisis.pressure.model'
+} from '../../model/analisis.pressure.model'
 
 import {
     getByBeforeDate,
