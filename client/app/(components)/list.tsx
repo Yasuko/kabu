@@ -111,7 +111,7 @@ const buildList = async (
                 </th>
                 <td className="px-6 py-4">
                     <History historys={ranks[sort][target]['History'][index]} />
-                    <GraphHistory list={ranks[sort][target]['Move'][index]} className="h-10" />
+                    <GraphHistory list={ranks[sort][target]['Move'][index]} />
                 </td>
             </tr>
         )

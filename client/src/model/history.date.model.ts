@@ -72,3 +72,67 @@ export const getByLatest = async (
         data: r
     }
 }
+
+export const getByBetweenDate = async (
+    companyCode: string,
+    startDate: string,
+    endDate: string
+): Promise<ReturnSuccessType | ReturnErrorType> => {
+    const pgService = PGService.call()
+    const query = `
+        SELECT
+            *
+        FROM
+            history_date as h
+        WHERE
+            h.companyCode = $1
+        AND
+            h.Date >= $2
+        AND
+            h.Date <= $3
+        ORDER BY
+            h.Date DESC
+    `
+    const values = [companyCode, startDate, endDate]
+    const r = await pgService.getMany(query, values)
+    if (r === false) {
+        return {
+            status: false,
+            message: 'Error'
+        }
+    }
+    return {
+        status: true,
+        data: r
+    }
+}
+
+export const getLatestDateList = async (
+    companyCode: string,
+    limit: number = 20
+): Promise<ReturnSuccessType | ReturnErrorType> => {
+    const pgService = PGService.call()
+    const query = `
+        SELECT
+            h.Date
+        FROM
+            history_date as h
+        WHERE
+            h.companyCode = $1
+        ORDER BY
+            h.Date DESC
+        LIMIT $1
+    `
+    const values = [companyCode, limit]
+    const r = await pgService.getMany(query, values)
+    if (r === false)
+        return {
+            status: false,
+            message: 'Error'
+        }
+    
+    return {
+        status: true,
+        data: r
+    }
+}

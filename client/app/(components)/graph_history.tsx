@@ -14,7 +14,6 @@ import { Line } from 'react-chartjs-2'
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement)
 
 export const options: ChartOptions<'line'> = {
-    responsive: true,
     plugins: {
         legend: {
             position: 'top',
@@ -25,10 +24,10 @@ export const options: ChartOptions<'line'> = {
     },
     scales: {
         x: {
-            display: false,
+            display: true,
         },
         y: {
-            display: false,
+            display: true,
         }
     }
 }
@@ -60,7 +59,7 @@ export const GraphHistory = (
     }
 
     return (
-        <Line options={options} data={data}/>
+        <Line options={options} data={data} className="h-[100px] w-[200px]"/>
     )
 }
 

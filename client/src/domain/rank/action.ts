@@ -16,6 +16,7 @@ import {
 
 import {
     getByBeforeDate,
+    getLatestDateList,
 } from '@/src/model/history.date.model'
 
 import {
@@ -29,6 +30,7 @@ import {
 import {
     convert_pressure
 } from '@/src/_helper/analysis'
+import { convDateList } from '../../_helper/date'
 
 export const getAnalysisAction = async (
     companyCode: string,
@@ -131,8 +133,9 @@ export const getHistoryAction = async (
     limit: number = 30,
 ): Promise<ReturnSuccessType | ReturnErrorType> => {
     const r = await getByBeforeDate(companyCode, date, limit)
+    const d = await getLatestDateList(companyCode, limit)
 
-    if (r.status === false) {
+    if (r.status === false || d.status === false) {
         return {
             status: false,
             message: 'Error'
@@ -144,6 +147,7 @@ export const getHistoryAction = async (
     const high = []
     const low = []
     const volume = []
+    const day = convDateList(d.data)
 
     for (let i = r.data.length; i > 0; i--) {
         open.push(r.data[i - 1].open)
@@ -161,6 +165,7 @@ export const getHistoryAction = async (
             high,
             low,
             volume,
+            day
         }
     }
 }

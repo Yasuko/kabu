@@ -28,7 +28,7 @@ interval = 1.7
 最新の株価取得
 
 '''
-'''
+
 for row in company_codes:
     count = 0
     workout = False
@@ -78,7 +78,7 @@ for row in company_codes:
     
     time.sleep(interval)
 
-'''
+
 '''
 
 株価解析

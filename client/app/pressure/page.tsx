@@ -126,7 +126,7 @@ export default function Page() {
                     className="hidden"
                     aria-labelledby="horizontal-alignment-item-2">
                     <p className="text-gray-500 dark:text-neutral-400">
-                        2日前との変動ランキング [上昇ランク、下降ランク]
+                        2日単位のローソク図トレンド解析ランキング [上昇ランク、下降ランク]
                     </p>
                     
                     <div className="flex gap-4 items-center flex-col sm:flex-row">
@@ -148,7 +148,7 @@ export default function Page() {
                     className="hidden"
                     aria-labelledby="horizontal-alignment-item-3">
                     <p className="text-gray-500 dark:text-neutral-400">
-                        3日前との変動ランキング [上昇ランク、下降ランク]
+                        3日単位のローソク図トレンド解析ランキング [上昇ランク、下降ランク]
                     </p>
                     <div className="flex gap-4 items-center flex-col sm:flex-row">
                         <Suspense fallback={<div>Loading...</div>}>
@@ -169,7 +169,28 @@ export default function Page() {
                     className="hidden"
                     aria-labelledby="horizontal-alignment-item-4">
                     <p className="text-gray-500 dark:text-neutral-400">
-                        １週間前との変動ランキング [上昇ランク、下降ランク]
+                        4日単位のローソク図トレンド解析ランキング [上昇ランク、下降ランク]
+                    </p>
+                    <div className="flex gap-4 items-center flex-col sm:flex-row">
+                        <Suspense fallback={<div>Loading...</div>}>
+                        <div className="grid grid-cols-2 gap-1">
+                            <div>
+                                <ListPressure target={'weekone'} sort={'upper'} />
+                            </div>
+                            <div>
+                                <ListPressure target={'daythree'} sort={'lower'} />
+                            </div>
+                        </div>
+                        </Suspense>
+                    </div>
+                </div>
+                <div
+                    id="horizontal-alignment-5"
+                    role="tabpanel"
+                    className="hidden"
+                    aria-labelledby="horizontal-alignment-item-5">
+                    <p className="text-gray-500 dark:text-neutral-400">
+                        1週単位のローソク図トレンド解析ランキング [上昇ランク、下降ランク]
                     </p>
                     <div className="flex gap-4 items-center flex-col sm:flex-row">
                         <Suspense fallback={<div>Loading...</div>}>

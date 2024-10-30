@@ -1,12 +1,12 @@
 'use client'
-import React from "react"
+import React, { Suspense } from "react"
 import useSWR from "swr"
 import {
     getRankAction
 } from "@/src/domain/analysis/action"
 
-import History from "@/app/(components)/history"
 import GraphHistory from "@/app/(components)/graph_history"
+import GraphActive from "@/app/(components)/graph_active"
 
 import Link from "next/link"
 
@@ -50,7 +50,8 @@ export default function ListPressure({
 
     const { data, error } = useSWR<rankType>(
                 'rank_pressure/' + target + '/' + sort,
-                getRankAction, {}
+                getRankAction,
+                {}
             )
 
     // const list = await fetchDataList(date, target)
@@ -96,7 +97,7 @@ const buildList = async (
     sort: 'upper' | 'lower' = 'upper'
 ): Promise<JSX.Element[]> => {
 
-    return ranks[sort][target].map((val: string, index: number) => {
+    return ranks[sort][target].map((val: any, index: number) => {
         return (
             <tr
                 key={index}
@@ -113,7 +114,9 @@ const buildList = async (
                     </Link>
                 </th>
                 <td className="px-6 py-4">
-
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <GraphActive companyCode={val['companycode']} limit={30} />
+                    </Suspense>
                 </td>
             </tr>
         )

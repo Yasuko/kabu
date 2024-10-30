@@ -70,6 +70,6 @@ export default function Graph({
     }
 
     return (
-        <Line options={options} data={data} />
+        <Line options={options} data={data} className="max-h-[100px] max-w-[200px]"/>
     )
 }

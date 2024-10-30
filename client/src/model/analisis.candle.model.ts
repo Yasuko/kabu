@@ -58,11 +58,8 @@ export const getRankByDay = async (
             ${order}
         LIMIT $2
     `
-    console.log(query)
-    console.log(date, limit)
     const values = [date, limit]
     const r = await pgService.getMany(query, values)
-    console.log(r)
     return returnResult(r)
 }
 
@@ -96,7 +93,6 @@ export const getRankByDayOne = async (
     `
     const values = [date, limit]
     const r = await pgService.getMany(query, values)
-    console.log(r)
     return returnResult(r)
 }
 
