@@ -12,13 +12,8 @@ import Link from "next/link"
 
 type rankType = {
     upper: any,
-    lower: any
-}
-
-type rankPropertiesType = {
-    Rank: string[],
-    History: number[][],
-    Move: number[][]
+    lower: any,
+    labels: number[]
 }
 
 const ranks: rankType = {
@@ -37,7 +32,8 @@ const ranks: rankType = {
         dayThree: [],
         weekOne: [],
         weekTwo: [],
-    }
+    },
+    labels: []
 }
 
 type TargetType = 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektwo'
@@ -58,7 +54,7 @@ export default function List({
 
     ranks.upper = data.upper
     ranks.lower = data.lower
-
+    ranks.labels = data.labels
 
     return (
     <div className="relative overflow-x-auto">
@@ -110,8 +106,12 @@ const buildList = async (
                     </Link>
                 </th>
                 <td className="px-6 py-4">
-                    <History historys={ranks[sort][target]['History'][index]} />
-                    <GraphHistory list={ranks[sort][target]['Move'][index]} />
+                    <History
+                        historys={ranks[sort][target]['History'][index]} />
+                    <GraphHistory
+                        list={ranks[sort][target]['Move'][index]}
+                        labels={ranks.labels}
+                    />
                 </td>
             </tr>
         )

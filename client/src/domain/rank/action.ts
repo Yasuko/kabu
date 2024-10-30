@@ -94,16 +94,16 @@ export const getRankActionV2 = async (
 ): Promise<any> => {
     const upper = await UpperRank()
     const lower = await LowerRank()
-    // console.log(upper['data']['day']['Rank'])
-    // console.log(upper['data']['day']['History'])
-    // console.log(upper['data']['day']['Move'])
-    if (upper.status === false || lower.status === false) {
+    const labels = await getLatestDateList('1301', 30)
+    
+    if (upper.status === false || lower.status === false || labels.status === false) {
         throw new Error('Error')
     }
 
     return {
         upper: upper.data,
-        lower: lower.data
+        lower: lower.data,
+        labels: convDateList(labels.data)
     }
 }
 export const getPressureAction = async (
@@ -169,3 +169,4 @@ export const getHistoryAction = async (
         }
     }
 }
+

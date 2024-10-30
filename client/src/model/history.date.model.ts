@@ -121,7 +121,7 @@ export const getLatestDateList = async (
             h.companyCode = $1
         ORDER BY
             h.Date DESC
-        LIMIT $1
+        LIMIT $2
     `
     const values = [companyCode, limit]
     const r = await pgService.getMany(query, values)
