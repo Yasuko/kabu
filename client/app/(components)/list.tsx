@@ -16,7 +16,7 @@ import Link from "next/link"
 type rankType = {
     upper: any,
     lower: any,
-    labels: number[]
+    labels: string[]
 }
 
 const ranks: rankType = {
@@ -55,7 +55,7 @@ export default function List({
     // const list = await fetchDataList(date, target)
     if (error) return <div>Loading...</div>
     if (!data) return <div>Loading...</div>
-    if (enterpriseError) return <div>Loading...</div>
+    //if (enterpriseError) return <div>Loading...</div>
     if (!enterprise) return <div>Loading...</div>
 
     ranks.upper = data.upper
@@ -85,14 +85,13 @@ const buildList = async (
     sort: 'upper' | 'lower' = 'upper',
     enterprise: any
 ): Promise<JSX.Element[]> => {
-
     return ranks[sort][target]['Rank'].map((val: string, index: number) => {
         return (
             <div
                 key={index}
                 className="
                 grid grid-cols-7 gap-4
-                max-w-[600px] mx-auto
+                w-[500px] min-x-[400px] max-w-[600px]
                 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <div
                     className="
@@ -100,10 +99,12 @@ const buildList = async (
                         col-span-7 px-6 py-4
                         text-sm text-center
                     ">
-                    <p className="relative float-left pl-2">rank { index + 1 }</p>
+                    <p className="relative float-left pl-2">
+                        <b>rank { index + 1 }</b>
+                    </p>
                     <p className="relative float-center">
                         <Link href={"/rank/" + val}>
-                            { enterprise[val]['stockName'] }
+                            {val} :{ (enterprise[val] === undefined) ? val : enterprise[val]['stockName'] }
                         </Link>
                     </p>
                 </div>

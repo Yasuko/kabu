@@ -14,10 +14,11 @@ if not os.path.isfile('data_j.csv'):
     exit()
 
 df_data_j = pd.read_csv('data_j.csv', index_col=None)
-df_data_j = df_data_j[~df_data_j['市場・商品区分'].isin(['REIT・ベンチャーファンド・カントリーファンド・インフラファンド', 'ETF・ETN'])]
+df_data_j = df_data_j[~df_data_j['市場・商品区分'].isin([])]
 df_data_j = df_data_j[df_data_j['コード'] != 25935]
 
 total_codes = len(df_data_j['コード'])
+print(f"Total codes: {total_codes}")
 start_index, end_index = 0, int(np.ceil(total_codes * 1))
 
 for ticker in df_data_j['コード'][start_index:end_index]:

@@ -31,14 +31,13 @@ export const getAll = async (
             status: false,
             message: 'Error'
         } 
-    const _r = {}
+    const _r: {[key:string]: any} = {}
     r.map((v: any) => {
-        _r[v.companyCode] = {
-                companyCode: v.companyCode,
-                stockName: v.stockName
+        _r[v.companycode] = {
+                companyCode: v.companycode,
+                stockName: v.stockname
             }
     })
-    console.log(_r)
     return {
         status: true,
         data: _r

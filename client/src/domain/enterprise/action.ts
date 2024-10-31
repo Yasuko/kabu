@@ -11,6 +11,6 @@ export const getEnterpriseList = async (
     if (e.status === false) {
         return []
     }
-console.log('getEnterpriseList', e.data)
+    // console.log('getEnterpriseList', e.data)
     return e.data
 }
