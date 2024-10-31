@@ -56,7 +56,7 @@ export const GraphHistory = (
     }
 
     return (
-        <Line options={options} data={data} className="h-[100px] w-[200px]"/>
+        <Line options={options} data={data} className="w-[380px] h-[200px]"/>
     )
 }
 

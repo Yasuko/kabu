@@ -13,31 +13,14 @@ export default function History({
     //companyCode: string
     historys: number[]
 }) {
-    //console.log(companyCode)
-    //const { data: history, error: historyError } = useSWR(companyCode, getHistoryAction)
-
-    //if (historyError) return <div>failed to load</div>
-    //if (!history) return <div>loading...</div>
-
     
     return (
         <>
+            <div className="relative top-[-20px]">値動き</div>
             { buildHistoryList(historys) }
         </>
     )
 }
-
-/*
-const buildHistoryList = (history: any) => {
-    const r = history.map((item: any) => {
-        return item.open
-    })
-
-    // 配列を逆に並べ替える
-    r.reverse()
-
-    return r.join(', ')
-}*/
 
 const buildHistoryList = (history: number[]) => {
     // 配列を逆に並べ替える
@@ -50,5 +33,11 @@ const buildHistoryList = (history: number[]) => {
     // 配列を逆に並べ替える
     // history.reverse()
 
-    return history.join(', ')
+    return history.map((value, index) => {
+        return (
+            <div key={index}>
+                { Math.floor(value * 100) / 100 }
+            </div>
+        )
+    })
 }

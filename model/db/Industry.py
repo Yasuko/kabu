@@ -96,8 +96,8 @@ class Industry:
     # company_codeaでソート、重複を排除し、指定のCompanyCodeから後のレコードを取得し返す
     def get_records_by_company_code(self, company_code):
         query = f"""
-        SELECT DISTINCT ON (companyCode)
-            *
+        SELECT DISTINCT ON
+            (companyCode) *
         FROM
             industry
         WHERE

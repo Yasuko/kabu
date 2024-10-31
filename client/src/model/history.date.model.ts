@@ -50,11 +50,21 @@ export const getByLatest = async (
     const pgService = PGService.call()
     const query = `
         SELECT
-            *
+            h.companyCode,
+            h.Date,
+            h.open,
+            h.high,
+            h.low,
+            h.close,
+            h.volume,
+            e.stockName
         FROM
             history_date as h
+            enterprise as e
         WHERE
             h.companyCode = $1
+        INNER JOIN
+            e.companyCode = h.companyCode
         ORDER BY
             h.Date DESC
         LIMIT $2

@@ -4,6 +4,9 @@ import useSWR from "swr"
 import {
     getRankActionV2
 } from "@/src/domain/rank/action"
+import {
+    getEnterpriseList
+} from "@/src/domain/enterprise/action"
 
 import History from "@/app/(components)/history"
 import GraphHistory from "@/app/(components)/graph_history"
@@ -47,10 +50,13 @@ export default function List({
 }) {
 
     const { data, error } = useSWR<rankType>('ranks', getRankActionV2, {})
+    const { data: enterprise, error: enterpriseError } = useSWR('enterprise', getEnterpriseList, {})
 
     // const list = await fetchDataList(date, target)
     if (error) return <div>Loading...</div>
     if (!data) return <div>Loading...</div>
+    if (enterpriseError) return <div>Loading...</div>
+    if (!enterprise) return <div>Loading...</div>
 
     ranks.upper = data.upper
     ranks.lower = data.lower
@@ -58,62 +64,61 @@ export default function List({
 
     return (
     <div className="relative overflow-x-auto">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="
-                text-xs text-gray-700 uppercase bg-gray-50
-                dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" className="px-6 py-3">
-                        rank
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        Code
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        History
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
+        <div
+            className="
+                w-full
+                text-xs text-center
+                rtl:text-right text-gray-500 dark:text-gray-400
+            ">
+            <div>
                 { 
-                buildList(target, sort) 
+                buildList(target, sort, enterprise) 
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
     )
 }
 
 const buildList = async (
     target: TargetType,
-    sort: 'upper' | 'lower' = 'upper'
+    sort: 'upper' | 'lower' = 'upper',
+    enterprise: any
 ): Promise<JSX.Element[]> => {
 
     return ranks[sort][target]['Rank'].map((val: string, index: number) => {
         return (
-            <tr
+            <div
                 key={index}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th className="px-6 py-4 text-center">
-                    { index + 1 }
-                </th>
-                <th
-                    scope="row"
-                    className="text-center px-6 py-4 font-medium cursor-pointer"
-                    >
-                    <Link href={"/rank/" + val}>
-                        { val }
-                    </Link>
-                </th>
-                <td className="px-6 py-4">
+                className="
+                grid grid-cols-7 gap-4
+                max-w-[600px] mx-auto
+                bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <div
+                    className="
+                        w-full
+                        col-span-7 px-6 py-4
+                        text-sm text-center
+                    ">
+                    <p className="relative float-left pl-2">rank { index + 1 }</p>
+                    <p className="relative float-center">
+                        <Link href={"/rank/" + val}>
+                            { enterprise[val]['stockName'] }
+                        </Link>
+                    </p>
+                </div>
+                <div className="col-span-2 px-6 py-4 h-[200px]">
                     <History
-                        historys={ranks[sort][target]['History'][index]} />
+                        historys={ranks[sort][target]['History'][index]}
+                    />
+                </div>
+                <div className="col-span-5 px-6 py-4">
                     <GraphHistory
                         list={ranks[sort][target]['Move'][index]}
                         labels={ranks.labels}
                     />
-                </td>
-            </tr>
+                </div>
+            </div>
         )
     })
 }
