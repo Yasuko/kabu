@@ -104,7 +104,7 @@ class Vector30:
         FROM
             vector_30
         ORDER BY
-            cosine
+            similality
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))

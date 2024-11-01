@@ -1,7 +1,7 @@
 import time
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.Vector20 import Vector20
+from model.db.Vector50 import Vector50
 
 from lib.utils import normalize
 
@@ -27,7 +27,7 @@ for row in company_codes:
             continue
 
         # 指定の日付から、20日前までのベクトルデータを保存
-        _r = Vector20(db).insert_exists_by_date_and_company_code(
+        _r = Vector50(db).insert_exists_by_date_and_company_code(
                             historys[i+dimension][2],
                             historys[i+dimension][1],
                             {

@@ -4,7 +4,7 @@ import yfinance as yf
 
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.Vector10 import VectorDate
+from model.db.Vector40 import VectorDate
 
 from lib.utils import angle
 from lib.analysis import normalize

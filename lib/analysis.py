@@ -6,9 +6,9 @@ import json
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
 from model.db.AnalysisCandle import AnalysisCandle
-from model.db.Vector10 import Vector10
-from model.db.Vector20 import Vector20
 from model.db.Vector30 import Vector30
+from model.db.Vector40 import Vector40
+from model.db.Vector50 import Vector50
 
 from lib.utils import angle, normalize
 
@@ -124,23 +124,23 @@ def vector(
     )
     
     # データが存在しない場合, Noneを返す
-    if len(df) <= 29:
+    if len(df) <= 49:
         return None
     # ノーマライズ
-    v10 = normalize(df[0:10])
-    v20 = normalize(df[0:20])
     v30 = normalize(df[0:30])
+    v40 = normalize(df[0:40])
+    v50 = normalize(df[0:50])
     
     # 内積計算で近似べクトルデータを取得
-    r10 = Vector10(DB).get_dot_by_vec(v10, 10)
-    r20 = Vector20(DB).get_dot_by_vec(v20, 10)
     r30 = Vector30(DB).get_dot_by_vec(v30, 10)
+    r40 = Vector40(DB).get_dot_by_vec(v40, 10)
+    r50 = Vector50(DB).get_dot_by_vec(v50, 10)
 
-    resultsv10 = []
-    resultsv20 = []
     resultsv30 = []
+    resultsv40 = []
+    resultsv50 = []
 
-    for idx, _r in enumerate([r10, r20, r30]):
+    for idx, _r in enumerate([r30, r40, r50]):
 
         for v in _r:
 
@@ -155,13 +155,13 @@ def vector(
                 'companyCode': company_code,
             }
             if idx == 0:
-                resultsv10.append(r)
-            elif idx == 1:
-                resultsv20.append(r)
-            else:
                 resultsv30.append(r)
+            elif idx == 1:
+                resultsv40.append(r)
+            else:
+                resultsv50.append(r)
 
-    return resultsv10, resultsv20, resultsv30
+    return resultsv30, resultsv40, resultsv50
 
 """
 指定された日付に基づいて、上昇幅および下降幅の高い順にデータを取得し、ランキングを生成します。
@@ -181,44 +181,16 @@ def ranking(
     # 上昇幅の高い順にデータを取得
     for target in targets:
         # 与えられた日付の解析データを取得
-        df = AnalysisDate(DB).get_by_day_and_target(
-            day, target, 'DESC'
-        )
+        df = AnalysisDate(DB).get_by_day_and_target(day, target, 'DESC')
 
-        historys = []
-        moves = []
-
-        for record in df:
-            h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
-            historys.append([float(item[3]) for item in h])
-            moves.append(normalize(h, 4))
-
-        resultsUpper[target] = json.dumps({
-            'Rank': [item[1] for item in df],
-            'History': historys,
-            'Move': moves
-        }, ensure_ascii=False)
+        resultsUpper[target] = buildHistoryList(df, day, DB)
 
     # 下降幅の高い順にデータを取得
     for target in targets:
         # 与えられた日付のデータを取得
-        df = AnalysisDate(DB).get_by_day_and_target(
-            day, target, 'ASC'
-        )
+        df = AnalysisDate(DB).get_by_day_and_target(day, target, 'ASC')
 
-        historys = []
-        moves = []
-
-        for record in df:
-            h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
-            historys.append([float(item[3]) for item in h])
-            moves.append(normalize(h, 4))
-
-        resultsLower[target] = json.dumps({
-            'Rank': [item[1] for item in df],
-            'History': historys,
-            'Move': moves
-        }, ensure_ascii=False)
+        resultsLower[target] = buildHistoryList(df, day, DB)
 
     return resultsUpper, resultsLower
 
@@ -242,47 +214,37 @@ def rankingAnalysisType1(
     # 上昇幅の高い順にデータを取得
     for target in targets:
         # 与えられた日付の解析データを取得
-        df = AnalysisCandle(DB).get_rank(
-            day,
-            target,
-            'DESC'
-        )
-        historys = []
-        moves = []
-
-        for record in df:
-            h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
-            historys.append([float(item[3]) for item in h])
-            moves.append(normalize(h, 4))
-
-        resultsUpper[target] = json.dumps({
-            'Rank': [item[1] for item in df],
-            'History': historys,
-            'Move': moves
-        }, ensure_ascii=False)
+        df = AnalysisCandle(DB).get_rank(day, target, 'DESC')
+        # ランク表示用のリスト作成
+        resultsUpper[target] = buildHistoryList(df, day, DB)
 
     # 下降幅の高い順にデータを取得
     for target in targets:
         # 与えられた日付のデータを取得
-        df = AnalysisCandle(DB).get_rank(
-            day,
-            target,
-            'ASC'
-        )
-
-        historys = []
-        moves = []
-
-        for record in df:
-            h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
-            historys.append([float(item[3]) for item in h])
-            moves.append(normalize(h, 4))
-
-        resultsLower[target] = json.dumps({
-            'Rank': [item[1] for item in df],
-            'History': historys,
-            'Move': moves
-        }, ensure_ascii=False)
+        df = AnalysisCandle(DB).get_rank(day, target, 'ASC')
+        # ランク表示用のリスト作成
+        resultsLower[target] = buildHistoryList(df, day, DB)
 
     return resultsUpper, resultsLower
 
+def buildHistoryList(
+    df: list,
+    day: str,
+    DB = None
+) -> list:
+    historys = []
+    volumes = []
+    moves = []
+
+    for record in df:
+        h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
+        historys.append([float(item[3]) for item in h])
+        volumes.append([float(item[7]) for item in h])
+        moves.append(normalize(h, 4))
+
+    return json.dumps({
+        'Rank': [item[1] for item in df],
+        'History': historys,
+        'Volume': volumes,
+        'Move': moves
+    }, ensure_ascii=False)

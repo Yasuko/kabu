@@ -4,7 +4,7 @@ import yfinance as yf
 
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.Vector10 import VectorDate
+from model.db.Vector40 import Vector4Date
 
 from lib.utils import build_date_map
 from lib.analysis import normalize
@@ -77,12 +77,12 @@ for row in company_codes:
     historys = HistoryDate().get_latest_data(row[1])
     for i in range(len(historys) - 9):
         # ベクトルデータに変換
-        r = normalize(historys[i:i+10], historys[i+10][2])
+        r = normalize(historys[i:i+40], historys[i+10][2])
 
         # 指定の日付から、10日前までのベクトルデータを保存
-        _r = VectorDate().insert_exists_by_date_and_company_code(
-                            historys[i+10][2],
-                            historys[i+10][1],
+        _r = Vector4Date().insert_exists_by_date_and_company_code(
+                            historys[i+40][2],
+                            historys[i+40][1],
                             r
                         )
         # 保存が成功した場合、ベクトルデータを表示
