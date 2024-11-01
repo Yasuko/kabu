@@ -19,12 +19,10 @@ import {
     getLatestDateList,
 } from '@/src/model/history.date.model'
 
-import {
-    getByLatest as UpperRank
-} from '@/src/model/rank.model'
-import {
-    getByLatest as LowerRank
-} from '@/src/model/rank_under.model'
+import { getByLatest as UpperRank } from '@/src/model/rank.model'
+import { getByLatest as LowerRank } from '@/src/model/rank_under.model'
+import { getByLatest as UpperCandleRank } from '@/src/model/rank.candle.model'
+import { getByLatest as LowerCandleRank } from '@/src/model/rank_under.candle.model'
 
 
 import {
@@ -106,6 +104,26 @@ export const getRankActionV2 = async (
         labels: convDateList(labels.data)
     }
 }
+
+export const getRankCandleAction = async (
+    rank: 'upper' | 'lower',
+): Promise<any> => {
+    const upper = await UpperCandleRank()
+    const lower = await LowerCandleRank()
+    const labels = await getLatestDateList('1301', 30)
+    
+    if (upper.status === false || lower.status === false || labels.status === false) {
+        throw new Error('Error')
+    }
+
+    return {
+        upper: upper.data,
+        lower: lower.data,
+        labels: convDateList(labels.data)
+    }
+}
+
+
 export const getPressureAction = async (
     date: string,
     limit: number = 10,

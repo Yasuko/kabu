@@ -5,11 +5,20 @@ import datetime
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
+from model.db.AnalysisCandle import AnalysisCandle
 from model.db.Rank import Rank
 from model.db.RankUnder import RankUnder
+from model.db.RankCandleBase import RankCandleBase
+from model.db.RankUnderCandleBase import RankUnderCandleBase
 
-from lib.analysis import ranking, vector
+from lib.analysis import ranking, rankingAnalysisType1
 from lib.analysis import rate
+
+from lib.explain import press_converter
+from lib.trend_pattern_base import (
+    trend_pattern_analysis
+)
+
 
 # ファイルパスを指定
 company_codes = Industry().get_all_records()
@@ -136,3 +145,83 @@ lower['Date'] = day.strftime("%Y-%m-%d")
 
 Rank(db).add_exists_by_date(day.strftime("%Y-%m-%d"), upper)
 RankUnder(db).add_exists_by_date(day.strftime("%Y-%m-%d"), lower)
+
+
+
+'''
+ローソクデータ解析
+
+'''
+
+ScoreColumns = ['DayScore', 'DayOneScore', 'DayTwoScore', 'DayThreeScore', 'WeekOneScore']
+UpColumns = ['DayUp', 'DayOneUp', 'DayTwoUp', 'DayThreeUp', 'WeekOneUp']
+DownColumns = ['DayDown', 'DayOneDown', 'DayTwoDown', 'DayThreeDown', 'WeekOneDown']
+TrendsColumns = ['DayTrends', 'DayOneTrends', 'DayTwoTrends', 'DayThreeTrends', 'WeekOneTrends']
+
+for row in company_codes:
+    print('Getting data for : ' + row[1])
+    try:    
+        candle = press_converter(row[1], day, db)
+        scores_dict = {}
+
+        for i, c in enumerate(candle):
+            # candles要素の数をカウント
+            # print('Candle count : ', len(c))
+
+            score = 0
+            up = 0
+            down = 0
+            trendos = []
+
+            for index in range(9):
+                u, d, s, t = trend_pattern_analysis(c[index]['price'], c[index + 1]['price'])
+                
+                up += u
+                down += d
+                score += s
+                trendos.extend(t)
+
+            # 集計結果を辞書形式で格納
+            scores_dict[UpColumns[i]] = up
+            scores_dict[DownColumns[i]] = down
+            scores_dict[ScoreColumns[i]] = score
+            scores_dict[TrendsColumns[i]] = trendos
+            
+            print('Score :', score)
+            #print('Trendos :', trendos)
+            #print('Scores :', scores)
+            #print('Scores Dict :', scores_dict)
+            #time.sleep(0.3)
+
+        # time.sleep(0.3)
+        scores_dict['companyCode'] = row[1]
+        scores_dict['Date'] = day.strftime('%Y-%m-%d')
+        (AnalysisCandle(db)
+            .add_exists_by_date_and_company_code(day.strftime('%Y-%m-%d'), row[1], scores_dict))
+    except Exception as e:
+        print(candle)
+        print(e)
+
+
+'''
+
+ローソクの解析結果から、ランキングを生成
+
+'''
+today =  day.strftime("%Y-%m-%d")
+# ランキング取得
+up, down = rankingAnalysisType1(today, db)
+
+# print('Up :', up)
+# print('Down :', down)
+
+# DBにランキング情報を保存
+
+up['Date'] = today
+down['Date'] = today
+
+RankCandleBase(db).add_exists_by_date(today, up)
+RankUnderCandleBase(db).add_exists_by_date(today, down)
+
+
+

@@ -5,6 +5,7 @@ import json
 
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
+from model.db.AnalysisCandle import AnalysisCandle
 from model.db.Vector10 import Vector10
 from model.db.Vector20 import Vector20
 from model.db.Vector30 import Vector30
@@ -221,4 +222,67 @@ def ranking(
 
     return resultsUpper, resultsLower
 
+
+"""
+指定された日付に基づいて、ローソク図の解析結果を取得し、ランキングを生成します。
+Args:
+    date (datetime.date): 解析対象の日付。
+    DB: データベース接続オブジェクト（省略可能）。
+Returns:
+    list: 上昇幅の高い順のデータと下降幅の高い順のデータを含むリスト。
+"""
+def rankingAnalysisType1(
+    day: str,
+    DB = None
+) -> list:
+    targets = ['Day', 'DayOne', 'DayTwo', 'DayThree', 'WeekOne']
+    resultsUpper = {}
+    resultsLower = {}
+
+    # 上昇幅の高い順にデータを取得
+    for target in targets:
+        # 与えられた日付の解析データを取得
+        df = AnalysisCandle(DB).get_rank(
+            day,
+            target,
+            'DESC'
+        )
+        historys = []
+        moves = []
+
+        for record in df:
+            h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
+            historys.append([float(item[3]) for item in h])
+            moves.append(normalize(h, 4))
+
+        resultsUpper[target] = json.dumps({
+            'Rank': [item[1] for item in df],
+            'History': historys,
+            'Move': moves
+        }, ensure_ascii=False)
+
+    # 下降幅の高い順にデータを取得
+    for target in targets:
+        # 与えられた日付のデータを取得
+        df = AnalysisCandle(DB).get_rank(
+            day,
+            target,
+            'ASC'
+        )
+
+        historys = []
+        moves = []
+
+        for record in df:
+            h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
+            historys.append([float(item[3]) for item in h])
+            moves.append(normalize(h, 4))
+
+        resultsLower[target] = json.dumps({
+            'Rank': [item[1] for item in df],
+            'History': historys,
+            'Move': moves
+        }, ensure_ascii=False)
+
+    return resultsUpper, resultsLower
 

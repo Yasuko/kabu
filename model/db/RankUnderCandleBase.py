@@ -2,11 +2,11 @@
  株価の分析データのDB操作を行うクラス
 """
 
-from model.schema.RankCandleBase import RankCandleBaseType, RankCandleBaseDBType
+from model.schema.RankUnderCandleBase import RankUnderCandleBaseType, RankUnderCandleBaseDBType
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
-class RankCandleBase:
+class RankUnderCandleBase:
     _DB = None
 
     def __init__(self, DB = None):
@@ -20,11 +20,11 @@ class RankCandleBase:
         return self._DB
 
     # データの追加
-    def add_data(self, data: RankCandleBaseType):
-        q, v, i = query_convert(data, RankCandleBaseType)
+    def add_data(self, data: RankUnderCandleBaseType):
+        q, v, i = query_convert(data, RankUnderCandleBaseType)
         query = f"""
             INSERT INTO
-                rank_candle_base
+                rank_under_candle_base
             (
                 {q}
             )
@@ -38,14 +38,14 @@ class RankCandleBase:
     
     # idを指定してデータを削除
     def delete(self, id):
-        query = "DELETE FROM rank_candle_base WHERE id = %s"
+        query = "DELETE FROM rank_under_candle_base WHERE id = %s"
         self._DB.execute(query, (id,))
 
     # companyCodeとDateでデータの削除
     def delete_by_date_and_company_code(self, date):
         query = """
         DELETE FROM
-            rank_candle_base
+            rank_under_candle_base
         WHERE
             Date = %s
         """
@@ -55,13 +55,13 @@ class RankCandleBase:
     def add_exists_by_date(
         self,
         date: str,
-        data: RankCandleBaseType
+        data: RankUnderCandleBaseType
     ) -> bool:
         query = f"""
         SELECT
             *
         FROM
-            rank_candle_base
+            rank_under_candle_base
         WHERE
             Date = %s
         """
@@ -77,7 +77,7 @@ class RankCandleBase:
         SELECT
             *
         FROM
-            rank_candle_base
+            rank_under_candle_base
         WHERE
             Date = %s
         """
@@ -88,7 +88,7 @@ class RankCandleBase:
         SELECT
             *
         FROM
-            rank_candle_base
+            rank_under_candle_base
         WHERE
             Date = %s
         """
@@ -104,7 +104,7 @@ class RankCandleBase:
         SELECT
             *
         FROM
-            rank_candle_base
+            rank_under_candle_base
         WHERE
             Date >= %s
         AND

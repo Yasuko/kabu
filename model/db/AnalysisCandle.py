@@ -115,29 +115,6 @@ class AnalysisCandle:
         LIMIT %s
         """
         return self._DB.fetch_all(query, (date, limit))
-    
-    # Dateと指定要素から
-    # もっとも大きいor小さいデータを指定件数取得
-    def get_by_day_and_target(
-        self,
-        date,
-        target = "Day" or "DayOne" or "DayTwo" or "DayThree" or "WeekOne" or "WeekTwo",
-        sort = "DESC" or "ASC",
-        limit = 30
-    ) -> list:
-        query = f"""
-        SELECT
-            *
-        FROM
-            analysis_candle
-        WHERE
-            Date = %s
-        ORDER BY
-            {target} {sort}
-        LIMIT %s
-        """
-
-        return self._DB.fetch_all(query, (date, limit))
 
     # 指定日から指定日までのデータを取得
     def get_data_by_date_range(
@@ -159,3 +136,35 @@ class AnalysisCandle:
             Date <= %s
         """
         return self._DB.fetch_all(query, (companyCode, start_date, end_date))
+
+    def get_rank(
+        self,
+        date: str,
+        target: str = 'Day' or 'DayOne' or 'DayTwo' or 'DayThree' or 'WeekOne',
+        order: str = 'DESC' or 'ASC' # Desc or Asc
+    ) -> list:
+        if order == 'DESC':
+            _order = f'''
+                {target}Up DESC,
+                {target}Down ASC,
+                {target}Score DESC
+            '''
+        else:
+            _order = f'''
+                {target}Up ASC,
+                {target}Down DESC,
+                {target}Score ASC
+            '''
+        query = f"""
+        SELECT
+            *
+        FROM
+            analysis_candle
+        WHERE
+            Date = %s
+        ORDER BY
+            {_order}
+        LIMIT 30
+        """
+        return self._DB.fetch_all(query, (date,))
+    

@@ -52,10 +52,8 @@ export default function List({
     const { data, error } = useSWR<rankType>('ranks', getRankActionV2, {})
     const { data: enterprise, error: enterpriseError } = useSWR('enterprise', getEnterpriseList, {})
 
-    // const list = await fetchDataList(date, target)
     if (error) return <div>Loading...</div>
     if (!data) return <div>Loading...</div>
-    //if (enterpriseError) return <div>Loading...</div>
     if (!enterprise) return <div>Loading...</div>
 
     ranks.upper = data.upper
