@@ -106,9 +106,16 @@ const buildList = async (
                         </Link>
                     </p>
                 </div>
-                <div className="col-span-2 px-6 py-4 h-[200px]">
+                <div className="col-span-1 px-6 py-4 h-[200px]">
                     <History
                         historys={ranks[sort][target]['History'][index]}
+                        label={'price'}
+                    />
+                </div>
+                <div className="col-span-1 px-6 py-4 h-[200px]">
+                    <History
+                        historys={ranks[sort][target]['Volume'][index]}
+                        label={'volume'}
                     />
                 </div>
                 <div className="col-span-5 px-6 py-4">

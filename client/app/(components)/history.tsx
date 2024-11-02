@@ -7,16 +7,21 @@ import {
 } from "@/src/domain/history/action"
 
 export default function History({
-    //companyCode = '0000',
-    historys
+    historys,
+    label = 'price'
 }: {
-    //companyCode: string
-    historys: number[]
+    historys: number[],
+    label: string
 }) {
     
     return (
         <>
-            <div className="relative top-[-20px]">値動き</div>
+            <div
+                className="
+                    absolute mt-[-20px] indent-1 text-center
+                ">
+                { label }
+            </div>
             { buildHistoryList(historys) }
         </>
     )
