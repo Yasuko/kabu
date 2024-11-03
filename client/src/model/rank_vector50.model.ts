@@ -1,6 +1,6 @@
 import { PGService } from '@/src/_lib/db/pg.service'
 
-export type RankPropertiesType = {
+export type RankVectorPropertiesType = {
     Rank: string[]
     History: number[][]
     Move: number[][]
@@ -11,12 +11,7 @@ export type ReturnSuccessType = {
     data: {
         id: string
         date: string
-        day: RankPropertiesType
-        dayone: RankPropertiesType
-        daytwo: RankPropertiesType
-        daythree: RankPropertiesType
-        weekone: RankPropertiesType
-        weektwo: RankPropertiesType
+        rank: RankVectorPropertiesType
         createdat: string
     }
 }
@@ -34,7 +29,7 @@ export const getByDate = async (
         SELECT
             *
         FROM
-            rank as r
+            rank_vector50 as r
         WHERE
             r.Date = $1
     `
@@ -58,7 +53,7 @@ export const getByLatest = async (
         SELECT
             *
         FROM
-            rank as r
+            rank_vector50 as r
         ORDER BY
             r.Date DESC
         LIMIT 1
@@ -78,12 +73,7 @@ const toObject = (r: any) => {
     return {
         id: r.id,
         date: r.date,
-        day: JSON.parse(r.day),
-        dayone: JSON.parse(r.dayone),
-        daytwo: JSON.parse(r.daytwo),
-        daythree: JSON.parse(r.daythree),
-        weekone: JSON.parse(r.weekone),
-        weektwo: JSON.parse(r.weektwo),
+        rank: JSON.parse(r.day),
         createdat: r.createdat
     }
 }

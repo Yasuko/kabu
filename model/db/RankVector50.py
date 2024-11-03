@@ -2,11 +2,11 @@
  株価の分析データのDB操作を行うクラス
 """
 
-from model.schema.RankVector10 import RankVector10Type, RankVector10DBType
+from model.schema.RankVector50 import RankVector50Type, RankVector50DBType
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
-class RankVector10:
+class RankVector50:
     _DB = None
 
     def __init__(self, DB = None):
@@ -20,11 +20,11 @@ class RankVector10:
         return self._DB
 
     # データの追加
-    def add_data(self, data: RankVector10Type):
-        q, v, i = query_convert(data, RankVector10Type)
+    def add_data(self, data: RankVector50Type):
+        q, v, i = query_convert(data, RankVector50Type)
         query = f"""
             INSERT INTO
-                rank_vector_10
+                rank_vector_50
             (
                 {q}
             )
@@ -33,47 +33,41 @@ class RankVector10:
                 {v}
             )
         """
-
         result = self._DB.execute(query, (i))
         return result
     
     # idを指定してデータを削除
     def delete(self, id):
-        query = "DELETE FROM rank_vector_10 WHERE id = %s"
+        query = "DELETE FROM rank_vector_50 WHERE id = %s"
         self._DB.execute(query, (id,))
 
     # companyCodeとDateでデータの削除
     def delete_by_date_and_company_code(self, date):
         query = f"""
         DELETE FROM
-            rank_vector_10
+            rank_vector_50
         WHERE
             Date = %s
         """
         self._DB.execute(query, (date))
 
-    # DateとCompanyCodeの重複がない場合のみ、データの追加
+    # Dateの重複がない場合のみ、データの追加
     def add_exists_by_date_and_company_code(
-        self,
-        date: str,
-        companyCode: str,
-        data: RankVector10Type,
+        self, date, companyCode, data: RankVector50Type
     ) -> bool:
         if not self.check_exists_by_date_and_company_code(date, companyCode):
             self.add_data(data)
             return True
-        return False
+        return None
 
     def check_exists_by_date_and_company_code(
-        self,
-        date: str,
-        companyCode: str
+        self, date, companyCode
     ) -> bool:
         query = f"""
         SELECT
             *
         FROM
-            rank_vector_10
+            rank_vector_50
         WHERE
             Date = %s
         AND
@@ -90,11 +84,11 @@ class RankVector10:
         SELECT
             *
         FROM
-            rank_vector_10
+            rank_vector_50
         WHERE
             Date = %s
         """
-        return self._DB.fetch_one(query, (date,))
+        return self._DB.fetch_one(query, (date))
 
     # 指定日前から指定日までのデータを取得
     def get_data_by_date_range(
@@ -106,7 +100,7 @@ class RankVector10:
         SELECT
             *
         FROM
-            rank_vector_10
+            rank_vector_50
         WHERE
             Date >= %s
         AND

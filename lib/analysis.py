@@ -6,9 +6,9 @@ import json
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
 from model.db.AnalysisCandle import AnalysisCandle
-from model.db.Vector80 import Vector30
-from model.db.Vector40 import Vector40
+from model.db.AnalysisVector import AnalysisVector
 from model.db.Vector50 import Vector50
+from model.db.Vector100 import Vector100
 
 from lib.utils import angle, normalize
 
@@ -226,6 +226,22 @@ def rankingAnalysisType1(
         resultsLower[target] = buildHistoryList(df, day, DB)
 
     return resultsUpper, resultsLower
+
+def rankingAnalysisVector(
+    day: str,
+    DB = None
+) -> list:
+    targets = ['DayOne', 'DayTwo', 'DayThree', 'WeekOne']
+    results = {}
+
+    # 上昇幅の高い順にデータを取得
+    for target in targets:
+        # 与えられた日付の解析データを取得
+        df = AnalysisVector(DB).get_rank(day, target)
+        # ランク表示用のリスト作成
+        resultsUpper[target] = buildHistoryList(df, day, DB)
+
+    return results
 
 def buildHistoryList(
     df: list,
