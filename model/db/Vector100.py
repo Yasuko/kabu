@@ -2,11 +2,11 @@
 リスク情報 (RiskInfo) テーブルのスキーマを定義する
 '''
 
-from model.schema.Vector40 import Vector40Type
+from model.schema.Vector100 import Vector100Type, Vector100DBType
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
-class Vector40:
+class Vector100:
     DB = None
 
     def __init__(self, DB = None):
@@ -16,11 +16,11 @@ class Vector40:
             self.DB = PgSQL().connect()
     
     # レコードの登録
-    def insert_record(self, data: Vector40Type):
-        q, v, i = query_convert(data, Vector40Type)
+    def insert_record(self, data: Vector100Type):
+        q, v, i = query_convert(data, Vector100Type)
         query = f"""
         INSERT INTO
-            vector_40
+            vector_100
         (
             {q},
             createdAt
@@ -36,31 +36,26 @@ class Vector40:
 
     # DateとcompanyCodeの重複がない場合のみ、データの追加
     def insert_exists_by_date_and_company_code(
-        self,
-        date,
-        companyCode,
-        data: Vector40Type,
+        self, date, companyCode, data: Vector100Type
     ) -> bool:
         query = f"""
         SELECT
-            *
+            COUNT(*)
         FROM
-            vector_40
+            vector_100
         WHERE
             Date = %s
         AND
             companyCode = %s
         """
-        r = self.DB.fetch_all(query, (date, companyCode))
-        if len(r) <= 0:
+        if self.DB.fetch_one(query, (date, companyCode)) == 0:
             self.insert_record(data)
             return True
-
         return False
 
     # idからレコードを1件検索し返す
     def get_record_by_id(self, id):
-        query = "SELECT * FROM vector_40 WHERE id = %s"
+        query = "SELECT * FROM vector_100 WHERE id = %s"
         record = self.DB.fetch_one(query, (id,))
         return record
 
@@ -70,12 +65,12 @@ class Vector40:
         query = f"""
         SELECT
             Date,
-            companyCode,
-            Vec <-> %s AS distance
+            CompanyCode,
+            vec <-> %s AS distance
         FROM
-            vector_40
+            vector_100
         ORDER BY
-            distance DESC
+            distance
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))
@@ -87,15 +82,14 @@ class Vector40:
         query = f"""
         SELECT
             Date,
-            companyCode,
-            (Vec <#> %s) * -1 AS dot
+            CompanyCode,
+            (vec <#> %s) * -1 AS dot
         FROM
-            vector_40
+            vector_100
         ORDER BY
             dot ASC
         LIMIT {limit}
         """
-        print(query % array_str)
         records = self.DB.fetch_all(query, (array_str,))
         return records
 
@@ -105,12 +99,12 @@ class Vector40:
         query = f"""
         SELECT
             Date,
-            companyCode,
-            1 - (Vec <=> %s) AS similality
+            CompanyCode,
+            1 - (vec <=> %s) AS similality
         FROM
-            vector_40
+            vector_100
         ORDER BY
-            similality DESC
+            similality
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))

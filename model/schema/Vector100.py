@@ -3,35 +3,36 @@
 """
 from lib.utils import validate
 
-class Vector40Type:
+class Vector100Type:
     companyCode: str
     Date: str
     Vec: list
 
-class Vector40DBType(Vector40Type):
+class Vector100DBType(Vector100Type):
     id: str
     createdAt: str
 
-def ConvertToVector40Type(data: dict) -> Vector40Type:
+def ConvertToVector80Type(data: dict) -> Vector100Type:
     result = {}
-    for key in Vector40Type.__annotations__.keys():
+    for key in Vector100Type.__annotations__.keys():
         if key in data:
-            result[key] = validate(data[key], Vector40Type.__annotations__[key])
+            result[key] = validate(data[key], Vector100Type.__annotations__[key])
         else:
-            result[key] = validate('', Vector40Type.__annotations__[key])
+            result[key] = validate('', Vector100Type.__annotations__[key])
+    #print('Validate Test: ', result)
     return result
 
-class Vector40:
+class Vector100:
     create_table_query = """
-    CREATE TABLE IF NOT EXISTS vector_40 (
+    CREATE TABLE IF NOT EXISTS vector_100 (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
-        Vec vector(40) NOT NULL,
+        Vec vector(100) NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    CREATE INDEX ON vector_40 (companyCode);
-    CREATE INDEX ON vector_40 (Date);
+    CREATE INDEX ON vector_100 (companyCode);
+    CREATE INDEX ON vector_100 (Date);
     """
 
     DB = None
@@ -40,7 +41,7 @@ class Vector40:
         self.DB = DB
     
     def create_table(self):
-        print('Creating table vector_40')
+        print('Creating table vector_100')
         try:
             self.DB.execute(self.create_table_query)
         except Exception as e:

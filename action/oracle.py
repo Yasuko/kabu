@@ -4,7 +4,7 @@ import yfinance as yf
 
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.Vector40 import VectorDate
+from model.db.Vector50 import Vector50
 
 from lib.utils import angle
 from lib.analysis import normalize
@@ -18,7 +18,7 @@ for i in range(len(historys) - 9):
     v = normalize(historys[i:i+10])
     #print(v)
     # 内積計算で近似べクトルデータを取得
-    r = VectorDate().get_dot_by_vec(v, 10)
+    r = Vector50().get_dot_by_vec(v, 10)
     #print(r)
 
     results = []

@@ -6,7 +6,7 @@ import json
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
 from model.db.AnalysisCandle import AnalysisCandle
-from model.db.Vector30 import Vector30
+from model.db.Vector80 import Vector30
 from model.db.Vector40 import Vector40
 from model.db.Vector50 import Vector50
 

@@ -2,7 +2,7 @@
 リスク情報 (RiskInfo) テーブルのスキーマを定義する
 '''
 
-from model.schema.Vector50 import Vector50Type, Vector50DBType
+from model.schema.Vector50 import Vector50Type
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
@@ -36,12 +36,26 @@ class Vector50:
 
     # DateとcompanyCodeの重複がない場合のみ、データの追加
     def insert_exists_by_date_and_company_code(
-        self, date, companyCode, data: Vector50Type
+        self,
+        date,
+        companyCode,
+        data: Vector50Type,
     ) -> bool:
-        query = "SELECT COUNT(*) FROM vector_50 WHERE Date = %s AND companyCode = %s"
-        if self.DB.fetch_one(query, (date, companyCode)) == 0:
+        query = f"""
+        SELECT
+            *
+        FROM
+            vector_50
+        WHERE
+            Date = %s
+        AND
+            companyCode = %s
+        """
+        r = self.DB.fetch_all(query, (date, companyCode))
+        if len(r) <= 0:
             self.insert_record(data)
             return True
+
         return False
 
     # idからレコードを1件検索し返す
@@ -56,8 +70,8 @@ class Vector50:
         query = f"""
         SELECT
             Date,
-            CompanyCode,
-            vec <-> %s AS distance
+            companyCode,
+            Vec <-> %s AS distance
         FROM
             vector_50
         ORDER BY
@@ -73,14 +87,15 @@ class Vector50:
         query = f"""
         SELECT
             Date,
-            CompanyCode,
-            (vec <#> %s) * -1 AS dot
+            companyCode,
+            (Vec <#> %s) * -1 AS dot
         FROM
             vector_50
         ORDER BY
-            dot DESC
+            dot ASC
         LIMIT {limit}
         """
+        print(query % array_str)
         records = self.DB.fetch_all(query, (array_str,))
         return records
 
@@ -90,12 +105,12 @@ class Vector50:
         query = f"""
         SELECT
             Date,
-            CompanyCode,
-            1 - (vec <=> %s) AS similality
+            companyCode,
+            1 - (Vec <=> %s) AS similality
         FROM
             vector_50
         ORDER BY
-            cosine DESC
+            similality DESC
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))

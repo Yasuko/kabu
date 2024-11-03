@@ -3,9 +3,8 @@ import datetime
 import math
 from model.db.Industry import Industry
 from model.db.HistoryDate import HistoryDate
-from model.db.Vector40 import Vector10
-from model.db.Vector50 import Vector20
-from model.db.Vector30 import Vector30
+from model.db.Vector50 import Vector50
+from model.db.Vector100 import Vector100
 
 from lib.utils import angle, normalize
 
@@ -25,7 +24,7 @@ for i in range(len(historys) - 29):
     v = normalize(historys[i:i+30])
     #print(v)
     # 内積計算で近似べクトルデータを取得
-    r = Vector30().get_similarity_by_vec(v, 100)
+    r = Vector50().get_similarity_by_vec(v, 100)
     print(r)
 
     results = []

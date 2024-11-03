@@ -166,38 +166,64 @@ def angle(data: list) -> list:
 """
 def normalize(
     records: list[list],
-    decimal: int = 18
+    decimal: int = 18,
+    vec: int = 10
 ) -> list:
     # recordsに数値以外の値が含まれている場合は空のリストを返す
 
     # Open値の最大値と最小値を取得
     open_values = [float(record[3]) for record in records]
+    # High値の最大値と最小値を取得
+    high_values = [float(record[4]) for record in records]
+    # Low値の最大値と最小値を取得
+    low_values = [float(record[5]) for record in records]
+    # Close値の最大値と最小値を取得
+    close_values = [float(record[6]) for record in records]
+    # Volume値の最大値と最小値を取得
+    volume_values = [float(record[7]) for record in records]
+
     # 配列が空の場合は0を返す
     if len(open_values) == 0:
         return [0]
-    max_open = max(open_values)
-    min_open = min(open_values)
 
     # 正規化
-    #normalized_open_values = [(open - min_open) / (max_open - min_open) for open in open_values]
-    normalized_open_values = []
-    for open in open_values:
+
+    normalized_open_values = build_normalize_list(open_values, decimal, vec)
+    normalized_high_values = build_normalize_list(high_values, decimal, vec)
+    normalized_low_values = build_normalize_list(low_values, decimal, vec)
+    normalized_close_values = build_normalize_list(close_values, decimal, vec)
+    normalized_volume_values = build_normalize_list(volume_values, decimal, vec)
+
+
+    # 全ての配列を結合して返す
+    return normalized_open_values + normalized_high_values + normalized_low_values + normalized_close_values + normalized_volume_values
+
+def build_normalize_list(
+    records: list[list],
+    decimal: int = 18,
+    vec: int = 10
+) -> list:
+    max_record = max(records)
+    min_record = min(records)
+
+    # 正規化
+
+    normalized_values = []
+    
+    for i in range(vec):
         # 分母が0の場合は0を返す
-        if max_open - min_open == 0:
-            normalized_open_values.append(0)
+        if max_record - min_record == 0:
+            normalized_values.append(0)
         else:
-            r = (open - min_open) / (max_open - min_open)
+            r = (records[i] - min_record) / (max_record - min_record)
             # 数値以外の場合は0を返す
             if math.isnan(r):
-                normalized_open_values.append(0)
+                normalized_values.append(0)
             else:
                 # 小数点以下をdecimalで指定された桁数に丸める
-                normalized_open_values.append(round(r, decimal))
-
-
-    # 結果を辞書形式で返す
-    return normalized_open_values
-
+                normalized_values.append(round(r, decimal))
+    
+    return normalized_values
 
 '''
 ローソク足から、上げ下げの圧力を計算する
