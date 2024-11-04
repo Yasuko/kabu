@@ -95,7 +95,6 @@ class Vector50:
             dot ASC
         LIMIT {limit}
         """
-        print(query % array_str)
         records = self.DB.fetch_all(query, (array_str,))
         return records
 

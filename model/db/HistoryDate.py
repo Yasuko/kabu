@@ -180,6 +180,7 @@ class HistoryDate:
         end_date: str,
         order: str = 'ASC'
     ) -> list:
+        print(companyCode, start_date, end_date)
         query = f"""
         SELECT
             *

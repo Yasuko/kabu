@@ -4,7 +4,7 @@
 
 from model.schema.AnalysisVector import AnalysisVectorType, AnalysisVectorDBType
 from lib.pgsql import PgSQL
-from lib.utils import query_convert, chek_float
+from lib.utils import query_convert
 
 class AnalysisVector:
     _DB = None
@@ -54,7 +54,7 @@ class AnalysisVector:
 
     # DateとcompanyCodeの重複がない場合のみ、データの追加
     def add_exists_by_date_and_company_code(
-        self, date, companyCode, data: AnalysisCandleType
+        self, date, companyCode, data: AnalysisVectorType
     ) -> bool:
         query = f"""
         SELECT

@@ -21,8 +21,9 @@ for row in company_codes:
     print('Getting data for : ' + row[1])
     try:    
         analysis = vector(row[1], day, db)
+        print('Analysis :', analysis)
+        time.sleep(20)
     except Exception as e:
-        print(candle)
         print(e)
         
         

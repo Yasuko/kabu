@@ -8,7 +8,7 @@ from model.db.AnalysisVector import AnalysisVector
 from model.db.Vector50 import Vector50
 from model.db.Vector100 import Vector100
 
-from lib.utils import angle, normalize
+from lib.utils import normalize
 
 
 def vector(
@@ -16,7 +16,7 @@ def vector(
     date: datetime.date,
     DB = None
 ) -> list:
-    sdate = date - datetime.timedelta(days=60)
+    sdate = date - datetime.timedelta(days=50)
     df = HistoryDate(DB).get_data_by_date_range(
         company_code,
         sdate.strftime('%Y-%m-%d'),
@@ -24,11 +24,11 @@ def vector(
     )
     
     # データが存在しない場合, Noneを返す
-    if len(df) <= 49:
+    if len(df) <= 19:
         return None
     # ノーマライズ
-    v50 = normalize(df[0:50])
-    v100 = normalize(df[0:100])
+    v50 = normalize(df[0:10], 18, 10)
+    v100 = normalize(df[0:20], 18, 20)
     
     # 内積計算で近似べクトルデータを取得
     r50 = Vector50(DB).get_dot_by_vec(v50, 10)
@@ -44,6 +44,7 @@ def vector(
             # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
             sdate = v[0].strftime('%Y-%m-%d')
             edate = (v[0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
+            
             h = HistoryDate(DB).get_data_by_date_range(v[1], sdate, edate)
             r = {
                 'VecPrice': normalize(rate(h)),
@@ -52,15 +53,18 @@ def vector(
             }
             if idx == 0:
                 resultsv50.append(r)
-            else idx == 1:
+            else:
                 resultsv100.append(r)
+
+    print('resultsv50 :', resultsv50)
+    print('resultsv100 :', resultsv100)
+
     hoge50 = rate_average(resultsv50)
     hoge100 = rate_average(resultsv100)
 
     print('hoge50 :', hoge50)
     print('hoge100 :', hoge100)
-    print('resultsv50 :', resultsv50)
-    print('resultsv100 :', resultsv100)
+
     
     return resultsv50, resultsv100
 
@@ -71,7 +75,7 @@ Open価格を比較し、比率を計算し返す
 def rate(
     df: datetime.date,
 ) -> list:
-
+    print(df)
     # 1日後、2日後、3日後、5日後のOpen価格を取得
     rate = []
     for i in range(1, 6):
