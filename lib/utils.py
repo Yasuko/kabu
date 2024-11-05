@@ -187,13 +187,11 @@ def normalize(
         return [0]
 
     # 正規化
-
     normalized_open_values = build_normalize_list(open_values, decimal, vec)
     normalized_high_values = build_normalize_list(high_values, decimal, vec)
     normalized_low_values = build_normalize_list(low_values, decimal, vec)
     normalized_close_values = build_normalize_list(close_values, decimal, vec)
     normalized_volume_values = build_normalize_list(volume_values, decimal, vec)
-
 
     # 全ての配列を結合して返す
     return normalized_open_values + normalized_high_values + normalized_low_values + normalized_close_values + normalized_volume_values

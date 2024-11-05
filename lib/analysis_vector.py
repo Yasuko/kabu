@@ -4,7 +4,8 @@ import math
 import json
 
 from model.db.HistoryDate import HistoryDate
-from model.db.AnalysisVector import AnalysisVector
+from model.db.AnalysisVector50 import AnalysisVector50
+from model.db.AnalysisVector100 import AnalysisVector100
 from model.db.Vector50 import Vector50
 from model.db.Vector100 import Vector100
 
@@ -31,40 +32,45 @@ def vector(
     v100 = normalize(df[0:20], 18, 20)
     
     # 内積計算で近似べクトルデータを取得
-    r50 = Vector50(DB).get_dot_by_vec(v50, 10)
-    r100 = Vector100(DB).get_dot_by_vec(v100, 10)
-
+    r50 = Vector50(DB).get_dot_by_vec(v50, 100)
+    r100 = Vector100(DB).get_dot_by_vec(v100, 100)
+    
     resultsv50 = []
     resultsv100 = []
 
     for idx, _r in enumerate([r50, r100]):
+        
+        for i in range(len(_r)):
 
-        for v in _r:
+            print(_r[i])
+            try:
 
-            # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
-            sdate = v[0].strftime('%Y-%m-%d')
-            edate = (v[0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
-            
-            h = HistoryDate(DB).get_data_by_date_range(v[1], sdate, edate)
-            r = {
-                'VecPrice': normalize(rate(h)),
-                'Date': date,
-                'companyCode': company_code,
-            }
-            if idx == 0:
-                resultsv50.append(r)
-            else:
-                resultsv100.append(r)
+                # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
+                sdate = _r[i][0].strftime('%Y-%m-%d')
+                edate = (_r[i][0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
+                
+                h = HistoryDate(DB).get_data_by_date_range(_r[i][1], sdate, edate)
 
-    print('resultsv50 :', resultsv50)
-    print('resultsv100 :', resultsv100)
+                r = {
+                    'Rate': rate(h),
+                    'VecPrice': normalize(h),
+                    'Date': date,
+                    'companyCode': company_code,
+                }
+                if idx == 0:
+                    resultsv50.append(r)
+                else:
+                    resultsv100.append(r)
+                # print(resultsv50)
+                print('UNKO!!')
+            except Exception as e:
+                print('ERROR!!  ', e)
+
+    #print('resultsv50 :', resultsv50)
+    #print('resultsv100 :', resultsv100)
 
     hoge50 = rate_average(resultsv50)
     hoge100 = rate_average(resultsv100)
-
-    print('hoge50 :', hoge50)
-    print('hoge100 :', hoge100)
-
     
     return resultsv50, resultsv100
 
@@ -73,17 +79,16 @@ def vector(
 Open価格を比較し、比率を計算し返す
 '''
 def rate(
-    df: datetime.date,
+    df: list,
 ) -> list:
-    print(df)
     # 1日後、2日後、3日後、5日後のOpen価格を取得
     rate = []
     for i in range(1, 6):
         rate.append({
             'rate': [
-                (df[i]['open'] - df[0]['open']) / df[0]['open']
+                (df[i][3] - df[0][3]) / df[0][3]
             ],
-            'volume': df[i]['volume']
+            'volume': df[i][7]
         })
 
     return rate

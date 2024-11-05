@@ -92,7 +92,7 @@ class Vector50:
         FROM
             vector_50
         ORDER BY
-            dot ASC
+            dot DESC
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))

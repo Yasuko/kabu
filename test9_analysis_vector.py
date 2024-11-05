@@ -1,7 +1,8 @@
 import datetime
 import time
 from model.db.Industry import Industry
-from model.db.AnalysisVector import AnalysisVector
+from model.db.AnalysisVector50 import AnalysisVector50
+from model.db.AnalysisVector100 import AnalysisVector100
 
 from lib.explain import press_converter
 from lib.analysis_vector import (
@@ -22,9 +23,10 @@ for row in company_codes:
     try:    
         analysis = vector(row[1], day, db)
         print('Analysis :', analysis)
-        time.sleep(20)
     except Exception as e:
         print(e)
+    print('Role')
+    time.sleep(60)
         
         
     

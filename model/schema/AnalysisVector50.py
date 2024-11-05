@@ -3,44 +3,49 @@
 """
 from lib.utils import validate
 
-class AnalysisVectorType:
+class AnalysisVector50Type:
     companyCode: str
     Date: str
-    Result: float
     DayOne: float
+    DayOneResult: str
     DayTwo: float
+    DayTwoResult: str
     DayThree: float
+    DayThreeResult: str
     WeekOne: float
+    WeekOneResult: str
 
-class AnalysisVectorDBType(AnalysisVectorType):
+class AnalysisVector50DBType(AnalysisVector50Type):
     id: str
     createdAt: str
 
-def ConvertToAnalysisVectorType(data: dict) -> AnalysisVectorType:
+def ConvertToAnalysisVectorType(data: dict) -> AnalysisVector50Type:
     result = {}
-    for key in AnalysisVectorType.__annotations__.keys():
+    for key in AnalysisVector50Type.__annotations__.keys():
         if key in data:
-            result[key] = validate(data[key], AnalysisVectorType.__annotations__[key])
+            result[key] = validate(data[key], AnalysisVector50Type.__annotations__[key])
         else:
-            result[key] = validate('', AnalysisVectorType.__annotations__[key])
+            result[key] = validate('', AnalysisVector50Type.__annotations__[key])
     #print('Validate Test: ', result)
     return result
 
 class AnalysisVector:
     create_table_query = """
-    CREATE TABLE IF NOT EXISTS analysis_vector (
+    CREATE TABLE IF NOT EXISTS analysis_vector50 (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
-        Result NUMERIC NOT NULL,
-        Day NUMERIC NOT NULL,
-        DayOne NUMERIC NOT NULL,
+        DayOne NUMERIC NOT NULL
+        DayOneResult TEXT NOT NULL,
         DayTwo NUMERIC NOT NULL,
+        DayTwoResult TEXT NOT NULL,
         DayThree NUMERIC NOT NULL,
+        DayThreeResult TEXT NOT NULL,
         WeekOne NUMERIC NOT NULL,
+        WeekOneResult TEXT NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    CREATE INDEX ON analysis_vector (companyCode);
+    CREATE INDEX ON analysis_vector50 (companyCode);
     """
 
     DB = None
@@ -49,7 +54,7 @@ class AnalysisVector:
         self.DB = DB
     
     def create_table(self):
-        print('Creating table analysis_vector')
+        print('Creating table analysis_vector50')
         try:
             self.DB.execute(self.create_table_query)
         except Exception as e:

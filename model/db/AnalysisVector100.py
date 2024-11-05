@@ -2,11 +2,11 @@
  株価の分析データのDB操作を行うクラス
 """
 
-from model.schema.AnalysisVector import AnalysisVectorType, AnalysisVectorDBType
+from model.schema.AnalysisVector100 import AnalysisVector100Type, AnalysisVector100DBType
 from lib.pgsql import PgSQL
 from lib.utils import query_convert
 
-class AnalysisVector:
+class AnalysisVector100:
     _DB = None
 
     def __init__(self, DB = None):
@@ -20,11 +20,11 @@ class AnalysisVector:
         return self._DB
 
     # データの追加
-    def add_data(self, data: AnalysisVectorType):
-        q, v, i = query_convert(data, AnalysisVectorType)
+    def add_data(self, data: AnalysisVector100Type):
+        q, v, i = query_convert(data, AnalysisVector100Type)
         query = f"""
             INSERT INTO
-                analysis_vector
+                analysis_vector100
             (
                 {q}
             )
@@ -38,14 +38,14 @@ class AnalysisVector:
     
     # idを指定してデータを削除
     def delete(self, id):
-        query = "DELETE FROM analysis_vector WHERE id = %s"
+        query = "DELETE FROM analysis_vector100 WHERE id = %s"
         self._DB.execute(query, (id,))
 
     # companyCodeとDateでデータの削除
     def delete_by_date_and_company_code(self, date, companyCode):
         query = """
         DELETE FROM
-            analysis_vector
+            analysis_vector100
         WHERE
             Date = %s
         AND companyCode = %s
@@ -54,13 +54,13 @@ class AnalysisVector:
 
     # DateとcompanyCodeの重複がない場合のみ、データの追加
     def add_exists_by_date_and_company_code(
-        self, date, companyCode, data: AnalysisVectorType
+        self, date, companyCode, data: AnalysisVector100Type
     ) -> bool:
         query = f"""
         SELECT
             *
         FROM
-            analysis_vector
+            analysis_vector100
         WHERE
             Date = %s
         AND
@@ -78,7 +78,7 @@ class AnalysisVector:
         SELECT
             *
         FROM
-            analysis_vector
+            analysis_vector100
         WHERE
             Date = %s
         AND
@@ -92,7 +92,7 @@ class AnalysisVector:
         SELECT
             *
         FROM
-            analysis_vector
+            analysis_vector100
         WHERE
             companyCode = %s
         """
@@ -107,7 +107,7 @@ class AnalysisVector:
         SELECT
             *
         FROM
-            analysis_vector
+            analysis_vector100
         WHERE
             Date = %s
         ORDER BY
@@ -127,7 +127,7 @@ class AnalysisVector:
         SELECT
             *
         FROM
-            analysis_vector
+            analysis_vector100
         WHERE
             companyCode = %s
         AND
@@ -146,7 +146,7 @@ class AnalysisVector:
         SELECT
             *
         FROM
-            analysis_vector
+            analysis_vector100
         WHERE
             Date = %s
         ORDER BY
