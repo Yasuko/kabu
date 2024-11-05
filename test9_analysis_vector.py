@@ -21,8 +21,10 @@ ScoreColumns = ['DayOneScore', 'DayTwoScore', 'DayThreeScore', 'WeekOneScore']
 for row in company_codes:
     print('Getting data for : ' + row[1])
     try:    
-        analysis = vector(row[1], day, db)
+        analysis, average = vector(row[1], day, db)
         print('Analysis :', analysis)
+
+        
     except Exception as e:
         print(e)
     print('Role')

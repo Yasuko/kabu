@@ -6,7 +6,7 @@ import json
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisDate import AnalysisDate
 from model.db.AnalysisCandle import AnalysisCandle
-from model.db.AnalysisVector import AnalysisVector
+from model.db.AnalysisVector50 import AnalysisVector50
 from model.db.Vector50 import Vector50
 from model.db.Vector100 import Vector100
 
@@ -237,9 +237,9 @@ def rankingAnalysisVector(
     # 上昇幅の高い順にデータを取得
     for target in targets:
         # 与えられた日付の解析データを取得
-        df = AnalysisVector(DB).get_rank(day, target)
+        df = AnalysisVector50(DB).get_rank(day, target)
         # ランク表示用のリスト作成
-        resultsUpper[target] = buildHistoryList(df, day, DB)
+        AnalysisVector50[target] = buildHistoryList(df, day, DB)
 
     return results
 

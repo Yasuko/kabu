@@ -29,16 +29,17 @@ def vector(
         return None
     # ノーマライズ
     v50 = normalize(df[0:10], 18, 10)
-    v100 = normalize(df[0:20], 18, 20)
+    #v100 = normalize(df[0:20], 18, 20)
     
     # 内積計算で近似べクトルデータを取得
-    r50 = Vector50(DB).get_dot_by_vec(v50, 100)
-    r100 = Vector100(DB).get_dot_by_vec(v100, 100)
+    r50 = Vector50(DB).get_dot_by_vec(v50, 50)
+    #r100 = Vector100(DB).get_dot_by_vec(v100, 100)
     
     resultsv50 = []
-    resultsv100 = []
+    #resultsv100 = []
 
-    for idx, _r in enumerate([r50, r100]):
+    #for idx, _r in enumerate([r50, r100]):
+    for idx, _r in enumerate([r50]):
         
         for i in range(len(_r)):
 
@@ -53,16 +54,17 @@ def vector(
 
                 r = {
                     'Rate': rate(h),
-                    'VecPrice': normalize(h),
-                    'Date': date,
-                    'companyCode': company_code,
+                    #'VecPrice': normalize(h),
+                    'Vec': _r[i][2],
+                    'Date': _r[i][0],
+                    'companyCode': _r[i][1],
                 }
                 if idx == 0:
                     resultsv50.append(r)
-                else:
-                    resultsv100.append(r)
+                #else:
+                    #resultsv100.append(r)
                 # print(resultsv50)
-                print('UNKO!!')
+
             except Exception as e:
                 print('ERROR!!  ', e)
 
@@ -70,9 +72,9 @@ def vector(
     #print('resultsv100 :', resultsv100)
 
     hoge50 = rate_average(resultsv50)
-    hoge100 = rate_average(resultsv100)
+    #hoge100 = rate_average(resultsv100)
     
-    return resultsv50, resultsv100
+    return resultsv50, hoge50
 
 '''
 配列の1番目のOpen価格と、1日後、2日後、3日後、5日後の
@@ -85,9 +87,7 @@ def rate(
     rate = []
     for i in range(1, 6):
         rate.append({
-            'rate': [
-                (df[i][3] - df[0][3]) / df[0][3]
-            ],
+            'rate': (df[i][3] - df[0][3]) / df[0][3],
             'volume': df[i][7]
         })
 
@@ -100,12 +100,11 @@ def rate(
 def rate_average(
     df: list,
 ) -> list:
-    _a1 = sum([item['VecPrice'][0] for item in df]) / len(df)
-    _a2 = sum([item['VecPrice'][1] for item in df]) / len(df)
-    _a3 = sum([item['VecPrice'][2] for item in df]) / len(df)
-    _a4 = sum([item['VecPrice'][3] for item in df]) / len(df)
-    _a5 = sum([item['VecPrice'][4] for item in df]) / len(df)
-    _a6 = sum([item['VecPrice'][5] for item in df]) / len(df)
+    _a1 = sum([item['Rate'][0]['rate'] for item in df]) / len(df)
+    _a2 = sum([item['Rate'][1]['rate'] for item in df]) / len(df)
+    _a3 = sum([item['Rate'][2]['rate'] for item in df]) / len(df)
+    _a4 = sum([item['Rate'][3]['rate'] for item in df]) / len(df)
+    _a5 = sum([item['Rate'][4]['rate'] for item in df]) / len(df)
     
-    return [_a1, _a2, _a3, _a4, _a5, _a6]
+    return [_a1, _a2, _a3, _a4, _a5]
 

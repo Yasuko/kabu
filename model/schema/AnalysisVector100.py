@@ -35,7 +35,7 @@ class AnalysisVector100:
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
-        DayOne NUMERIC NOT NULL
+        DayOne NUMERIC NOT NULL,
         DayOneResult TEXT NOT NULL,
         DayTwo NUMERIC NOT NULL,
         DayTwoResult TEXT NOT NULL,
