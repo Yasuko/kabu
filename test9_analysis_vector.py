@@ -24,6 +24,7 @@ for row in company_codes:
     try:    
         analysis, average = vector(row[1], day, db)
         print('Analysis :', row[1])
+        '''
         data = {
             'companyCode': row[1],
             'Date': day.strftime("%Y-%m-%d"),
@@ -42,7 +43,7 @@ for row in company_codes:
                 row[1],
                 data
             ))
-
+        '''
         
     except Exception as e:
         print(e)

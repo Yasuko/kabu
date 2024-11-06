@@ -89,12 +89,12 @@ def rate(
 ) -> list:
     # 1日後、2日後、3日後、5日後のOpen価格を取得
     rate = []
-    for i in range(1, 6):
+    for i in range(5):
         rate.append({
-            'rate': float((df[i][3] - df[0][3]) / df[0][3]),
-            'volume': float(df[i][7])
+            'rate': float((df[i + 1][3] - df[0][3]) / df[0][3]),
+            'volume': float(df[i + 1][7])
         })
-
+    print(rate)
     return rate
 
 '''
