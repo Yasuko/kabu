@@ -32,18 +32,22 @@ def vector(
     #v100 = normalize(df[0:20], 18, 20)
     
     # 内積計算で近似べクトルデータを取得
-    r50 = Vector50(DB).get_dot_by_vec(v50, 50)
+    #r50 = Vector50(DB).get_dot_by_vec(v50, 50)
     #r100 = Vector100(DB).get_dot_by_vec(v100, 100)
+
+    # Cosine類似度計算で近似べクトルデータを取得
+    r50 = Vector50(DB).get_similarity_by_vec(v50, 50)
+
+    # ユークリッド距離で近似べクトルデータを取得
+    # r50 = Vector50(DB).get_distance_by_vec(v50, 50)
     
     resultsv50 = []
     #resultsv100 = []
 
     #for idx, _r in enumerate([r50, r100]):
     for idx, _r in enumerate([r50]):
-        
-        for i in range(len(_r)):
 
-            print(_r[i])
+        for i in range(len(_r)):
             try:
 
                 # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
@@ -56,7 +60,7 @@ def vector(
                     'Rate': rate(h),
                     #'VecPrice': normalize(h),
                     'Vec': _r[i][2],
-                    'Date': _r[i][0],
+                    'Date': _r[i][0].strftime('%Y-%m-%d'),
                     'companyCode': _r[i][1],
                 }
                 if idx == 0:
@@ -87,8 +91,8 @@ def rate(
     rate = []
     for i in range(1, 6):
         rate.append({
-            'rate': (df[i][3] - df[0][3]) / df[0][3],
-            'volume': df[i][7]
+            'rate': float((df[i][3] - df[0][3]) / df[0][3]),
+            'volume': float(df[i][7])
         })
 
     return rate

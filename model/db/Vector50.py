@@ -109,7 +109,7 @@ class Vector50:
         FROM
             vector_50
         ORDER BY
-            similality DESC
+            similality ASC
         LIMIT {limit}
         """
         records = self.DB.fetch_all(query, (array_str,))
