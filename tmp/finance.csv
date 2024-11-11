@@ -1,105 +1,105 @@
-'auditRisk',監査リスク,1
-'boardRisk',取締役会リスク,4
-'compensationRisk',報酬リスク,1
-'shareHolderRightsRisk',株主権利リスク,3
-'overallRisk',全体的なリスク,2
-'governanceEpochDate',ガバナンス情報基準日（エポック時間）,1730419200
-'compensationAsOfEpochDate',報酬情報基準日（エポック時間）,1735603200
-'maxAge',最大年齢,86400
-'priceHint',価格の目安,2
-'previousClose',前日終値,9222
-'open',始値,9522
-'dayLow',日中の最安値,9448
-'dayHigh',日中の最高値,9610
-'regularMarketPreviousClose',通常市場の前日終値,9222
-'regularMarketOpen',通常市場の始値,9522
-'regularMarketDayLow',通常市場の日中最安値,9448
-'regularMarketDayHigh',通常市場の日中最高値,9610
-'dividendRate',配当利率,44
-'dividendYield',配当利回り,0.0048
-'exDividendDate',配当落ち日（エポック時間）,1743120000
-'payoutRatio',配当性向,1.2188
-'fiveYearAvgDividendYield',過去5年の平均配当利回り,0.69
-'beta',ベータ値,0.708
-'trailingPE',過去12ヶ月の株価収益率,264.804
-'forwardPE',予測株価収益率,32.256424
-'volume',出来高,5766700
-'regularMarketVolume',通常市場の出来高,5766700
-'averageVolume',平均出来高,11485573
-'averageVolume10days',過去10日の平均出来高,8438620
-'averageDailyVolume10Day',過去10日間の日ごとの平均出来高,8438620
-'bid',買値,9531
-'ask',売値,9528
-'marketCap',時価総額,1.37832E+13
-'fiftyTwoWeekLow',52週安値,5639
-'fiftyTwoWeekHigh',52週高値,12180
-'priceToSalesTrailing12Months',過去12か月の売上高比率,1.9973577
-'fiftyDayAverage',50日移動平均,8650.52
-'twoHundredDayAverage',200日移動平均,8700.18
-'trailingAnnualDividendRate',過去年間配当金率,44
-'trailingAnnualDividendYield',過去年間配当利回り,0.004771199
-'currency',通貨, 'JPY'
-'enterpriseValue',企業価値,3.19743E+13
-'profitMargins',利益率,0.01097
-'floatShares',流通株式数,916100852
-'sharesOutstanding',発行済株式数,1447059968
-'heldPercentInsiders',インサイダー保有率,0.34013999
-'heldPercentInstitutions',機関保有率,0.29782
-'impliedSharesOutstanding',推定発行株式数,1533270016
-'bookValue',簿価,8133.855
-'priceToBook',株価純資産倍率（PBR）,1.1710315
-'lastFiscalYearEnd',最終会計年度末,1711843200
-'nextFiscalYearEnd',次会計年度末,1743379200
-'mostRecentQuarter',最新四半期,1719705600
-'netIncomeToCommon',普通株当たり純利益,57024000000
-'trailingEps',過去EPS,35.97
-'forwardEps',予想EPS,295.29
-'pegRatio',PEGレシオ,-1.56
-'lastSplitFactor',最後の株式分割比率, '2:1'
-'lastSplitDate',最後の株式分割日,1561420800
-'enterpriseToRevenue',EV/売上高比率,4.633
-'enterpriseToEbitda',EV/EBITDA比率,22.239
-'52WeekChange',52週変化率,0.49167323
-'SandP52WeekChange',S&P 52週変化率,0.36382854
-'lastDividendValue',最後の配当金額,22
-'lastDividendDate',最後の配当日,1743120000
-'exchange',取引所, 'JPX'
-'quoteType',銘柄タイプ, 'EQUITY'
-'symbol',シンボル, '9984.T'
-'underlyingSymbol',原資産シンボル, '9984.T'
-'shortName',短縮名, 'SOFTBANK GROUP CORP'
-'longName',正式名称, 'SoftBank Group Corp.'
-'firstTradeDateEpochUtc',初取引日（UTC）,946944000
-'timeZoneFullName',タイムゾーン完全名, 'Asia/Tokyo'
-'timeZoneShortName',タイムゾーン短縮名, 'JST'
-'uuid',uuid, '6da05edb-8daf-367e-b1b5-80f39c5ac241'
-'messageBoardId',掲示板ID, 'finmb_23013'
-'gmtOffSetMilliseconds',GMTオフセット（ミリ秒）,32400000
-'currentPrice',現在価格,9525
-'targetHighPrice',目標高値,14520
-'targetLowPrice',目標安値,9000
-'targetMeanPrice',目標平均価格,11648.2
-'targetMedianPrice',目標中央値価格,11600
-'recommendationMean',推奨平均,2.1
-'recommendationKey',推奨キー, 'buy'
-'numberOfAnalystOpinions',アナリスト意見数,16
-'totalCash',現金合計,5.49893E+12
-'totalCashPerShare',1株当たり現金,3751.047
-'ebitda',EBITDA（税引前利益・減価償却前利益）,1.43773E+12
-'totalDebt',総負債,2.15999E+13
-'quickRatio',当座比率,0.571
-'currentRatio',流動比率,0.788
-'totalRevenue',総収入,6.90074E+12
-'debtToEquity',負債比率,152.08
-'revenuePerShare',1株当たり収入,4708.315
-'returnOnAssets',総資産利益率,0.007710001
-'returnOnEquity',自己資本利益率,0.04178
-'freeCashflow',フリーキャッシュフロー,-1.62785E+12
-'operatingCashflow',営業キャッシュフロー,3.80116E+11
-'revenueGrowth',収益成長率,0.093
-'grossMargins',売上総利益率,0.52617
-'ebitdaMargins',EBITDAマージン,0.20833999
-'operatingMargins',営業利益率,0.11808
-'financialCurrency',財務通貨, 'JPY'
-'trailingPegRatio',トレーリングPEGレシオ, None
-},,
+3,'auditRisk',監査リスク,1
+4,'boardRisk',取締役会リスク,4
+5,'compensationRisk',報酬リスク,1
+6,'shareHolderRightsRisk',株主権利リスク,3
+7,'overallRisk',全体的なリスク,2
+8,'governanceEpochDate',ガバナンス情報基準日（エポック時間）,1730419200
+9,'compensationAsOfEpochDate',報酬情報基準日（エポック時間）,1735603200
+10,'maxAge',最大年齢,86400
+11,'priceHint',価格の目安,2
+12,'previousClose',前日終値,9222
+13,'open',始値,9522
+14,'dayLow',日中の最安値,9448
+15,'dayHigh',日中の最高値,9610
+16,'regularMarketPreviousClose',通常市場の前日終値,9222
+17,'regularMarketOpen',通常市場の始値,9522
+18,'regularMarketDayLow',通常市場の日中最安値,9448
+19,'regularMarketDayHigh',通常市場の日中最高値,9610
+20,'dividendRate',配当利率,44
+21,'dividendYield',配当利回り,0.0048
+22,'exDividendDate',配当落ち日（エポック時間）,1743120000
+23,'payoutRatio',配当性向,1.2188
+24,'fiveYearAvgDividendYield',過去5年の平均配当利回り,0.69
+25,'beta',ベータ値,0.708
+26,'trailingPE',過去12ヶ月の株価収益率,264.804
+27,'forwardPE',予測株価収益率,32.256424
+28,'volume',出来高,5766700
+29,'regularMarketVolume',通常市場の出来高,5766700
+30,'averageVolume',平均出来高,11485573
+31,'averageVolume10days',過去10日の平均出来高,8438620
+32,'averageDailyVolume10Day',過去10日間の日ごとの平均出来高,8438620
+33,'bid',買値,9531
+34,'ask',売値,9528
+35,'marketCap',時価総額,1.38E+13
+36,'fiftyTwoWeekLow',52週安値,5639
+37,'fiftyTwoWeekHigh',52週高値,12180
+38,'priceToSalesTrailing12Months',過去12か月の売上高比率,1.9973577
+39,'fiftyDayAverage',50日移動平均,8650.52
+40,'twoHundredDayAverage',200日移動平均,8700.18
+41,'trailingAnnualDividendRate',過去年間配当金率,44
+42,'trailingAnnualDividendYield',過去年間配当利回り,0.004771199
+43,'currency',通貨, 'JPY'
+44,'enterpriseValue',企業価値,3.20E+13
+45,'profitMargins',利益率,0.01097
+46,'floatShares',流通株式数,916100852
+47,'sharesOutstanding',発行済株式数,1447059968
+48,'heldPercentInsiders',インサイダー保有率,0.34013999
+49,'heldPercentInstitutions',機関保有率,0.29782
+50,'impliedSharesOutstanding',推定発行株式数,1533270016
+51,'bookValue',簿価,8133.855
+52,'priceToBook',株価純資産倍率（PBR）,1.1710315
+53,'lastFiscalYearEnd',最終会計年度末,1711843200
+54,'nextFiscalYearEnd',次会計年度末,1743379200
+55,'mostRecentQuarter',最新四半期,1719705600
+56,'netIncomeToCommon',普通株当たり純利益,57024000000
+57,'trailingEps',過去EPS,35.97
+58,'forwardEps',予想EPS,295.29
+59,'pegRatio',PEGレシオ,-1.56
+60,'lastSplitFactor',最後の株式分割比率, '2:1'
+61,'lastSplitDate',最後の株式分割日,1561420800
+62,'enterpriseToRevenue',EV/売上高比率,4.633
+63,'enterpriseToEbitda',EV/EBITDA比率,22.239
+64,'52WeekChange',52週変化率,0.49167323
+65,'SandP52WeekChange',S&P 52週変化率,0.36382854
+66,'lastDividendValue',最後の配当金額,22
+67,'lastDividendDate',最後の配当日,1743120000
+68,'exchange',取引所, 'JPX'
+69,'quoteType',銘柄タイプ, 'EQUITY'
+70,'symbol',シンボル, '9984.T'
+71,'underlyingSymbol',原資産シンボル, '9984.T'
+72,'shortName',短縮名, 'SOFTBANK GROUP CORP'
+73,'longName',正式名称, 'SoftBank Group Corp.'
+74,'firstTradeDateEpochUtc',初取引日（UTC）,946944000
+75,'timeZoneFullName',タイムゾーン完全名, 'Asia/Tokyo'
+76,'timeZoneShortName',タイムゾーン短縮名, 'JST'
+77,'uuid',uuid, '6da05edb-8daf-367e-b1b5-80f39c5ac241'
+78,'messageBoardId',掲示板ID, 'finmb_23013'
+79,'gmtOffSetMilliseconds',GMTオフセット（ミリ秒）,32400000
+80,'currentPrice',現在価格,9525
+81,'targetHighPrice',目標高値,14520
+82,'targetLowPrice',目標安値,9000
+83,'targetMeanPrice',目標平均価格,11648.2
+84,'targetMedianPrice',目標中央値価格,11600
+85,'recommendationMean',推奨平均,2.1
+86,'recommendationKey',推奨キー, 'buy'
+87,'numberOfAnalystOpinions',アナリスト意見数,16
+88,'totalCash',現金合計,5.50E+12
+89,'totalCashPerShare',1株当たり現金,3751.047
+90,'ebitda',EBITDA（税引前利益・減価償却前利益）,1.44E+12
+91,'totalDebt',総負債,2.16E+13
+92,'quickRatio',当座比率,0.571
+93,'currentRatio',流動比率,0.788
+94,'totalRevenue',総収入,6.90E+12
+95,'debtToEquity',負債比率,152.08
+96,'revenuePerShare',1株当たり収入,4708.315
+97,'returnOnAssets',総資産利益率,0.007710001
+98,'returnOnEquity',自己資本利益率,0.04178
+99,'freeCashflow',フリーキャッシュフロー,-1.63E+12
+100,'operatingCashflow',営業キャッシュフロー,3.80E+11
+101,'revenueGrowth',収益成長率,0.093
+102,'grossMargins',売上総利益率,0.52617
+103,'ebitdaMargins',EBITDAマージン,0.20833999
+104,'operatingMargins',営業利益率,0.11808
+105,'financialCurrency',財務通貨, 'JPY'
+106,'trailingPegRatio',トレーリングPEGレシオ, None
+,},,

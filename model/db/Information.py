@@ -78,11 +78,20 @@ class Information:
         query = "DELETE FROM information WHERE id = %s;"
         self.DB.execute(query, (id,))
 
-    # idからレコードを1件検索し返す
-    def get_record_by_id(self, id):
-        query = "SELECT * FROM information WHERE id = %s;"
-        record = self.DB.fetch_one(query, (id,))
-        return record
+    # 最新のDateで登録された全てのレコードを取得し返す
+    def get_all_records(self):
+        query = f"""
+        SELECT * FROM
+            information
+        WHERE
+            Date = %s
+        ORDER BY
+            Date DESC;
+        """
+        date = self.get_latest_date()
+        records = self.DB.fetch_all(query, (date,))
+        return records
+
 
     # company_codeからレコードを検索、createdAtでソートし最新の1件を取得し返す
     def get_latest_record_by_company_code(self, company_code):
@@ -98,3 +107,16 @@ class Information:
         record = self.DB.fetch_one(query, (company_code,))
         return record
 
+    # 最新のレコードのDateを取得
+    def get_latest_date(self):
+        query = """
+        SELECT
+            Date
+        FROM
+            information
+        ORDER BY
+            createdAt DESC
+        LIMIT 1;
+        """
+        record = self.DB.fetch_one(query)
+        return record
