@@ -1,22 +1,18 @@
-import pandas as pd
 import datetime
-import math
 import json
 
 from model.db.HistoryDate import HistoryDate
 from model.db.AnalysisVector50 import AnalysisVector50
-from model.db.AnalysisVector100 import AnalysisVector100
 from model.db.Vector50 import Vector50
-from model.db.Vector100 import Vector100
 
 from lib.utils import normalize
 
 
-def vector(
+def vector_analysis(
     company_code: str,
     date: datetime.date,
     DB = None
-) -> list:
+) -> tuple:
     sdate = date - datetime.timedelta(days=50)
     df = HistoryDate(DB).get_data_by_date_range(
         company_code,
@@ -32,53 +28,99 @@ def vector(
     #v100 = normalize(df[0:20], 18, 20)
     
     # 内積計算で近似べクトルデータを取得
-    #r50 = Vector50(DB).get_dot_by_vec(v50, 50)
+    r50 = Vector50(DB).get_dot_by_vec(v50, 10)
     #r100 = Vector100(DB).get_dot_by_vec(v100, 100)
 
     # Cosine類似度計算で近似べクトルデータを取得
-    r50 = Vector50(DB).get_similarity_by_vec(v50, 50)
+    #r50 = Vector50(DB).get_similarity_by_vec(v50, 10)
 
     # ユークリッド距離で近似べクトルデータを取得
     # r50 = Vector50(DB).get_distance_by_vec(v50, 50)
+
+    average = sum([vec[2] for vec in r50]) / len(r50)
+    veclist = []
+
+    for i in range(len(r50)):
+        veclist.append([r50[i][0].strftime('%Y-%m-%d'), r50[i][1], r50[i][2]])
+
+    return veclist, average
+
+
+
+def vector_rank(
+    date: datetime.date,
+    DB = None
+) -> list:
+    df = AnalysisVector50(DB).get_nonzero_rank(
+        date.strftime('%Y-%m-%d')
+    )
     
-    resultsv50 = []
+    r50DayOne = []
+    r50DayTwo = []
+    r50DayThree = []
+    r50WeekOne = []
     #resultsv100 = []
 
     #for idx, _r in enumerate([r50, r100]):
-    for idx, _r in enumerate([r50]):
+    for _r in df:
+        # jsonをデコード
+        _v = json.loads(_r[4])
 
-        for i in range(len(_r)):
+        for v in _v:
             try:
-
                 # 近似ベクトルデータトップ１０から、５日後までの株価情報を取得
-                sdate = _r[i][0].strftime('%Y-%m-%d')
-                edate = (_r[i][0] + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
+
+                # yyyy-mm-dd形式の日付文字列をdatetime型に変換
+                _date = datetime.datetime.strptime(v[0], '%Y-%m-%d')
+                sdate = v[0]
+                edate = (_date + datetime.timedelta(days=15)).strftime('%Y-%m-%d')
                 
-                h = HistoryDate(DB).get_data_by_date_range(_r[i][1], sdate, edate)
+                h = HistoryDate(DB).get_data_by_date_range(v[1], sdate, edate)
 
-                r = {
-                    'Rate': rate(h),
-                    #'VecPrice': normalize(h),
-                    'Vec': _r[i][2],
-                    'Date': _r[i][0].strftime('%Y-%m-%d'),
-                    'companyCode': _r[i][1],
-                }
-                if idx == 0:
-                    resultsv50.append(r)
-                #else:
-                    #resultsv100.append(r)
-                # print(resultsv50)
+                _rate = rate(h)
 
+                r50DayOne.append({
+                    'Rate': _rate[0],
+                    'Date': v[0],
+                    'companyCode': v[1],
+                    'companyCodeOrg': _r[1],
+                })
+                r50DayTwo.append({
+                    'Rate': _rate[1],
+                    'Date': v[0],
+                    'companyCode': v[1],
+                    'companyCodeOrg': _r[1],
+                })
+                r50DayThree.append({
+                    'Rate': _rate[2],
+                    'Date': v[0],
+                    'companyCode': v[1],
+                    'companyCodeOrg': _r[1],
+                })
+                r50WeekOne.append({
+                    'Rate': _rate[4],
+                    'Date': v[0],
+                    'companyCode': v[1],
+                    'companyCodeOrg': _r[1],
+                })
+                
             except Exception as e:
                 print('ERROR!!  ', e)
 
-    #print('resultsv50 :', resultsv50)
-    #print('resultsv100 :', resultsv100)
+    # 各配列をRateの降順にソート
+    r50DayOne = sorted(r50DayOne, key=lambda x: x['Rate'], reverse=True)
+    r50DayTwo = sorted(r50DayTwo, key=lambda x: x['Rate'], reverse=True)
+    r50DayThree = sorted(r50DayThree, key=lambda x: x['Rate'], reverse=True)
+    r50WeekOne = sorted(r50WeekOne, key=lambda x: x['Rate'],  reverse=True)
 
-    hoge50 = rate_average(resultsv50)
-    #hoge100 = rate_average(resultsv100)
-    
-    return resultsv50, hoge50
+    # 上位10件を返す
+    r50DayOne = r50DayOne[:10]
+    r50DayTwo = r50DayTwo[:10]
+    r50DayThree = r50DayThree[:10]
+    r50WeekOne = r50WeekOne[:10]
+     
+    return r50DayOne, r50DayTwo, r50DayThree, r50WeekOne
+
 
 '''
 配列の1番目のOpen価格と、1日後、2日後、3日後、5日後の
@@ -90,25 +132,6 @@ def rate(
     # 1日後、2日後、3日後、5日後のOpen価格を取得
     rate = []
     for i in range(5):
-        rate.append({
-            'rate': float((df[i + 1][3] - df[0][3]) / df[0][3]),
-            'volume': float(df[i + 1][7])
-        })
-    print(rate)
+        rate.append(float((df[i + 1][3] - df[0][3]) / df[0][3]))
     return rate
-
-'''
-6日間の価格の変動率が入った10個の配列から
-平均を求めた配列を作成し返す
-'''
-def rate_average(
-    df: list,
-) -> list:
-    _a1 = sum([item['Rate'][0]['rate'] for item in df]) / len(df)
-    _a2 = sum([item['Rate'][1]['rate'] for item in df]) / len(df)
-    _a3 = sum([item['Rate'][2]['rate'] for item in df]) / len(df)
-    _a4 = sum([item['Rate'][3]['rate'] for item in df]) / len(df)
-    _a5 = sum([item['Rate'][4]['rate'] for item in df]) / len(df)
-    
-    return [_a1, _a2, _a3, _a4, _a5]
 

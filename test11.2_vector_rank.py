@@ -1,12 +1,7 @@
 import datetime
-import time
 from model.db.Industry import Industry
-from model.db.HistoryDate import HistoryDate
-from model.db.AnalysisVector import AnalysisVector
-from model.db.RankVector50 import RankVector50
-from model.db.RankVector100 import RankVector100
 
-from lib.analysis import rankingAnalysisVector, vector
+from lib.analysis_vector import vector_rank
 
 '''
 指定日の価格の動きをベクトル化し、過去の近似データを元に
@@ -14,18 +9,19 @@ from lib.analysis import rankingAnalysisVector, vector
 '''
 
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=6)
+day = day - datetime.timedelta(days=2)
 
 db = Industry().DB
 
 today =  day.strftime("%Y-%m-%d")
 print('Getting data for : ' + today)
 
-rank = rankingAnalysisVector(today, db)
+dayone, daytwo, daythree, weekone = vector_rank(day, db)
 
-rank['Date'] = today
-
-print('Rank :', rank)
+print('Analysis :', dayone)
+print('Analysis :', daytwo)
+print('Analysis :', daythree)
+print('Analysis :', weekone)
 
 
 

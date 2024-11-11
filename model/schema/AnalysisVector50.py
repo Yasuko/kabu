@@ -6,14 +6,8 @@ from lib.utils import validate
 class AnalysisVector50Type:
     companyCode: str
     Date: str
-    DayOne: float
-    DayOneResult: str
-    DayTwo: float
-    DayTwoResult: str
-    DayThree: float
-    DayThreeResult: str
-    WeekOne: float
-    WeekOneResult: str
+    Score: float
+    VecList: str
 
 class AnalysisVector50DBType(AnalysisVector50Type):
     id: str
@@ -35,14 +29,8 @@ class AnalysisVector:
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         companyCode VARCHAR(20) NOT NULL,
         Date DATE NOT NULL,
-        DayOne NUMERIC NOT NULL,
-        DayOneResult TEXT NOT NULL,
-        DayTwo NUMERIC NOT NULL,
-        DayTwoResult TEXT NOT NULL,
-        DayThree NUMERIC NOT NULL,
-        DayThreeResult TEXT NOT NULL,
-        WeekOne NUMERIC NOT NULL,
-        WeekOneResult TEXT NOT NULL,
+        Score FLOAT NOT NULL,
+        VecList TEXT NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX ON analysis_vector50 (companyCode);

@@ -101,21 +101,6 @@ class AnalysisVector50:
             return print(query % companyCode)
         return self._DB.fetch_all(query, (companyCode,))
 
-    # Dateから最新のデータ30件を取得
-    def get_latest_data(self, date, limit = 30):
-        query = f"""
-        SELECT
-            *
-        FROM
-            analysis_vector50
-        WHERE
-            Date = %s
-        ORDER BY
-            createdAt DESC
-        LIMIT %s
-        """
-        return self._DB.fetch_all(query, (date, limit))
-
     # 指定日から指定日までのデータを取得
     def get_data_by_date_range(
         self,
@@ -137,10 +122,10 @@ class AnalysisVector50:
         """
         return self._DB.fetch_all(query, (companyCode, start_date, end_date))
 
-    def get_rank(
+    # ベクトルスコア０以上のデータを日付で絞り込んで取得
+    def get_nonzero_rank(
         self,
         date: str,
-        target: str = 'DayOne' or 'DayTwo' or 'DayThree' or 'WeekOne',
     ) -> list:
         query = f"""
         SELECT
@@ -149,9 +134,7 @@ class AnalysisVector50:
             analysis_vector50
         WHERE
             Date = %s
-        ORDER BY
-            {target} DESC
-        LIMIT 30
+        AND
+            Score > 20
         """
         return self._DB.fetch_all(query, (date,))
-    
