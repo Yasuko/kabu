@@ -1,10 +1,20 @@
 'use client'
 import React, { Suspense } from "react"
+import Modal from "react-modal"
 // import { IStaticMethods } from "preline/preline"
 
 import List from "../(components)/list"
+import CompanyInfo from "../(components)/company_info"
+
+Modal.setAppElement('.App')
+
+export type ModalContentType = {
+    companyCode: string,
+}
 
 export default function Page() {
+    const [modalIsOpen, setIsOpen] = React.useState(false)
+    const [modalContent, setModalContent] = React.useState('')
 
     return (
         <>
@@ -110,10 +120,18 @@ export default function Page() {
                         <Suspense fallback={<div>Loading...</div>}>
                         <div className="grid grid-cols-2 gap-1">
                             <div>
-                                <List target={'dayone'} sort={'upper'} />
+                                <List
+                                    target={'dayone'}
+                                    sort={'upper'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                             <div>
-                                <List target={'dayone'} sort={'lower'} />
+                                <List
+                                    target={'dayone'}
+                                    sort={'lower'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                         </div>
                         </Suspense>
@@ -132,10 +150,18 @@ export default function Page() {
                         <Suspense fallback={<div>Loading...</div>}>
                         <div className="grid grid-cols-2 gap-1">
                             <div>
-                                <List target={'daytwo'} sort={'upper'} />
+                                <List
+                                    target={'daytwo'}
+                                    sort={'upper'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                             <div>
-                                <List target={'daytwo'} sort={'lower'} />
+                                <List
+                                    target={'daytwo'}
+                                    sort={'lower'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                         </div>
                         </Suspense>
@@ -153,10 +179,18 @@ export default function Page() {
                         <Suspense fallback={<div>Loading...</div>}>
                         <div className="grid grid-cols-2 gap-1">
                             <div>
-                                <List target={'daythree'} sort={'upper'} />
+                                <List
+                                    target={'daythree'}
+                                    sort={'upper'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                             <div>
-                                <List target={'daythree'} sort={'lower'} />
+                                <List
+                                    target={'daythree'}
+                                    sort={'lower'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                         </div>
                         </Suspense>
@@ -174,10 +208,18 @@ export default function Page() {
                         <Suspense fallback={<div>Loading...</div>}>
                         <div className="grid grid-cols-2 gap-1">
                             <div>
-                                <List target={'weekone'} sort={'upper'} />
+                                <List
+                                    target={'weekone'}
+                                    sort={'upper'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                             <div>
-                                <List target={'daythree'} sort={'lower'} />
+                                <List
+                                    target={'daythree'}
+                                    sort={'lower'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                         </div>
                         </Suspense>
@@ -195,15 +237,47 @@ export default function Page() {
                         <Suspense fallback={<div>Loading...</div>}>
                         <div className="grid grid-cols-2 gap-1">
                             <div>
-                                <List target={'weektwo'} sort={'upper'} />
+                                <List
+                                    target={'weektwo'}
+                                    sort={'upper'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                             <div>
-                                <List target={'daythree'} sort={'lower'} />
+                                <List
+                                    target={'daythree'}
+                                    sort={'lower'}
+                                    setModalOpen={setIsOpen}
+                                    setModalOption={setModalContent} />
                             </div>
                         </div>
                         </Suspense>
                     </div>
                 </div>
+            </div>
+            <div className="App">
+                <Modal isOpen={modalIsOpen} className="">
+                    <CompanyInfo
+                        companyCode={modalContent}
+                    />
+                    <button
+                        type="button"
+                        className="
+                            absolute bottom-0 end-0 mt-2 mr-2
+                            py-2 px-3 inline-flex items-center gap-x-2
+                            text-sm font-medium
+                            rounded-lg border border-gray-200 bg-white
+                            text-gray-800 shadow-sm
+                            hover:bg-gray-50 focus:outline-none focus:bg-gray-50
+                            disabled:opacity-50 disabled:pointer-events-none
+                            dark:bg-neutral-800 dark:border-neutral-700
+                            dark:text-white dark:hover:bg-neutral-700
+                            dark:focus:bg-neutral-700"
+                        data-hs-overlay="#hs-full-screen-modal"
+                        onClick={() => setIsOpen(false)}>
+                    Close
+                    </button>
+                </Modal>
             </div>
     </main>
     </>

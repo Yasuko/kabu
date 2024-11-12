@@ -8,10 +8,10 @@ import {
 
 export default function History({
     historys,
-    label = 'price'
+    label = 'price',
 }: {
     historys: number[],
-    label: string
+    label: string,
 }) {
     
     return (

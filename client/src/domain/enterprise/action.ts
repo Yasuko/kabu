@@ -4,6 +4,10 @@ import {
     getAll
 } from '@/src/model/enterprise.model'
 
+import {
+    getFinanceInfo
+} from '@/src/model/information.model'
+
 
 export const getEnterpriseList = async (
 ):Promise<{[key: string]: any}> => {
@@ -13,4 +17,11 @@ export const getEnterpriseList = async (
     }
     // console.log('getEnterpriseList', e.data)
     return e.data
+}
+
+
+export const getCompanyInfoAction = async (
+    companyCode: string
+):Promise<any> => {
+    return getByCompanyCode(companyCode)
 }

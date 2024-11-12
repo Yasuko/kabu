@@ -46,3 +46,5 @@ export const getRankAction = async (
             return getRankByDay(date, limit, sort)
     }
 }
+
+

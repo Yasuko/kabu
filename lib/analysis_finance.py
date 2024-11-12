@@ -68,4 +68,3 @@ def finance_average():
     operatingMargin = (sum([float(row[104]) for row in informations if row[104] is not None]) / len(informations))
     print('operatingMargin:', operatingMargin)
     
-

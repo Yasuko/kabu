@@ -43,10 +43,15 @@ type TargetType = 'day' | 'dayone' | 'daytwo' | 'daythree' | 'weekone' | 'weektw
 
 export default function List({
     target,
-    sort = 'upper'
+    sort = 'upper',
+    setModalOpen,
+    setModalOption,
+    
 }: {
     target: TargetType,
-    sort: 'upper' | 'lower'
+    sort: 'upper' | 'lower',
+    setModalOpen: any,
+    setModalOption: any,
 }) {
 
     const { data, error } = useSWR<rankType>('ranks', getRankActionV2, {})
@@ -70,7 +75,9 @@ export default function List({
             ">
             <div>
                 { 
-                buildList(target, sort, enterprise) 
+                    buildList(
+                        target, sort, enterprise,
+                        setModalOpen, setModalOption)
                 }
             </div>
         </div>
@@ -81,8 +88,11 @@ export default function List({
 const buildList = async (
     target: TargetType,
     sort: 'upper' | 'lower' = 'upper',
-    enterprise: any
+    enterprise: any,
+    setModalOpen,
+    setModalOption,
 ): Promise<JSX.Element[]> => {
+    console.log(setModalOpen)
     return ranks[sort][target]['Rank'].map((val: string, index: number) => {
         return (
             <div
@@ -101,6 +111,14 @@ const buildList = async (
                         <b>rank { index + 1 }</b>
                     </p>
                     <p className="relative float-center">
+                        <button 
+                            onClick={() => {
+                                setModalOpen(true)
+                                setModalOption(val)
+                            }}
+                        >
+                            { val } aaaaa
+                        </button>
                         <Link href={"/rank/" + val}>
                             {val} :{ (enterprise[val] === undefined) ? val : enterprise[val]['stockName'] }
                         </Link>
