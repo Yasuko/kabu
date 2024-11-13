@@ -13,7 +13,6 @@ export default function History({
     historys: number[],
     label: string,
 }) {
-    
     return (
         <>
             <div

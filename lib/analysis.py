@@ -127,20 +127,14 @@ def vector(
     if len(df) <= 49:
         return None
     # ノーマライズ
-    v30 = normalize(df[0:30])
-    v40 = normalize(df[0:40])
     v50 = normalize(df[0:50])
     
     # 内積計算で近似べクトルデータを取得
-    r30 = Vector30(DB).get_dot_by_vec(v30, 10)
-    r40 = Vector40(DB).get_dot_by_vec(v40, 10)
     r50 = Vector50(DB).get_dot_by_vec(v50, 10)
 
-    resultsv30 = []
-    resultsv40 = []
     resultsv50 = []
 
-    for idx, _r in enumerate([r30, r40, r50]):
+    for idx, _r in enumerate([r50]):
 
         for v in _r:
 
@@ -154,14 +148,9 @@ def vector(
                 'Date': date,
                 'companyCode': company_code,
             }
-            if idx == 0:
-                resultsv30.append(r)
-            elif idx == 1:
-                resultsv40.append(r)
-            else:
-                resultsv50.append(r)
+            resultsv50.append(r)
 
-    return resultsv30, resultsv40, resultsv50
+    return resultsv50
 
 """
 指定された日付に基づいて、上昇幅および下降幅の高い順にデータを取得し、ランキングを生成します。

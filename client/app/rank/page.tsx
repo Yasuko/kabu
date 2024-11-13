@@ -12,6 +12,12 @@ export type ModalContentType = {
     companyCode: string,
 }
 
+const customStyles = {
+    content: {
+        backgroundColor: 'rgba(10,10,10,1)',
+    },
+}
+
 export default function Page() {
     const [modalIsOpen, setIsOpen] = React.useState(false)
     const [modalContent, setModalContent] = React.useState('')
@@ -255,23 +261,24 @@ export default function Page() {
                     </div>
                 </div>
             </div>
-            <div className="App">
-                <Modal isOpen={modalIsOpen} className="">
+            <div className="App bg-gray-800">
+                <Modal isOpen={modalIsOpen} style={customStyles}>
                     <CompanyInfo
                         companyCode={modalContent}
                     />
                     <button
                         type="button"
                         className="
-                            absolute bottom-0 end-0 mt-2 mr-2
-                            py-2 px-3 inline-flex items-center gap-x-2
+                            absolute bottom-0 end-0 m-4
+                            w-24 h-10
+                            py-2 px-3 inline-flex items-center justify-center
                             text-sm font-medium
                             rounded-lg border border-gray-200 bg-white
                             text-gray-800 shadow-sm
                             hover:bg-gray-50 focus:outline-none focus:bg-gray-50
                             disabled:opacity-50 disabled:pointer-events-none
-                            dark:bg-neutral-800 dark:border-neutral-700
-                            dark:text-white dark:hover:bg-neutral-700
+                            dark:bg-neutral-700 dark:border-neutral-500
+                            dark:text-white dark:hover:bg-neutral-500
                             dark:focus:bg-neutral-700"
                         data-hs-overlay="#hs-full-screen-modal"
                         onClick={() => setIsOpen(false)}>

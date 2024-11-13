@@ -8,6 +8,11 @@ import {
     getFinanceInfo
 } from '@/src/model/information.model'
 
+import {
+    getLatestHistory
+} from '@/src/model/history.date.model'
+
+
 
 export const getEnterpriseList = async (
 ):Promise<{[key: string]: any}> => {
@@ -21,7 +26,15 @@ export const getEnterpriseList = async (
 
 
 export const getCompanyInfoAction = async (
-    companyCode: string
+    key: string
 ):Promise<any> => {
-    return getByCompanyCode(companyCode)
+    const companyCode = key.split('/')[1]
+    const c = await getFinanceInfo(companyCode)
+    const h = await getLatestHistory(companyCode, 30)
+
+    console.log(c)
+    return {
+        companyInfo: c,
+        history: h
+    }
 }

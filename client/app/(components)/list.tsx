@@ -92,7 +92,7 @@ const buildList = async (
     setModalOpen,
     setModalOption,
 ): Promise<JSX.Element[]> => {
-    console.log(setModalOpen)
+    
     return ranks[sort][target]['Rank'].map((val: string, index: number) => {
         return (
             <div
