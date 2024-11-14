@@ -12,7 +12,7 @@ import {
     getLatestHistory
 } from '@/src/model/history.date.model'
 
-
+import { convertFormat } from './_helper/helper'
 
 export const getEnterpriseList = async (
 ):Promise<{[key: string]: any}> => {
@@ -32,9 +32,15 @@ export const getCompanyInfoAction = async (
     const c = await getFinanceInfo(companyCode)
     const h = await getLatestHistory(companyCode, 30)
 
-    console.log(c)
+    if (c.status === false || h.status === false) {
+        return {
+            status: false,
+            message: 'Error'
+        }
+    }
     return {
-        companyInfo: c,
-        history: h
+        status: true,
+        companyInfo: c.data,
+        history: convertFormat(h.data)
     }
 }
