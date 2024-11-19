@@ -124,10 +124,13 @@ export const getFinanceInfo = async (
     const pgService = PGService.call()
     const query = `
         SELECT
+            i.dividendRate,
             i.dividendYield,
             i.beta,
             i.profitMargins,
             i.priceToBook,
+            i.trailingEps,
+            i.forwardEps,
             i.enterpriseToEbitda,
             i.enterpriseToRevenue,
             i.quickRatio,

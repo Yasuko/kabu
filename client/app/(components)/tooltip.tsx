@@ -16,25 +16,23 @@ export default function ToolTip({
             <div
                 hidden={show ? false : true}
                 className="
-                whitespace-nowrap
-                rounded
-                bg-black
-                px-2
-                py-1
+                z-[1000] absolute left-[200px] px-2 py-1 mt-[-50px]
+                w-[500px] h-[600px] text-left
                 text-white
-                absolute
+                whitespace-normal rounded
+                bg-black
                 "
             >
-                { tips }
+                <pre>{ tips }</pre>
             </div>
             <div
                 className="
                     z-50
                     rounded px-0 py-1
-                    shadow  hover:bg-gray-100
+                    shadow  hover:bg-gray-600
                     cursor-pointer"
-                onClick={() => setShow(true)}
-                onMouseLeave={() => setShow(false)}>
+                onMouseOver={() => setShow(true)}
+                onMouseOut={() => setShow(false)}>
                 { label }
             </div>
         </>

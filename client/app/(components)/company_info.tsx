@@ -26,10 +26,13 @@ export default function CompanyInfo({
     if (data.status === false) return <div>Loading...</div>
 
     const info = {
+        dividendrate: data.companyInfo.dividendrate,
         dividendyield: data.companyInfo.dividendyield,
         beta: data.companyInfo.beta,
         profitmargins: data.companyInfo.profitmargins,
         pricetobook: data.companyInfo.pricetobook,
+        trailingeps: data.companyInfo.trailingeps,
+        forwardeps: data.companyInfo.forwardeps,
         enterprisetoebitda: data.companyInfo.enterprisetoebitda,
         enterprisetorevenue: data.companyInfo.enterprisetorevenue,
         quickratio: data.companyInfo.quickratio,
@@ -49,11 +52,9 @@ export default function CompanyInfo({
         className="
             absolute hs-overlay w-[75%] h-lvh top-0 right-0
             overflow-x-hidden overflow-y-auto
-            bg-gray-800
-            pointer-events-none"
+            bg-gray-800"
         >
         <div className="grid grid-cols-8 grid-rows-2 gap-0 ">
-
 
         <div className="
             flex flex-col mt-5 ml-5 h-full
@@ -62,7 +63,6 @@ export default function CompanyInfo({
             shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
             <FinanceInformation info={info} />
         </div>
-
 
         <div className="
             flex flex-col mt-5 mr-5 h-full

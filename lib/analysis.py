@@ -243,9 +243,10 @@ def buildHistoryList(
 
     for record in df:
         h = HistoryDate(DB).get_latest_by_company_code(record[1], day, 30)
+        n = normalize(h, 4, 30)
         historys.append([float(item[3]) for item in h])
         volumes.append([float(item[7]) for item in h])
-        moves.append(normalize(h, 4))
+        moves.append(n[0])
 
     return json.dumps({
         'Rank': [item[1] for item in df],

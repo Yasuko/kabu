@@ -111,6 +111,7 @@ export default function ListPressure({
                     </div>
                     <div className="col-span-2 px-6 py-4 h-[200px]">
                         <History
+                            label="Pressure"
                             historys={ranks[sort][target]['History'][index]}
                         />
                     </div>

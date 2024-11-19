@@ -89,8 +89,8 @@ const buildList = async (
     target: TargetType,
     sort: 'upper' | 'lower' = 'upper',
     enterprise: any,
-    setModalOpen,
-    setModalOption,
+    setModalOpen : any,
+    setModalOption : any,
 ): Promise<JSX.Element[]> => {
     
     return ranks[sort][target]['Rank'].map((val: string, index: number) => {
@@ -117,11 +117,9 @@ const buildList = async (
                                 setModalOption(val)
                             }}
                         >
-                            { val } aaaaa
+                            <b>[ { val } ]</b>
                         </button>
-                        <Link href={"/rank/" + val}>
-                            {val} :{ (enterprise[val] === undefined) ? val : enterprise[val]['stockName'] }
-                        </Link>
+                        { (enterprise[val] === undefined) ? val : enterprise[val]['stockName'] }
                     </p>
                 </div>
                 <div className="col-span-1 px-6 py-4 h-[200px]">

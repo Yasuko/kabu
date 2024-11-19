@@ -162,13 +162,13 @@ def angle(data: list) -> list:
     records (list[list]): 各レコードが財務データを含むリストであるレコードのリスト。
                         「Open」値はインデックス3にある必要があります。
 戻り値:
-    dict: 正規化された「Open」値を含む辞書。
+    tupple: 正規化された、Open、High、Low、Close,Volumesのタプル。
 """
 def normalize(
     records: list[list],
     decimal: int = 18,
     vec: int = 10
-) -> list:
+) -> tuple:
     # recordsに数値以外の値が含まれている場合は空のリストを返す
 
     # Open値の最大値と最小値を取得
@@ -194,7 +194,7 @@ def normalize(
     normalized_volume_values = build_normalize_list(volume_values, decimal, vec)
 
     # 全ての配列を結合して返す
-    return normalized_open_values + normalized_high_values + normalized_low_values + normalized_close_values + normalized_volume_values
+    return normalized_open_values, normalized_high_values, normalized_low_values, normalized_close_values, normalized_volume_values
 
 def build_normalize_list(
     records: list[list],

@@ -12,25 +12,24 @@ from lib.analysis import ranking, vector
 '''
 
 day = datetime.datetime.now()
-day = day - datetime.timedelta(days=2)
+day = day - datetime.timedelta(days=4)
 
 db = Industry().DB
 
 print('Getting data for : ' + day.strftime("%Y-%m-%d"))
 upper, lower = ranking(day.strftime("%Y-%m-%d"), db)
 
-print(upper)
 if upper == None or lower == None:
     print('Unable to get data for : ')
 
 upper['Date'] = day.strftime("%Y-%m-%d")
 lower['Date'] = day.strftime("%Y-%m-%d")
 
-#print('Upper : ', upper)
+print('Upper : ', upper)
 
 
-Rank(db).add_exists_by_date(day.strftime("%Y-%m-%d"), upper)
-RankUnder(db).add_exists_by_date(day.strftime("%Y-%m-%d"), lower)
+#Rank(db).add_exists_by_date(day.strftime("%Y-%m-%d"), upper)
+#RankUnder(db).add_exists_by_date(day.strftime("%Y-%m-%d"), lower)
 
 
 #print('Analysis :', r)
