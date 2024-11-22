@@ -21,9 +21,14 @@ def validate(
     data: int | float | str | list | dict | set | bool | None,
     data_type: int | float | str | list | dict | set | bool | None
 ) -> int | float | str | list | dict | set | bool | None:
-    # データがNoneでないかつ型が一致する場合
-    if data is not None and isinstance(data, data_type):
+    # データがNoneでない、かつNullでもない、かつ型が一致する場合
+    if (
+        not math.isnan(data)
+        and data != None
+        and isinstance(data, data_type)
+    ):
         return data
+
     # 型に合わせた最小のデータを返す
     if data_type == int:
         return 0

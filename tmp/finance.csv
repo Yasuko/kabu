@@ -1,105 +1,98 @@
-3,'auditRisk',監査リスク,1
-4,'boardRisk',取締役会リスク,4
-5,'compensationRisk',報酬リスク,1
-6,'shareHolderRightsRisk',株主権利リスク,3
-7,'overallRisk',全体的なリスク,2
-8,'governanceEpochDate',ガバナンス情報基準日（エポック時間）,1730419200
-9,'compensationAsOfEpochDate',報酬情報基準日（エポック時間）,1735603200
-10,'maxAge',最大年齢,86400
-11,'priceHint',価格の目安,2
-12,'previousClose',前日終値,9222
-13,'open',始値,9522
-14,'dayLow',日中の最安値,9448
-15,'dayHigh',日中の最高値,9610
-16,'regularMarketPreviousClose',通常市場の前日終値,9222
-17,'regularMarketOpen',通常市場の始値,9522
-18,'regularMarketDayLow',通常市場の日中最安値,9448
-19,'regularMarketDayHigh',通常市場の日中最高値,9610
-20,'dividendRate',配当利率,44
-21,'dividendYield',配当利回り,0.0048
-22,'exDividendDate',配当落ち日（エポック時間）,1743120000
-23,'payoutRatio',配当性向,1.2188
-24,'fiveYearAvgDividendYield',過去5年の平均配当利回り,0.69
-25,'beta',ベータ値,0.708
-26,'trailingPE',過去12ヶ月の株価収益率,264.804
-27,'forwardPE',予測株価収益率,32.256424
-28,'volume',出来高,5766700
-29,'regularMarketVolume',通常市場の出来高,5766700
-30,'averageVolume',平均出来高,11485573
-31,'averageVolume10days',過去10日の平均出来高,8438620
-32,'averageDailyVolume10Day',過去10日間の日ごとの平均出来高,8438620
-33,'bid',買値,9531
-34,'ask',売値,9528
-35,'marketCap',時価総額,1.38E+13
-36,'fiftyTwoWeekLow',52週安値,5639
-37,'fiftyTwoWeekHigh',52週高値,12180
-38,'priceToSalesTrailing12Months',過去12か月の売上高比率,1.9973577
-39,'fiftyDayAverage',50日移動平均,8650.52
-40,'twoHundredDayAverage',200日移動平均,8700.18
-41,'trailingAnnualDividendRate',過去年間配当金率,44
-42,'trailingAnnualDividendYield',過去年間配当利回り,0.004771199
-43,'currency',通貨, 'JPY'
-44,'enterpriseValue',企業価値,3.20E+13
-45,'profitMargins',利益率,0.01097
-46,'floatShares',流通株式数,916100852
-47,'sharesOutstanding',発行済株式数,1447059968
-48,'heldPercentInsiders',インサイダー保有率,0.34013999
-49,'heldPercentInstitutions',機関保有率,0.29782
-50,'impliedSharesOutstanding',推定発行株式数,1533270016
-51,'bookValue',簿価,8133.855
-52,'priceToBook',株価純資産倍率（PBR）,1.1710315
-53,'lastFiscalYearEnd',最終会計年度末,1711843200
-54,'nextFiscalYearEnd',次会計年度末,1743379200
-55,'mostRecentQuarter',最新四半期,1719705600
-56,'netIncomeToCommon',普通株当たり純利益,57024000000
-57,'trailingEps',過去EPS,35.97
-58,'forwardEps',予想EPS,295.29
-59,'pegRatio',PEGレシオ,-1.56
-60,'lastSplitFactor',最後の株式分割比率, '2:1'
-61,'lastSplitDate',最後の株式分割日,1561420800
-62,'enterpriseToRevenue',EV/売上高比率,4.633
-63,'enterpriseToEbitda',EV/EBITDA比率,22.239
-64,'52WeekChange',52週変化率,0.49167323
-65,'SandP52WeekChange',S&P 52週変化率,0.36382854
-66,'lastDividendValue',最後の配当金額,22
-67,'lastDividendDate',最後の配当日,1743120000
-68,'exchange',取引所, 'JPX'
-69,'quoteType',銘柄タイプ, 'EQUITY'
-70,'symbol',シンボル, '9984.T'
-71,'underlyingSymbol',原資産シンボル, '9984.T'
-72,'shortName',短縮名, 'SOFTBANK GROUP CORP'
-73,'longName',正式名称, 'SoftBank Group Corp.'
-74,'firstTradeDateEpochUtc',初取引日（UTC）,946944000
-75,'timeZoneFullName',タイムゾーン完全名, 'Asia/Tokyo'
-76,'timeZoneShortName',タイムゾーン短縮名, 'JST'
-77,'uuid',uuid, '6da05edb-8daf-367e-b1b5-80f39c5ac241'
-78,'messageBoardId',掲示板ID, 'finmb_23013'
-79,'gmtOffSetMilliseconds',GMTオフセット（ミリ秒）,32400000
-80,'currentPrice',現在価格,9525
-81,'targetHighPrice',目標高値,14520
-82,'targetLowPrice',目標安値,9000
-83,'targetMeanPrice',目標平均価格,11648.2
-84,'targetMedianPrice',目標中央値価格,11600
-85,'recommendationMean',推奨平均,2.1
-86,'recommendationKey',推奨キー, 'buy'
-87,'numberOfAnalystOpinions',アナリスト意見数,16
-88,'totalCash',現金合計,5.50E+12
-89,'totalCashPerShare',1株当たり現金,3751.047
-90,'ebitda',EBITDA（税引前利益・減価償却前利益）,1.44E+12
-91,'totalDebt',総負債,2.16E+13
-92,'quickRatio',当座比率,0.571
-93,'currentRatio',流動比率,0.788
-94,'totalRevenue',総収入,6.90E+12
-95,'debtToEquity',負債比率,152.08
-96,'revenuePerShare',1株当たり収入,4708.315
-97,'returnOnAssets',総資産利益率,0.007710001
-98,'returnOnEquity',自己資本利益率,0.04178
-99,'freeCashflow',フリーキャッシュフロー,-1.63E+12
-100,'operatingCashflow',営業キャッシュフロー,3.80E+11
-101,'revenueGrowth',収益成長率,0.093
-102,'grossMargins',売上総利益率,0.52617
-103,'ebitdaMargins',EBITDAマージン,0.20833999
-104,'operatingMargins',営業利益率,0.11808
-105,'financialCurrency',財務通貨, 'JPY'
-106,'trailingPegRatio',トレーリングPEGレシオ, None
-,},,
+3,Tax Effect Of Unusual Items,異常項目の税効果,TaxEffectOfUnusualItems
+4,Tax Rate For Calcs,計算用の税率,TaxRateForCalcs
+5,Normalized EBITDA,正常化EBITDA,NormalizedEBITDA
+6,Total Unusual Items,総異常項目,TotalUnusualItems
+7,Total Unusual Items Excluding Goodwill,のれんを除く総異常項目,TotalUnusualItemsExcludingGoodwill
+8,Net Income From Continuing Operation Net Minority Interest,継続事業からの純利益（少数株主利益非控除後）,NetIncomeFromContinuingOperationNetMinorityInterest
+9,Reconciled Depreciation,調整済み減価償却費,ReconciledDepreciation
+10,Reconciled Cost Of Revenue,調整済み売上原価,ReconciledCostOfRevenue
+11,EBITDA,EBITDA,EBITDA
+12,EBIT,EBIT,EBIT
+13,Net Interest Income,純利子収入,NetInterestIncome
+14,Interest Expense,利息費用,InterestExpense
+15,Interest Income,利息収入,InterestIncome
+16,Normalized Income,正常化所得,NormalizedIncome
+17,Net Income From Continuing And Discontinued Operation,継続および非継続事業からの純利益,NetIncomeFromContinuingAndDiscontinuedOperation
+18,Total Expenses,総費用,TotalExpenses
+19,Total Operating Income As Reported,報告された営業利益,TotalOperatingIncomeAsReported
+20,Diluted Average Shares,希薄化後平均株式数,DilutedAverageShares
+21,Basic Average Shares,基本平均株式数,BasicAverageShares
+22,Diluted EPS,希薄化後EPS,DilutedEPS
+23,Basic EPS,基本EPS,BasicEPS
+24,Diluted NI Availto Com Stockholders,希薄化後普通株主に帰属する純利益,DilutedNIAvailtoComStockholders
+25,Net Income Common Stockholders,普通株主に帰属する純利益,NetIncomeCommonStockholders
+26,Otherunder Preferred Stock Dividend,優先株配当の他,OtherunderPreferredStockDividend
+27,Net Income,純利益,NetIncome
+28,Minority Interests,少数株主持分,MinorityInterests
+29,Net Income Including Noncontrolling Interests,非支配持分を含む純利益,NetIncomeIncludingNoncontrollingInterests
+30,Net Income Continuous Operations,継続事業からの純利益,NetIncomeContinuousOperations
+31,Tax Provision,税金引当額,TaxProvision
+32,Pretax Income,税引前利益,PretaxIncome
+33,Other Non Operating Income Expenses,その他の営業外収益費用,OtherNonOperatingIncomeExpenses
+34,Special Income Charges,特別収益費用,SpecialIncomeCharges
+35,Other Special Charges,その他の特別費用,OtherSpecialCharges
+36,Write Off,減損損失,WriteOff
+37,Net Non Operating Interest Income Expense,純営業外利息収支,NetNonOperatingInterestIncomeExpense
+38,Interest Expense Non Operating,非営業利息費用,InterestExpenseNonOperating
+39,Interest Income Non Operating,非営業利息収入,InterestIncomeNonOperating
+40,Operating Income,営業利益,OperatingIncome
+41,Operating Expense,営業費用,OperatingExpense
+42,Selling General And Administration,販売一般管理費,SellingGeneralAndAdministration
+43,Selling And Marketing Expense,販売及びマーケティング費用,SellingAndMarketingExpense
+44,General And Administrative Expense,一般管理費,GeneralAndAdministrativeExpense
+45,Gross Profit,売上総利益,GrossProfit
+46,Cost Of Revenue,売上原価,CostOfRevenue
+47,Total Revenue,総収益,TotalRevenue
+48,Operating Revenue,営業収益,OperatingRevenue
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
