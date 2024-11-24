@@ -21,6 +21,7 @@ class FinancialsType:
     EBIT: float                     # EBIT (営業利益)
     NetInterestIncome: float        # 純利息収益
     InterestExpense: float          # 利息費用
+    OtherNonInterestExpense: float  # その他の非利息費用
     InterestIncome: float           # 利息収益
     NormalizedIncome: float         # 正常化純利益
     NetIncomeFromContinuingAndDiscontinuedOperation: float   # 継続事業と中断事業からの純利益
@@ -38,6 +39,7 @@ class FinancialsType:
     NetIncomeIncludingNoncontrollingInterests: float    # 非支配株主持分を含む純利益
     NetIncomeContinuousOperations: float    # 継続事業の純利益 
     NetIncomeDiscontinuousOperations: float  # 中断事業の純利益
+    NetIncomeFromTaxLossCarryforward: float  # 繰越税損からの純利益
     TaxProvision: float             # 税金負担
     PretaxIncome: float             # 税引き前利益
     OtherNonOperatingIncomeExpenses: float  # その他の非営業収益費用
@@ -62,10 +64,24 @@ class FinancialsType:
     RestructuringAndMergernAcquisition: float
     DepreciationAndAmortizationInIncomeStatement: float
     DepreciationIncomeStatement: float
+    DepreciationAmortizationDepletionIncomeStatement: float
     ImpairmentOfCapitalAssets: float
     ResearchAndDevelopment: float
     TotalOtherFinanceCost: float
     Amortization: float
+    AmortizationOfIntangiblesIncomeStatement: float
+    OtherIncomeExpense: float
+    GainOnSaleOfPpe: float
+    GainOnSaleOfBusiness: float
+    GainOnSaleOfSecurity: float
+    EarningsFromEquityInterest: float
+    EarningsFromEquityInterestNetOfTax: float
+    AverageDilutionEarnings: float
+    OtherGandA: float
+    NetPolicyholderBenefitsAndClaims: float
+    InsuranceAndClaims: float
+    SalariesAndWages: float
+    OccupancyAndEquipment: float
 
 class FinancialsDBType(FinancialsType):
     id: str
@@ -105,6 +121,7 @@ CREATE TABLE IF NOT EXISTS financials (
     EBIT FLOAT NOT NULL,
     NetInterestIncome FLOAT NOT NULL,
     InterestExpense FLOAT NOT NULL,
+    OtherNonInterestExpense FLOAT NOT NULL,
     InterestIncome FLOAT NOT NULL,
     NormalizedIncome FLOAT NOT NULL,
     NetIncomeFromContinuingAndDiscontinuedOperation FLOAT NOT NULL,
@@ -122,6 +139,7 @@ CREATE TABLE IF NOT EXISTS financials (
     NetIncomeIncludingNoncontrollingInterests FLOAT NOT NULL,
     NetIncomeContinuousOperations FLOAT NOT NULL,
     NetIncomeDiscontinuousOperations FLOAT NOT NULL,
+    NetIncomeFromTaxLossCarryforward FLOAT NOT NULL,
     TaxProvision FLOAT NOT NULL,
     PretaxIncome FLOAT NOT NULL,
     OtherNonOperatingIncomeExpenses FLOAT NOT NULL,
@@ -146,10 +164,24 @@ CREATE TABLE IF NOT EXISTS financials (
     RestructuringAndMergernAcquisition FLOAT NOT NULL,
     DepreciationAndAmortizationInIncomeStatement FLOAT NOT NULL,
     DepreciationIncomeStatement FLOAT NOT NULL,
+    DepreciationAmortizationDepletionIncomeStatement FLOAT NOT NULL,
     ImpairmentOfCapitalAssets FLOAT NOT NULL,
     ResearchAndDevelopment FLOAT NOT NULL,
     TotalOtherFinanceCost FLOAT NOT NULL,
     Amortization FLOAT NOT NULL,
+    AmortizationOfIntangiblesIncomeStatement FLOAT NOT NULL,
+    OtherIncomeExpense FLOAT NOT NULL,
+    GainOnSaleOfPpe FLOAT NOT NULL,
+    GainOnSaleOfBusiness FLOAT NOT NULL,
+    GainOnSaleOfSecurity FLOAT NOT NULL,
+    EarningsFromEquityInterest FLOAT NOT NULL,
+    EarningsFromEquityInterestNetOfTax FLOAT NOT NULL,
+    AverageDilutionEarnings FLOAT NOT NULL,
+    OtherGandA FLOAT NOT NULL,
+    NetPolicyholderBenefitsAndClaims FLOAT NOT NULL,
+    InsuranceAndClaims FLOAT NOT NULL,
+    SalariesAndWages FLOAT NOT NULL,
+    OccupancyAndEquipment FLOAT NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX ON financials (companyCode);

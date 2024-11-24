@@ -14,8 +14,8 @@ from lib.analysis import rate
 '''
 '''
 
-#company_codes = Industry().get_all_records()
-company_codes = Industry().get_records_by_company_code('2437')
+company_codes = Industry().get_all_records()
+# company_codes = Industry().get_records_by_company_code('8306')
 day = datetime.datetime.now()
 day = day - datetime.timedelta(days=1)
 

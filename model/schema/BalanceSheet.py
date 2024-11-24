@@ -29,11 +29,14 @@ class BalanceSheetType:
     AdditionalPaidInCapital: float
     CapitalStock: float
     CommonStock: float
+    PreferredStock: float
+    PreferredSecuritiesOutsideStockEquity: float
     TotalLiabilitiesNetMinorityInterest: float
     TotalNonCurrentLiabilitiesNetMinorityInterest: float
     OtherNonCurrentLiabilities: float
     NonCurrentPensionAndOtherPostretirementBenefitPlans: float
     TradeandOtherPayablesNonCurrent: float
+    CurrentDeferredTaxesLiabilities: float
     NonCurrentDeferredTaxesLiabilities: float
     LongTermDebtAndCapitalLeaseObligation: float
     LongTermCapitalLeaseObligation: float
@@ -53,6 +56,7 @@ class BalanceSheetType:
     TotalTaxPayable: float
     AccountsPayable: float
     DividendsPayable: float
+    CurrentNotesPayable: float
     TotalAssets: float
     TotalNonCurrentAssets: float
     OtherNonCurrentAssets: float
@@ -85,16 +89,21 @@ class BalanceSheetType:
     WorkInProcess: float
     RawMaterials: float
     AccountsReceivable: float
+    NonCurrentAccountsReceivable: float
     GrossAccountsReceivable: float
     TaxesReceivable: float
     CashCashEquivalentsAndShortTermInvestments: float
+    CashCashEquivalentsAndFederalFundsSold: float
     CashEquivalents: float
     CashFinancial: float
     CashAndCashEquivalents: float
     OtherShortTermInvestments: float
     AccumulatedDepreciation: float
     OtherEquityInterest: float
+    OtherEquityAdjustments: float
     AssetsHeldForSaleCurrent: float
+    Receivables: float
+    NotesReceivable: float
     OtherReceivables: float
     NonCurrentPrepaidAssets: float
     PrepaidAssets: float
@@ -106,12 +115,29 @@ class BalanceSheetType:
     HeldToMaturitySecurities: float
     RestrictedCash: float
     DerivativeProductLiabilities: float
+    CurrentDeferredRevenue: float
     NonCurrentDeferredRevenue: float
     FinancialAssets: float
     FinancialAssetsDesignatedasFairValueThroughProfitorLossTotal: float
     HedgingAssetsCurrent: float
     AllowanceForDoubtfulAccountsReceivable: float
-
+    CurrentAccruedExpenses: float
+    NonCurrentAccruedExpenses: float
+    PayablesAndAccruedExpenses: float
+    EmployeeBenefits: float
+    CurrentDeferredLiabilities: float
+    NonCurrentDeferredLiabilities: float
+    OtherCurrentBorrowings: float
+    IncomeTaxPayable: float
+    InvestmentsAndAdvances: float
+    ReceivablesAdjustmentsAllowances: float
+    GainsLossesNotAffectingRetainedEarnings: float
+    Leases: float
+    TradingSecurities: float
+    ForeignCurrencyTranslationAdjustments: float
+    MinimumPensionLiabilities: float
+    UnrealizedGainLoss: float
+    CommercialPaper: float
 
 class BalanceSheetDBType(BalanceSheetType):
     id: str
@@ -160,12 +186,15 @@ CREATE TABLE IF NOT EXISTS balance_sheet (
     AdditionalPaidInCapital FLOAT NOT NULL,
     CapitalStock FLOAT NOT NULL,
     CommonStock FLOAT NOT NULL,
+    PreferredStock FLOAT NOT NULL,
+    PreferredSecuritiesOutsideStockEquity FLOAT NOT NULL,
     TotalLiabilitiesNetMinorityInterest FLOAT NOT NULL,
     TotalNonCurrentLiabilitiesNetMinorityInterest FLOAT NOT NULL,
     OtherNonCurrentLiabilities FLOAT NOT NULL,
     NonCurrentPensionAndOtherPostretirementBenefitPlans FLOAT NOT NULL,
     DefinedPensionBenefit FLOAT NOT NULL,
     TradeandOtherPayablesNonCurrent FLOAT NOT NULL,
+    CurrentDeferredTaxesLiabilities FLOAT NOT NULL,
     NonCurrentDeferredTaxesLiabilities FLOAT NOT NULL,
     LongTermDebtAndCapitalLeaseObligation FLOAT NOT NULL,
     LongTermCapitalLeaseObligation FLOAT NOT NULL,
@@ -184,6 +213,7 @@ CREATE TABLE IF NOT EXISTS balance_sheet (
     TotalTaxPayable FLOAT NOT NULL,
     AccountsPayable FLOAT NOT NULL,
     DividendsPayable FLOAT NOT NULL,
+    CurrentNotesPayable FLOAT NOT NULL,
     TotalAssets FLOAT NOT NULL,
     TotalNonCurrentAssets FLOAT NOT NULL,
     OtherNonCurrentAssets FLOAT NOT NULL,
@@ -216,16 +246,21 @@ CREATE TABLE IF NOT EXISTS balance_sheet (
     WorkInProcess FLOAT NOT NULL,
     RawMaterials FLOAT NOT NULL,
     AccountsReceivable FLOAT NOT NULL,
+    NonCurrentAccountsReceivable FLOAT NOT NULL,
     GrossAccountsReceivable FLOAT NOT NULL,
     TaxesReceivable FLOAT NOT NULL,
     CashCashEquivalentsAndShortTermInvestments FLOAT NOT NULL,
+    CashCashEquivalentsAndFederalFundsSold FLOAT NOT NULL,
     CashEquivalents FLOAT NOT NULL,
     CashFinancial FLOAT NOT NULL,
     CashAndCashEquivalents FLOAT NOT NULL,
     OtherShortTermInvestments FLOAT NOT NULL,
     AccumulatedDepreciation FLOAT NOT NULL,
     OtherEquityInterest FLOAT NOT NULL,
+    OtherEquityAdjustments FLOAT NOT NULL,
     AssetsHeldForSaleCurrent FLOAT NOT NULL,
+    Receivables FLOAT NOT NULL,
+    NotesReceivable FLOAT NOT NULL,
     OtherReceivables FLOAT NOT NULL,
     NonCurrentPrepaidAssets FLOAT NOT NULL,
     PrepaidAssets FLOAT NOT NULL,
@@ -237,11 +272,29 @@ CREATE TABLE IF NOT EXISTS balance_sheet (
     HeldToMaturitySecurities FLOAT NOT NULL,
     RestrictedCash FLOAT NOT NULL,
     DerivativeProductLiabilities FLOAT NOT NULL,
+    CurrentDeferredRevenue FLOAT NOT NULL,
     NonCurrentDeferredRevenue FLOAT NOT NULL,
     FinancialAssets FLOAT NOT NULL,
     FinancialAssetsDesignatedasFairValueThroughProfitorLossTotal FLOAT NOT NULL,
     HedgingAssetsCurrent FLOAT NOT NULL,
     AllowanceForDoubtfulAccountsReceivable FLOAT NOT NULL,
+    CurrentAccruedExpenses FLOAT NOT NULL,
+    NonCurrentAccruedExpenses FLOAT NOT NULL,
+    PayablesAndAccruedExpenses FLOAT NOT NULL,
+    EmployeeBenefits FLOAT NOT NULL,
+    CurrentDeferredLiabilities FLOAT NOT NULL,
+    NonCurrentDeferredLiabilities FLOAT NOT NULL,
+    OtherCurrentBorrowings FLOAT NOT NULL,
+    IncomeTaxPayable FLOAT NOT NULL,
+    InvestmentsAndAdvances FLOAT NOT NULL,
+    ReceivablesAdjustmentsAllowances FLOAT NOT NULL,
+    GainsLossesNotAffectingRetainedEarnings FLOAT NOT NULL,
+    Leases FLOAT NOT NULL,
+    TradingSecurities FLOAT NOT NULL,
+    ForeignCurrencyTranslationAdjustments FLOAT NOT NULL,
+    MinimumPensionLiabilities FLOAT NOT NULL,
+    UnrealizedGainLoss FLOAT NOT NULL,
+    CommercialPaper FLOAT NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX ON balance_sheet (companyCode);
